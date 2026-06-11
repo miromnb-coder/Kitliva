@@ -21,47 +21,35 @@ export function ListingHero({ listing, onFavoritePress, isFavoriteLoading = fals
   return (
     <View style={styles.container}>
       {listing.imageUrl ? (
-        <Image source={{ uri: listing.imageUrl }} style={styles.image} contentFit="cover" transition={180} />
+        <Image source={{ uri: listing.imageUrl }} style={styles.image} contentFit="cover" contentPosition="center" transition={180} />
       ) : (
         <View style={styles.placeholder}>
-          <Ionicons name="image-outline" size={38} color={colors.primary} />
-          <Text style={styles.placeholderText}>Photos coming soon</Text>
+          <Ionicons name="image-outline" size={36} color={colors.primary} />
+          <Text style={styles.placeholderText}>Photo coming soon</Text>
         </View>
       )}
 
-      <View style={[styles.topActions, { top: insets.top + 8 }]}> 
-        <Pressable style={styles.roundButton} onPress={() => router.back()}>
-          <Ionicons name="chevron-back" size={22} color={colors.text} />
-        </Pressable>
+      <Pressable style={[styles.floatingButton, styles.backButton, { top: insets.top + 14 }]} onPress={() => router.back()}>
+        <Ionicons name="chevron-back" size={22} color={colors.text} />
+      </Pressable>
 
-        <View style={styles.rightActions}>
-          <Pressable style={styles.roundButton}>
-            <Ionicons name="share-outline" size={20} color={colors.text} />
-          </Pressable>
-          <Pressable style={styles.roundButton}>
-            <Ionicons name="ellipsis-horizontal" size={20} color={colors.text} />
-          </Pressable>
+      <Pressable style={[styles.floatingButton, styles.favoriteButton, { top: insets.top + 14 }]} onPress={onFavoritePress} disabled={isFavoriteLoading}>
+        <Ionicons name={listing.isFavorite ? "heart" : "heart-outline"} size={22} color={listing.isFavorite ? "#A77C3A" : colors.text} />
+      </Pressable>
+
+      {imageCount > 1 ? (
+        <View style={styles.counterPill}>
+          <Text style={styles.counterText}>1 / {imageCount}</Text>
         </View>
-      </View>
-
-      <View style={styles.bottomActions}>
-        {imageCount > 0 ? (
-          <View style={styles.counterPill}>
-            <Text style={styles.counterText}>1/{imageCount}</Text>
-          </View>
-        ) : null}
-        <Pressable style={[styles.favoriteButton, listing.isFavorite && styles.favoriteButtonActive]} onPress={onFavoritePress} disabled={isFavoriteLoading}>
-          <Ionicons name={listing.isFavorite ? "heart" : "heart-outline"} size={24} color={colors.primary} />
-        </Pressable>
-      </View>
+      ) : null}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: 260,
-    backgroundColor: "#EDF2F0"
+    height: 318,
+    backgroundColor: "#EFE8DD"
   },
   image: {
     width: "100%",
@@ -72,63 +60,44 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.mint
+    backgroundColor: "#F7F2EB"
   },
   placeholderText: {
     marginTop: 8,
     color: colors.primary,
     fontSize: 13,
-    fontWeight: "800"
-  },
-  topActions: {
-    position: "absolute",
-    left: 16,
-    right: 16,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between"
-  },
-  rightActions: {
-    flexDirection: "row",
-    gap: 10
-  },
-  roundButton: {
-    width: 34,
-    height: 34,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 17,
-    backgroundColor: "rgba(255,255,255,0.88)"
-  },
-  bottomActions: {
-    position: "absolute",
-    right: 16,
-    bottom: 18,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8
-  },
-  counterPill: {
-    height: 24,
-    justifyContent: "center",
-    borderRadius: 12,
-    backgroundColor: "rgba(16,42,42,0.65)",
-    paddingHorizontal: 9
-  },
-  counterText: {
-    color: colors.surface,
-    fontSize: 12,
     fontWeight: "700"
   },
-  favoriteButton: {
-    width: 42,
-    height: 42,
+  floatingButton: {
+    position: "absolute",
+    width: 40,
+    height: 40,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 21,
+    borderRadius: 20,
     backgroundColor: "rgba(255,255,255,0.92)"
   },
-  favoriteButtonActive: {
-    backgroundColor: colors.mint
+  backButton: {
+    left: 20
+  },
+  favoriteButton: {
+    right: 20
+  },
+  counterPill: {
+    position: "absolute",
+    right: 20,
+    bottom: 18,
+    minWidth: 50,
+    height: 28,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 14,
+    backgroundColor: "rgba(255,255,255,0.92)",
+    paddingHorizontal: 12
+  },
+  counterText: {
+    color: colors.text,
+    fontSize: 12,
+    fontWeight: "600"
   }
 });
