@@ -17,7 +17,9 @@ export default function HomeScreen() {
     <Screen noPadding>
       <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <HomeHeader />
-        <Text style={styles.headline}>Find premium used gear</Text>
+        <Text style={styles.headline} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.88} maxFontSizeMultiplier={1}>
+          Find premium used gear
+        </Text>
         <View style={styles.searchWrap}>
           <HomeSearchBar />
         </View>
@@ -39,18 +41,18 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 20,
     paddingTop: 10,
-    paddingBottom: 108
+    paddingBottom: 100
   },
   headline: {
-    marginTop: 22,
+    marginTop: 18,
     color: colors.text,
     fontFamily: serifFont,
-    fontSize: 34,
+    fontSize: 30,
     fontWeight: "500",
-    letterSpacing: -0.7,
-    lineHeight: 40
+    letterSpacing: -0.55,
+    lineHeight: 36
   },
   searchWrap: {
-    marginTop: 18
+    marginTop: 17
   }
 });
