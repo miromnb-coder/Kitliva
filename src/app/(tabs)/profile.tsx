@@ -68,6 +68,16 @@ export default function ProfileScreen() {
     router.replace("/auth/welcome");
   }
 
+  function handleItemPress(label: string) {
+    if (label === "My listings") {
+      router.push("/my-listings");
+    }
+
+    if (label === "Create listing") {
+      router.push("/sell");
+    }
+  }
+
   if (isLoading || !user) {
     return (
       <Screen noPadding>
@@ -115,7 +125,7 @@ export default function ProfileScreen() {
         <ProfileSummaryCard />
         <ProfileStatsCard stats={stats} ratingLabel={ratingLabel} isLoading={isStatsLoading} />
         {sections.map((section) => (
-          <ProfileSection key={section.title} section={section} onSignOut={handleSignOut} />
+          <ProfileSection key={section.title} section={section} onSignOut={handleSignOut} onItemPress={handleItemPress} />
         ))}
       </ScrollView>
     </Screen>
