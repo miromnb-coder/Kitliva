@@ -10,15 +10,24 @@ import { Listing } from "@/types/listing";
 type ListingHeroProps = {
   listing: Listing;
   onFavoritePress?: () => void;
+  isFavoriteLoading?: boolean;
 };
 
-export function ListingHero({ listing, onFavoritePress }: ListingHeroProps) {
+export function ListingHero({ listing, onFavoritePress, isFavoriteLoading = false }: ListingHeroProps) {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const imageCount = listing.imageCount ?? listing.imageUrls?.length ?? (listing.imageUrl ? 1 : 0);
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: listing.imageUrl }} style={styles.image} contentFit="cover" transition={180} />
+      {listing.imageUrl ? (
+        <Image source={{ uri: listing.imageUrl }} style={styles.image} contentFit="cover" transition={180} />
+      ) : (
+        <View style={styles.placeholder}>
+          <Ionicons name="image-outline" size={38} color={colors.primary} />
+          <Text style={styles.placeholderText}>Photos coming soon</Text>
+        </View>
+      )}
 
       <View style={[styles.topActions, { top: insets.top + 8 }]}> 
         <Pressable style={styles.roundButton} onPress={() => router.back()}>
@@ -36,11 +45,13 @@ export function ListingHero({ listing, onFavoritePress }: ListingHeroProps) {
       </View>
 
       <View style={styles.bottomActions}>
-        <View style={styles.counterPill}>
-          <Text style={styles.counterText}>1/8</Text>
-        </View>
-        <Pressable style={styles.favoriteButton} onPress={onFavoritePress}>
-          <Ionicons name="heart-outline" size={24} color={colors.primary} />
+        {imageCount > 0 ? (
+          <View style={styles.counterPill}>
+            <Text style={styles.counterText}>1/{imageCount}</Text>
+          </View>
+        ) : null}
+        <Pressable style={[styles.favoriteButton, listing.isFavorite && styles.favoriteButtonActive]} onPress={onFavoritePress} disabled={isFavoriteLoading}>
+          <Ionicons name={listing.isFavorite ? "heart" : "heart-outline"} size={24} color={colors.primary} />
         </Pressable>
       </View>
     </View>
@@ -55,6 +66,19 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: "100%"
+  },
+  placeholder: {
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.mint
+  },
+  placeholderText: {
+    marginTop: 8,
+    color: colors.primary,
+    fontSize: 13,
+    fontWeight: "800"
   },
   topActions: {
     position: "absolute",
@@ -103,5 +127,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 21,
     backgroundColor: "rgba(255,255,255,0.92)"
+  },
+  favoriteButtonActive: {
+    backgroundColor: colors.mint
   }
 });
