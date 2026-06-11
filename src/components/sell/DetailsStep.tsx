@@ -1,6 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { AiPriceRecommendation } from "@/components/sell/AiPriceRecommendation";
 import { AmountField } from "@/components/sell/AmountField";
 import { ConditionSelector } from "@/components/sell/ConditionSelector";
 import { SellOptionCard } from "@/components/sell/SellOptionCard";
@@ -40,7 +39,6 @@ export function DetailsStep({ form, onChange }: DetailsStepProps) {
       </View>
 
       <ConditionSelector value={form.conditionLabel} onChange={(value) => onChange("conditionLabel", value)} />
-      <AiPriceRecommendation />
       <AmountField value={form.priceLabel} onChangeText={(value) => onChange("priceLabel", value)} />
       <SellTextField
         label="Description"
