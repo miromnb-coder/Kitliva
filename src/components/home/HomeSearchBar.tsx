@@ -6,7 +6,7 @@ import { colors } from "@/constants/colors";
 export function HomeSearchBar() {
   return (
     <View style={styles.container}>
-      <Ionicons name="search" size={17} color={colors.muted} />
+      <Ionicons name="search" size={16} color={colors.muted} />
       <Text style={styles.placeholder}>Search gear, brands or hobbies</Text>
     </View>
   );
@@ -14,15 +14,15 @@ export function HomeSearchBar() {
 
 const styles = StyleSheet.create({
   container: {
-    height: 42,
+    height: 38,
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    borderRadius: 21,
+    borderRadius: 19,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
-    paddingHorizontal: 14
+    paddingHorizontal: 13
   },
   placeholder: {
     color: colors.muted,
