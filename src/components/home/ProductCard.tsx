@@ -27,12 +27,12 @@ export function ProductCard({ listing, onFavoritePress }: ProductCardProps) {
           <Image source={{ uri: listing.imageUrl }} style={styles.image} contentFit="contain" transition={180} />
         ) : (
           <View style={styles.placeholder}>
-            <Ionicons name="image-outline" size={22} color={colors.primary} />
+            <Ionicons name="image-outline" size={20} color={colors.primary} />
           </View>
         )}
         {onFavoritePress ? (
-          <Pressable style={styles.favoriteButton} onPress={handleFavoritePress} hitSlop={8}>
-            <Ionicons name={listing.isFavorite ? "heart" : "heart-outline"} size={19} color={colors.text} />
+          <Pressable style={styles.favoriteButton} onPress={handleFavoritePress}>
+            <Ionicons name={listing.isFavorite ? "heart" : "heart-outline"} size={18} color={colors.text} />
           </Pressable>
         ) : null}
       </View>
@@ -43,10 +43,10 @@ export function ProductCard({ listing, onFavoritePress }: ProductCardProps) {
         <Text style={styles.price}>{formatPrice(listing.price, listing.currency)}</Text>
         <View style={styles.badgeRow}>
           <View style={styles.smallBadge}><Text style={styles.smallBadgeText}>{listing.conditionLabel.replace(" condition", "")}</Text></View>
-          <View style={styles.smallBadge}><Text style={styles.smallBadgeText}>Fair price</Text></View>
+          <View style={styles.smallBadge}><Text style={styles.smallBadgeText}>Fair</Text></View>
         </View>
         <View style={styles.verifiedRow}>
-          <Ionicons name="shield-checkmark" size={10} color={colors.primary} />
+          <Ionicons name="shield-checkmark" size={9} color={colors.primary} />
           <Text style={styles.verifiedText}>{listing.sellerTrustLabel ?? "Verified profile"}</Text>
         </View>
       </View>
@@ -57,7 +57,7 @@ export function ProductCard({ listing, onFavoritePress }: ProductCardProps) {
 const styles = StyleSheet.create({
   card: {
     width: "48.5%",
-    minHeight: 214,
+    minHeight: 188,
     overflow: "hidden",
     borderRadius: 13,
     borderWidth: 1,
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface
   },
   imageWrap: {
-    height: 90,
+    height: 78,
     backgroundColor: colors.background
   },
   image: {
@@ -81,68 +81,68 @@ const styles = StyleSheet.create({
   },
   favoriteButton: {
     position: "absolute",
-    top: 9,
-    right: 9,
-    width: 28,
-    height: 28,
+    top: 8,
+    right: 8,
+    width: 26,
+    height: 26,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 14,
+    borderRadius: 13,
     backgroundColor: "rgba(255,255,255,0.86)"
   },
   content: {
-    paddingHorizontal: 9,
-    paddingTop: 8,
-    paddingBottom: 9
+    paddingHorizontal: 8,
+    paddingTop: 7,
+    paddingBottom: 8
   },
   title: {
     color: colors.text,
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: "700",
-    lineHeight: 15
+    lineHeight: 14
   },
   subtitle: {
-    marginTop: 2,
+    marginTop: 1,
     color: colors.muted,
-    fontSize: 10.5,
+    fontSize: 10,
     fontWeight: "400",
-    lineHeight: 13
+    lineHeight: 12
   },
   price: {
-    marginTop: 4,
+    marginTop: 3,
     color: colors.text,
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "700",
-    lineHeight: 18
+    lineHeight: 16
   },
   badgeRow: {
     flexDirection: "row",
-    gap: 5,
-    marginTop: 7
+    gap: 4,
+    marginTop: 5
   },
   smallBadge: {
-    height: 20,
+    height: 18,
     justifyContent: "center",
-    borderRadius: 10,
+    borderRadius: 9,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: "#F7F2EB",
-    paddingHorizontal: 6
+    paddingHorizontal: 5
   },
   smallBadgeText: {
     color: "#5F655F",
-    fontSize: 8.5,
+    fontSize: 7.8,
     fontWeight: "500"
   },
   verifiedRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 7
+    marginTop: 5
   },
   verifiedText: {
     marginLeft: 4,
     color: "#4F5752",
-    fontSize: 9.5,
+    fontSize: 8.8,
     fontWeight: "500"
   }
 });
