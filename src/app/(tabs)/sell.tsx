@@ -13,8 +13,9 @@ import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
 import { mockSellListing } from "@/data/mockSellListing";
 import { useAuth } from "@/hooks/useAuth";
-import { createListingWithoutImages } from "@/services/listings";
+import { createListingWithImages } from "@/services/listings";
 import { PublishedListing } from "@/types/listing";
+import { SellPhoto } from "@/types/sell";
 
 type SellFlowStep = SellStep | "success";
 
@@ -22,6 +23,8 @@ export default function SellScreen() {
   const router = useRouter();
   const { isLoading, profile, user } = useAuth();
   const [currentStep, setCurrentStep] = useState<SellFlowStep>("photos");
+  const [selectedPhotos, setSelectedPhotos] = useState<SellPhoto[]>([]);
+  const [photoError, setPhotoError] = useState<string | null>(null);
   const [isPublishing, setIsPublishing] = useState(false);
   const [publishError, setPublishError] = useState<string | null>(null);
   const [publishedListing, setPublishedListing] = useState<PublishedListing | null>(null);
@@ -38,6 +41,11 @@ export default function SellScreen() {
     setPublishError(null);
 
     if (currentStep === "photos") {
+      if (selectedPhotos.length === 0) {
+        setPhotoError("Add a photo before continuing.");
+        return;
+      }
+
       setCurrentStep("details");
       return;
     }
@@ -73,16 +81,19 @@ export default function SellScreen() {
     setIsPublishing(true);
     setPublishError(null);
 
-    const result = await createListingWithoutImages({
-      sellerId: user.id,
-      title: mockSellListing.title,
-      description: mockSellListing.description,
-      categoryName: mockSellListing.category,
-      conditionLabel: mockSellListing.condition,
-      priceLabel: mockSellListing.price,
-      locationCity: profile?.location_city ?? mockSellListing.location,
-      locationCountry: profile?.location_country ?? "Ireland"
-    });
+    const result = await createListingWithImages(
+      {
+        sellerId: user.id,
+        title: mockSellListing.title,
+        description: mockSellListing.description,
+        categoryName: mockSellListing.category,
+        conditionLabel: mockSellListing.condition,
+        priceLabel: mockSellListing.price,
+        locationCity: profile?.location_city ?? mockSellListing.location,
+        locationCountry: profile?.location_country ?? "Ireland"
+      },
+      selectedPhotos
+    );
 
     setIsPublishing(false);
 
@@ -96,6 +107,8 @@ export default function SellScreen() {
   }
 
   function createAnotherListing() {
+    setPhotoError(null);
+    setSelectedPhotos([]);
     setPublishError(null);
     setPublishedListing(null);
     setCurrentStep("photos");
@@ -103,7 +116,7 @@ export default function SellScreen() {
 
   function renderStepContent() {
     if (currentStep === "success") {
-      return <PublishSuccessStep listing={publishedListing} onCreateAnother={createAnotherListing} />;
+      return <PublishSuccessStep listing={publishedListing} onCreateAnother={createAnotherListing} onViewListing={() => publishedListing && router.push(`/listing/${publishedListing.id}`)} />;
     }
 
     if (currentStep === "details") {
@@ -111,10 +124,20 @@ export default function SellScreen() {
     }
 
     if (currentStep === "review") {
-      return <ReviewStep publishError={publishError} />;
+      return <ReviewStep photos={selectedPhotos} publishError={publishError} />;
     }
 
-    return <PhotosStep />;
+    return (
+      <PhotosStep
+        photos={selectedPhotos}
+        error={photoError}
+        onAddPhotos={(photos) => {
+          setPhotoError(null);
+          setSelectedPhotos((current) => [...current, ...photos].slice(0, 6));
+        }}
+        onRemovePhoto={(photoId) => setSelectedPhotos((current) => current.filter((photo) => photo.id !== photoId))}
+      />
+    );
   }
 
   function renderActions() {
