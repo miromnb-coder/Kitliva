@@ -2,20 +2,33 @@ import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
-import { mockProfile } from "@/data/mockProfile";
+import { ProfileStats } from "@/services/profileStats";
 
-export function ProfileStatsCard() {
+type ProfileStatsCardProps = {
+  stats: ProfileStats;
+  ratingLabel: string;
+  isLoading?: boolean;
+};
+
+export function ProfileStatsCard({ stats, ratingLabel, isLoading = false }: ProfileStatsCardProps) {
+  const items = [
+    { label: "Active", value: isLoading ? "-" : String(stats.activeListings), icon: "pricetag-outline" as const },
+    { label: "Saved", value: isLoading ? "-" : String(stats.savedItems), icon: "heart-outline" as const },
+    { label: "Sold", value: isLoading ? "-" : String(stats.soldListings), icon: "bag-handle-outline" as const },
+    { label: "Rating", value: isLoading ? "-" : ratingLabel, icon: "star-outline" as const }
+  ];
+
   return (
     <View style={styles.card}>
-      {mockProfile.stats.map((stat, index) => (
+      {items.map((stat, index) => (
         <View key={stat.label} style={styles.statWrap}>
           <View style={styles.stat}>
-            <Ionicons name={stat.icon} size={20} color={colors.text} style={styles.icon} />
+            <Ionicons name={stat.icon} size={18} color={colors.text} style={styles.icon} />
             <Text style={styles.value}>{stat.value}</Text>
             <Text style={styles.label}>{stat.label}</Text>
           </View>
 
-          {index < mockProfile.stats.length - 1 ? <View style={styles.separator} /> : null}
+          {index < items.length - 1 ? <View style={styles.separator} /> : null}
         </View>
       ))}
     </View>
@@ -45,18 +58,18 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   icon: {
-    marginBottom: 5
+    marginBottom: 4
   },
   value: {
     color: colors.text,
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: "800",
-    lineHeight: 22
+    lineHeight: 21
   },
   label: {
     marginTop: 2,
     color: "#657575",
-    fontSize: 12.5,
+    fontSize: 11.5,
     fontWeight: "500"
   },
   separator: {
