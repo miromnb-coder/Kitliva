@@ -13,14 +13,14 @@ export function SectionHeader({ title, actionLabel = "See all" }: { title: strin
 
 const styles = StyleSheet.create({
   container: {
-    minHeight: 24,
+    minHeight: 22,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between"
   },
   title: {
     color: colors.text,
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "800"
   },
   action: {
