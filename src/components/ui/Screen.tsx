@@ -7,13 +7,14 @@ import { spacing } from "@/constants/spacing";
 
 type ScreenProps = PropsWithChildren<{
   centered?: boolean;
+  noPadding?: boolean;
   style?: ViewStyle;
 }>;
 
-export function Screen({ children, centered = false, style }: ScreenProps) {
+export function Screen({ children, centered = false, noPadding = false, style }: ScreenProps) {
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={[styles.container, centered && styles.centered, style]}>{children}</View>
+      <View style={[styles.container, noPadding && styles.noPadding, centered && styles.centered, style]}>{children}</View>
     </SafeAreaView>
   );
 }
@@ -28,6 +29,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.lg
+  },
+  noPadding: {
+    paddingHorizontal: 0,
+    paddingTop: 0
   },
   centered: {
     alignItems: "center",
