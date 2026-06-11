@@ -41,18 +41,18 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 20,
     paddingTop: 10,
-    paddingBottom: 100
+    paddingBottom: 112
   },
   headline: {
-    marginTop: 18,
+    marginTop: 16,
     color: colors.text,
     fontFamily: serifFont,
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: "500",
-    letterSpacing: -0.55,
-    lineHeight: 36
+    letterSpacing: -0.45,
+    lineHeight: 34
   },
   searchWrap: {
-    marginTop: 17
+    marginTop: 14
   }
 });
