@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 
 import { ProductGrid } from "@/components/home/ProductGrid";
@@ -12,6 +13,12 @@ import { colors } from "@/constants/colors";
 import { mockListings } from "@/data/mockListings";
 
 export default function SearchScreen() {
+  const [query, setQuery] = useState("");
+  const normalizedQuery = query.trim().toLowerCase();
+  const listings = normalizedQuery
+    ? mockListings.filter((item) => [item.title, item.subtitle, item.conditionLabel].join(" ").toLowerCase().includes(normalizedQuery))
+    : mockListings;
+
   return (
     <Screen noPadding>
       <ScrollView
@@ -20,12 +27,12 @@ export default function SearchScreen() {
         showsVerticalScrollIndicator={false}
       >
         <SearchHeader />
-        <SearchInputBar />
+        <SearchInputBar value={query} onChangeText={setQuery} onClear={() => setQuery("")} />
         <SuggestedSearches />
         <SearchCategoryIcons />
         <FilterRow />
         <SearchResultsHeader />
-        <ProductGrid listings={mockListings} />
+        <ProductGrid listings={listings} />
       </ScrollView>
     </Screen>
   );
