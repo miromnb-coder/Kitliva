@@ -33,8 +33,6 @@ export default function HomeScreen() {
         </View>
 
         <ProductGrid listings={mockListings} />
-
-        <View style={styles.bottomSpacer} />
       </ScrollView>
     </Screen>
   );
@@ -48,7 +46,7 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 18,
     paddingTop: 8,
-    paddingBottom: 20
+    paddingBottom: 0
   },
   searchWrap: {
     marginTop: 10
@@ -59,8 +57,5 @@ const styles = StyleSheet.create({
   sectionWrap: {
     marginTop: spacing.xs,
     marginBottom: 8
-  },
-  bottomSpacer: {
-    height: 22
   }
 });
