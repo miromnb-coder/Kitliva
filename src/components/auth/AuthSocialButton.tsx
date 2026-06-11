@@ -15,7 +15,7 @@ export function AuthSocialButton({ provider, onPress }: AuthSocialButtonProps) {
     <Pressable style={styles.button} onPress={onPress}>
       <View style={styles.iconWrap}>
         {isApple ? (
-          <Ionicons name="logo-apple" size={22} color="#000000" />
+          <Ionicons name="logo-apple" size={20} color="#000000" />
         ) : (
           <Text style={styles.googleIcon}>G</Text>
         )}
@@ -27,7 +27,7 @@ export function AuthSocialButton({ provider, onPress }: AuthSocialButtonProps) {
 
 const styles = StyleSheet.create({
   button: {
-    height: 48,
+    height: 44,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -35,21 +35,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.primary,
     backgroundColor: colors.surface,
-    marginBottom: 10
+    marginBottom: 8
   },
   iconWrap: {
-    width: 30,
+    width: 28,
     alignItems: "center",
-    marginRight: 10
+    marginRight: 9
   },
   googleIcon: {
     color: "#4285F4",
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "900"
   },
   text: {
     color: colors.text,
-    fontSize: 14.5,
+    fontSize: 14,
     fontWeight: "800"
   }
 });
