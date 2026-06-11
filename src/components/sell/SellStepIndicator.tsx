@@ -27,9 +27,9 @@ export function SellStepIndicator() {
 
 const styles = StyleSheet.create({
   container: {
-    height: 28,
-    marginTop: 14,
-    marginBottom: 22,
+    height: 24,
+    marginTop: 10,
+    marginBottom: 18,
     flexDirection: "row",
     alignItems: "center"
   },
@@ -43,11 +43,11 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   circle: {
-    width: 22,
-    height: 22,
+    width: 20,
+    height: 20,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 11
+    borderRadius: 10
   },
   activeCircle: {
     backgroundColor: colors.primary
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface
   },
   number: {
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: "800"
   },
   activeNumber: {
@@ -68,8 +68,8 @@ const styles = StyleSheet.create({
     color: colors.muted
   },
   label: {
-    marginLeft: 6,
-    fontSize: 12,
+    marginLeft: 5,
+    fontSize: 11.5,
     fontWeight: "700"
   },
   activeLabel: {
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   line: {
     flex: 1,
     height: 1,
-    marginHorizontal: 8,
+    marginHorizontal: 7,
     backgroundColor: colors.border
   }
 });
