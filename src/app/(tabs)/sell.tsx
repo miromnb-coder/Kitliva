@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 
 import { AiConditionCheck } from "@/components/sell/AiConditionCheck";
 import { AiPriceRecommendation } from "@/components/sell/AiPriceRecommendation";
@@ -29,7 +29,6 @@ export default function SellScreen() {
         <AiPriceRecommendation />
         <AmountField />
         <SellContinueButton />
-        <View style={styles.bottomSpacer} />
       </ScrollView>
     </Screen>
   );
@@ -43,9 +42,6 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 18,
     paddingTop: 6,
-    paddingBottom: 22
-  },
-  bottomSpacer: {
-    height: 22
+    paddingBottom: 0
   }
 });
