@@ -24,7 +24,7 @@ export function SuggestedSearches() {
       <View style={styles.chips}>
         {suggestedSearches.map((item) => (
           <View key={item.label} style={styles.chip}>
-            <Ionicons name={item.icon} size={15} color={colors.primary} style={styles.chipIcon} />
+            <Ionicons name={item.icon} size={14} color={colors.primary} style={styles.chipIcon} />
             <Text style={styles.chipText}>{item.label}</Text>
           </View>
         ))}
@@ -35,35 +35,36 @@ export function SuggestedSearches() {
 
 const styles = StyleSheet.create({
   section: {
-    marginBottom: 19
+    marginBottom: 16
   },
   title: {
-    marginBottom: 9,
+    marginBottom: 8,
     color: colors.text,
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "800"
   },
   chips: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 8
+    columnGap: 7,
+    rowGap: 7
   },
   chip: {
-    height: 32,
+    height: 29,
     flexDirection: "row",
     alignItems: "center",
-    borderRadius: 16,
+    borderRadius: 14.5,
     borderWidth: 1,
     borderColor: "#D8E2DF",
     backgroundColor: colors.surface,
-    paddingHorizontal: 11
+    paddingHorizontal: 10
   },
   chipIcon: {
-    marginRight: 6
+    marginRight: 5
   },
   chipText: {
     color: colors.text,
-    fontSize: 12.5,
+    fontSize: 11.5,
     fontWeight: "700"
   }
 });
