@@ -14,11 +14,11 @@ export function HomeSearchBar() {
 
 const styles = StyleSheet.create({
   container: {
-    height: 44,
+    height: 42,
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-    borderRadius: 14,
+    borderRadius: 13,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   },
   placeholder: {
     color: "#8C908A",
-    fontSize: 12.5,
+    fontSize: 12.2,
     fontWeight: "400"
   }
 });
