@@ -21,13 +21,13 @@ export function PhotoUploadPreview() {
           <View key={photo} style={styles.photoTile}>
             <Image source={{ uri: photo }} style={styles.photo} contentFit="cover" transition={160} />
             <View style={styles.removeButton}>
-              <Ionicons name="close" size={12} color={colors.text} />
+              <Ionicons name="close" size={11} color={colors.text} />
             </View>
           </View>
         ))}
 
         <View style={styles.addTile}>
-          <Ionicons name="add" size={22} color={colors.primary} />
+          <Ionicons name="add" size={21} color={colors.primary} />
         </View>
       </View>
     </View>
@@ -36,29 +36,29 @@ export function PhotoUploadPreview() {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 20
+    marginBottom: 16
   },
   title: {
     color: colors.text,
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "800"
   },
   tip: {
-    marginTop: 4,
+    marginTop: 3,
     color: colors.muted,
-    fontSize: 11,
+    fontSize: 10.5,
     fontWeight: "500"
   },
   photoRow: {
-    marginTop: 10,
+    marginTop: 9,
     flexDirection: "row",
-    gap: 10
+    gap: 9
   },
   photoTile: {
-    width: 64,
-    height: 64,
+    width: 58,
+    height: 58,
     overflow: "hidden",
-    borderRadius: 12,
+    borderRadius: 11,
     backgroundColor: "#EDF2F0"
   },
   photo: {
@@ -67,21 +67,21 @@ const styles = StyleSheet.create({
   },
   removeButton: {
     position: "absolute",
-    top: 5,
-    right: 5,
-    width: 18,
-    height: 18,
+    top: 4,
+    right: 4,
+    width: 17,
+    height: 17,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 9,
+    borderRadius: 8.5,
     backgroundColor: "rgba(255,255,255,0.92)"
   },
   addTile: {
-    width: 64,
-    height: 64,
+    width: 58,
+    height: 58,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 12,
+    borderRadius: 11,
     borderWidth: 1,
     borderStyle: "dashed",
     borderColor: "#C8D2D0",
