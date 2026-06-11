@@ -7,9 +7,10 @@ import { ProfileSection as ProfileSectionType } from "@/data/mockProfile";
 type ProfileSectionProps = {
   section: ProfileSectionType;
   onSignOut?: () => void;
+  onItemPress?: (label: string) => void;
 };
 
-export function ProfileSection({ section, onSignOut }: ProfileSectionProps) {
+export function ProfileSection({ section, onSignOut, onItemPress }: ProfileSectionProps) {
   return (
     <View style={styles.section}>
       <Text style={styles.title}>{section.title}</Text>
@@ -19,7 +20,7 @@ export function ProfileSection({ section, onSignOut }: ProfileSectionProps) {
 
           return (
             <View key={item.label}>
-              <Pressable style={styles.row} onPress={isSignOut ? onSignOut : undefined}>
+              <Pressable style={styles.row} onPress={isSignOut ? onSignOut : () => onItemPress?.(item.label)}>
                 <View style={styles.iconWrap}>
                   <Ionicons name={item.icon} size={20} color={isSignOut ? colors.primary : colors.text} />
                 </View>
