@@ -13,15 +13,15 @@ export function HomeHeroCard() {
       <Image source={heroImage} style={styles.image} contentFit="cover" transition={180} />
       <View style={styles.overlay} />
       <View style={styles.content}>
-        <Text style={styles.title}>Give quality gear{"\n"}a second life</Text>
+        <Text style={styles.title} maxFontSizeMultiplier={1}>Give quality gear{"\n"}a second life</Text>
         <Text style={styles.subtitle}>Trusted community.{"\n"}Better choices.</Text>
         <View style={styles.badgeRow}>
           <View style={styles.badge}>
-            <Ionicons name="shield-checkmark" size={12} color={colors.primary} />
+            <Ionicons name="shield-checkmark" size={10} color={colors.primary} />
             <Text style={styles.badgeText}>Verified</Text>
           </View>
           <View style={styles.badge}>
-            <Ionicons name="pricetag-outline" size={12} color="#A77C3A" />
+            <Ionicons name="pricetag-outline" size={10} color="#A77C3A" />
             <Text style={styles.badgeText}>Fair price</Text>
           </View>
         </View>
@@ -32,13 +32,13 @@ export function HomeHeroCard() {
 
 const styles = StyleSheet.create({
   card: {
-    height: 150,
+    height: 132,
     overflow: "hidden",
-    borderRadius: 18,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: "#EFE8DD",
-    marginTop: 18
+    marginTop: 16
   },
   image: {
     position: "absolute",
@@ -53,49 +53,49 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     bottom: 0,
-    width: "54%",
-    backgroundColor: "rgba(250,248,243,0.9)"
+    width: "50%",
+    backgroundColor: "rgba(250,248,243,0.86)"
   },
   content: {
-    width: "54%",
-    paddingLeft: 20,
-    paddingTop: 26,
-    paddingBottom: 18
+    width: "50%",
+    paddingLeft: 17,
+    paddingTop: 22,
+    paddingBottom: 14
   },
   title: {
     color: colors.text,
     fontFamily: serifFont,
-    fontSize: 22,
+    fontSize: 18.5,
     fontWeight: "500",
-    letterSpacing: -0.3,
-    lineHeight: 27
+    letterSpacing: -0.25,
+    lineHeight: 23
   },
   subtitle: {
-    marginTop: 10,
+    marginTop: 8,
     color: "#5F655F",
-    fontSize: 12.5,
+    fontSize: 11,
     fontWeight: "400",
-    lineHeight: 18
+    lineHeight: 15
   },
   badgeRow: {
     flexDirection: "row",
-    gap: 8,
-    marginTop: 17
+    gap: 6,
+    marginTop: 12
   },
   badge: {
-    height: 27,
+    height: 22,
     flexDirection: "row",
     alignItems: "center",
-    borderRadius: 13.5,
+    borderRadius: 11,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: "rgba(255,255,255,0.92)",
-    paddingHorizontal: 9
+    paddingHorizontal: 8
   },
   badgeText: {
-    marginLeft: 4,
+    marginLeft: 3,
     color: "#39433E",
-    fontSize: 11,
+    fontSize: 9.5,
     fontWeight: "500"
   }
 });
