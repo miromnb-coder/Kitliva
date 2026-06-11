@@ -1,10 +1,19 @@
-export type InboxContact = {
+type GroupContact = {
   id: string;
   label: string;
-  type?: "group";
+  type: "group";
   unread?: number;
-  avatarUrl?: string;
 };
+
+type PersonContact = {
+  id: string;
+  label: string;
+  type?: "person";
+  unread?: number;
+  avatarUrl: string;
+};
+
+export type InboxContact = GroupContact | PersonContact;
 
 export type InboxThread = {
   id: string;
