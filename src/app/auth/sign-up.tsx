@@ -45,47 +45,47 @@ export default function SignUpScreen() {
 
 const styles = StyleSheet.create({
   headerBlock: {
-    marginTop: 42
+    marginTop: 24
   },
   title: {
     color: colors.primary,
-    fontSize: 38,
+    fontSize: 34,
     fontWeight: "800",
     letterSpacing: -0.7,
-    lineHeight: 44
+    lineHeight: 39
   },
   subtitle: {
-    marginTop: 8,
+    marginTop: 5,
     color: "#6F8380",
-    fontSize: 15,
+    fontSize: 13.5,
     fontWeight: "500",
-    lineHeight: 22
+    lineHeight: 19
   },
   formCard: {
     borderRadius: 18,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
-    padding: 16,
-    marginTop: 28,
-    marginBottom: 24
+    padding: 14,
+    marginTop: 20,
+    marginBottom: 15
   },
   helperText: {
     color: colors.muted,
-    fontSize: 12,
+    fontSize: 11.5,
     fontWeight: "500",
-    marginTop: -7
+    marginTop: -4
   },
   primaryWrap: {
-    marginBottom: 24
+    marginBottom: 16
   },
   bottomLink: {
     alignItems: "center",
-    marginTop: 20
+    marginTop: 13
   },
   bottomText: {
     color: colors.muted,
-    fontSize: 14,
+    fontSize: 13.5,
     fontWeight: "500"
   },
   linkText: {
