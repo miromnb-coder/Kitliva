@@ -1,24 +1,29 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
 
 const conditions = ["New", "Like new", "Good", "Fair", "Poor"];
 
-export function ConditionSelector() {
+type ConditionSelectorProps = {
+  value: string;
+  onChange: (value: string) => void;
+};
+
+export function ConditionSelector({ value, onChange }: ConditionSelectorProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Condition</Text>
       <View style={styles.chipRow}>
         {conditions.map((condition) => {
-          const selected = condition === "Good";
+          const selected = condition === value;
           return (
-            <View key={condition} style={[styles.chip, selected && styles.selectedChip]}>
+            <Pressable key={condition} style={[styles.chip, selected && styles.selectedChip]} onPress={() => onChange(condition)}>
               <Text style={[styles.chipText, selected && styles.selectedChipText]}>{condition}</Text>
-            </View>
+            </Pressable>
           );
         })}
       </View>
-      <Text style={styles.helpText}>What does this mean?</Text>
+      <Text style={styles.helpText}>Choose the closest real condition</Text>
     </View>
   );
 }
