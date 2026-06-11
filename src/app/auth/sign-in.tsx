@@ -1,4 +1,5 @@
 import { useRouter } from "expo-router";
+import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { AuthBackButton } from "@/components/auth/AuthBackButton";
@@ -8,9 +9,26 @@ import { AuthScreen } from "@/components/auth/AuthScreen";
 import { AuthSocialButton } from "@/components/auth/AuthSocialButton";
 import { AuthTextField } from "@/components/auth/AuthTextField";
 import { colors } from "@/constants/colors";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function SignInScreen() {
   const router = useRouter();
+  const { isSigningIn, signIn } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSignIn() {
+    setError(null);
+    const result = await signIn(email, password);
+
+    if (!result.success) {
+      setError(result.message ?? "Something went wrong. Please try again.");
+      return;
+    }
+
+    router.replace("/(tabs)");
+  }
 
   return (
     <AuthScreen>
@@ -22,13 +40,38 @@ export default function SignInScreen() {
       </View>
 
       <View style={styles.formCard}>
-        <AuthTextField label="Email address" placeholder="Enter your email" />
-        <AuthTextField label="Password" placeholder="Enter your password" secure />
+        <AuthTextField
+          label="Email address"
+          placeholder="Enter your email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoComplete="email"
+          textContentType="emailAddress"
+          returnKeyType="next"
+        />
+        <AuthTextField
+          label="Password"
+          placeholder="Enter your password"
+          value={password}
+          onChangeText={setPassword}
+          secure
+          autoComplete="password"
+          textContentType="password"
+          returnKeyType="done"
+        />
         <Text style={styles.forgotText}>Forgot password?</Text>
       </View>
 
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
       <View style={styles.primaryWrap}>
-        <AuthButton label="Sign in" onPress={() => undefined} />
+        <AuthButton
+          label="Sign in"
+          loadingLabel="Signing in..."
+          loading={isSigningIn}
+          onPress={handleSignIn}
+        />
       </View>
 
       <AuthDivider />
@@ -69,7 +112,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     padding: 14,
     marginTop: 24,
-    marginBottom: 16
+    marginBottom: 12
   },
   forgotText: {
     color: colors.primary,
@@ -77,6 +120,19 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     textAlign: "right",
     marginTop: -4
+  },
+  errorText: {
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#F1C8C2",
+    backgroundColor: "#FFF4F2",
+    color: "#9F2E23",
+    fontSize: 12.5,
+    fontWeight: "700",
+    lineHeight: 17,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 12
   },
   primaryWrap: {
     marginBottom: 18
