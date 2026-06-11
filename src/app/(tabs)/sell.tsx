@@ -11,18 +11,18 @@ import { SellHeader } from "@/components/sell/SellHeader";
 import { SellStep, SellStepIndicator } from "@/components/sell/SellStepIndicator";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
-import { mockSellListing } from "@/data/mockSellListing";
 import { useAuth } from "@/hooks/useAuth";
 import { createListingWithImages } from "@/services/listings";
 import { PublishedListing } from "@/types/listing";
-import { SellPhoto } from "@/types/sell";
+import { emptySellFormDraft, SellFormDraft, SellPhoto } from "@/types/sell";
 
 type SellFlowStep = SellStep | "success";
 
 export default function SellScreen() {
   const router = useRouter();
-  const { isLoading, profile, user } = useAuth();
+  const { isLoading, user } = useAuth();
   const [currentStep, setCurrentStep] = useState<SellFlowStep>("photos");
+  const [form, setForm] = useState<SellFormDraft>(emptySellFormDraft);
   const [selectedPhotos, setSelectedPhotos] = useState<SellPhoto[]>([]);
   const [photoError, setPhotoError] = useState<string | null>(null);
   const [isPublishing, setIsPublishing] = useState(false);
@@ -36,6 +36,24 @@ export default function SellScreen() {
       }
     }, [isLoading, router, user])
   );
+
+  function updateForm<Key extends keyof SellFormDraft>(key: Key, value: SellFormDraft[Key]) {
+    setPublishError(null);
+    setForm((currentForm) => ({ ...currentForm, [key]: value }));
+  }
+
+  function getDetailsError() {
+    if (!form.title.trim()) return "Please add a title before continuing.";
+    if (!form.categoryName.trim()) return "Please choose a category before continuing.";
+    if (!form.conditionLabel.trim()) return "Please choose the item condition before continuing.";
+    if (!form.priceLabel.trim()) return "Please add a price before continuing.";
+    if (!form.description.trim()) return "Please add a short description before continuing.";
+    if (!form.locationCity.trim()) return "Please add a city before continuing.";
+    if (!form.locationCountry.trim()) return "Please add a country before continuing.";
+    if (!form.allowPickup && !form.allowShipping) return "Please choose at least one delivery option.";
+
+    return null;
+  }
 
   function goToNextStep() {
     setPublishError(null);
@@ -51,6 +69,13 @@ export default function SellScreen() {
     }
 
     if (currentStep === "details") {
+      const detailsError = getDetailsError();
+
+      if (detailsError) {
+        setPublishError(detailsError);
+        return;
+      }
+
       setCurrentStep("review");
     }
   }
@@ -78,19 +103,27 @@ export default function SellScreen() {
       return;
     }
 
+    const detailsError = getDetailsError();
+
+    if (detailsError) {
+      setPublishError(detailsError);
+      setCurrentStep("details");
+      return;
+    }
+
     setIsPublishing(true);
     setPublishError(null);
 
     const result = await createListingWithImages(
       {
         sellerId: user.id,
-        title: mockSellListing.title,
-        description: mockSellListing.description,
-        categoryName: mockSellListing.category,
-        conditionLabel: mockSellListing.condition,
-        priceLabel: mockSellListing.price,
-        locationCity: profile?.location_city ?? mockSellListing.location,
-        locationCountry: profile?.location_country ?? "Ireland"
+        title: form.title,
+        description: form.description,
+        categoryName: form.categoryName,
+        conditionLabel: form.conditionLabel,
+        priceLabel: form.priceLabel,
+        locationCity: form.locationCity,
+        locationCountry: form.locationCountry
       },
       selectedPhotos
     );
@@ -107,6 +140,7 @@ export default function SellScreen() {
   }
 
   function createAnotherListing() {
+    setForm(emptySellFormDraft);
     setPhotoError(null);
     setSelectedPhotos([]);
     setPublishError(null);
@@ -120,11 +154,11 @@ export default function SellScreen() {
     }
 
     if (currentStep === "details") {
-      return <DetailsStep />;
+      return <DetailsStep form={form} onChange={updateForm} />;
     }
 
     if (currentStep === "review") {
-      return <ReviewStep photos={selectedPhotos} publishError={publishError} />;
+      return <ReviewStep form={form} photos={selectedPhotos} publishError={publishError} />;
     }
 
     return (
