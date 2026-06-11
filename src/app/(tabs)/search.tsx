@@ -37,8 +37,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background
   },
   content: {
-    paddingHorizontal: 22,
-    paddingTop: 18,
+    paddingHorizontal: 16,
+    paddingTop: 12,
     paddingBottom: 118
   }
 });
