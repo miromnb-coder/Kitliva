@@ -2,11 +2,11 @@ import { StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
 
-export function SellHeader() {
+export function SellHeader({ showSaveDraft = true }: { showSaveDraft?: boolean }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sell your gear</Text>
-      <Text style={styles.saveDraft}>Save draft</Text>
+      {showSaveDraft ? <Text style={styles.saveDraft}>Save draft</Text> : <View style={styles.placeholder} />}
     </View>
   );
 }
@@ -28,5 +28,9 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontSize: 11.5,
     fontWeight: "700"
+  },
+  placeholder: {
+    width: 1,
+    height: 1
   }
 });
