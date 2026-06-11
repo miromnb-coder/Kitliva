@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "Kitliva",
+    "slug": "kitliva",
+    "scheme": "kitliva",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "platforms": ["ios", "android", "web"],
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kitliva.app"
+    },
+    "android": {
+      "package": "com.kitliva.app"
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
