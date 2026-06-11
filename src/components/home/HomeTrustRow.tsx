@@ -6,7 +6,7 @@ import { colors } from "@/constants/colors";
 const trustItems = [
   { label: "Verified profiles", icon: "shield-checkmark" as const },
   { label: "Fair prices", icon: "pricetag-outline" as const },
-  { label: "Safe messaging", icon: "lock-closed-outline" as const }
+  { label: "Safe chat", icon: "lock-closed-outline" as const }
 ];
 
 export function HomeTrustRow() {
@@ -15,8 +15,8 @@ export function HomeTrustRow() {
       {trustItems.map((item, index) => (
         <View key={item.label} style={styles.itemWrap}>
           <View style={styles.item}>
-            <Ionicons name={item.icon} size={13} color={colors.primary} />
-            <Text style={styles.label}>{item.label}</Text>
+            <Ionicons name={item.icon} size={11} color={colors.primary} />
+            <Text style={styles.label} maxFontSizeMultiplier={1}>{item.label}</Text>
           </View>
           {index < trustItems.length - 1 ? <Text style={styles.dot}>•</Text> : null}
         </View>
@@ -27,10 +27,10 @@ export function HomeTrustRow() {
 
 const styles = StyleSheet.create({
   container: {
-    minHeight: 22,
+    minHeight: 18,
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 14
+    marginTop: 12
   },
   itemWrap: {
     flexDirection: "row",
@@ -41,15 +41,15 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   label: {
-    marginLeft: 5,
+    marginLeft: 4,
     color: "#4F5752",
-    fontSize: 11.5,
+    fontSize: 10,
     fontWeight: "500"
   },
   dot: {
-    marginHorizontal: 13,
+    marginHorizontal: 10,
     color: "#B5A78F",
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: "600"
   }
 });
