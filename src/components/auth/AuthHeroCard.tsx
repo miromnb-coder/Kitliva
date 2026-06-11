@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { AuthTrustRow } from "@/components/auth/AuthTrustRow";
 import { colors } from "@/constants/colors";
 
-const authGearIllustration = require("../../../assets/images/auth-gear-illustration.PNG");
+const authGearIllustration = require("../../../assets/images/auth-gear-illustration.png");
 
 const trustRows = [
   {
