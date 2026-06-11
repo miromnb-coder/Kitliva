@@ -47,6 +47,11 @@ export type Listing = {
   sellerName: string;
   sellerInitial: string;
   sellerLocation: string;
+  sellerBio?: string | null;
+  sellerAvatarUrl?: string | null;
+  sellerIsVerified?: boolean;
+  sellerIsTrusted?: boolean;
+  sellerTrustLabel?: string;
   sellerDistanceKm: number;
   sellerRating: number;
   sellerReviewCount: number;
