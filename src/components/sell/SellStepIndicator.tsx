@@ -1,23 +1,42 @@
+import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
 
-const steps = ["Photos", "Details", "Review"];
+export type SellStep = "photos" | "details" | "review";
 
-export function SellStepIndicator() {
+const steps: { key: SellStep; label: string }[] = [
+  { key: "photos", label: "Photos" },
+  { key: "details", label: "Details" },
+  { key: "review", label: "Review" }
+];
+
+function getStepIndex(step: SellStep) {
+  return steps.findIndex((item) => item.key === step);
+}
+
+export function SellStepIndicator({ currentStep }: { currentStep: SellStep }) {
+  const currentIndex = getStepIndex(currentStep);
+
   return (
     <View style={styles.container}>
       {steps.map((step, index) => {
-        const isActive = index === 0;
+        const isActive = index === currentIndex;
+        const isCompleted = index < currentIndex;
+
         return (
-          <View key={step} style={styles.stepWrap}>
+          <View key={step.key} style={styles.stepWrap}>
             <View style={styles.stepContent}>
-              <View style={[styles.circle, isActive ? styles.activeCircle : styles.inactiveCircle]}>
-                <Text style={[styles.number, isActive ? styles.activeNumber : styles.inactiveNumber]}>{index + 1}</Text>
+              <View style={[styles.circle, isActive || isCompleted ? styles.activeCircle : styles.inactiveCircle]}>
+                {isCompleted ? (
+                  <Ionicons name="checkmark" size={12} color={colors.surface} />
+                ) : (
+                  <Text style={[styles.number, isActive ? styles.activeNumber : styles.inactiveNumber]}>{index + 1}</Text>
+                )}
               </View>
-              <Text style={[styles.label, isActive ? styles.activeLabel : styles.inactiveLabel]}>{step}</Text>
+              <Text style={[styles.label, isActive ? styles.activeLabel : styles.inactiveLabel]}>{step.label}</Text>
             </View>
-            {index < steps.length - 1 ? <View style={styles.line} /> : null}
+            {index < steps.length - 1 ? <View style={[styles.line, isCompleted && styles.activeLine]} /> : null}
           </View>
         );
       })}
@@ -83,5 +102,8 @@ const styles = StyleSheet.create({
     height: 1,
     marginHorizontal: 7,
     backgroundColor: colors.border
+  },
+  activeLine: {
+    backgroundColor: colors.primary
   }
 });
