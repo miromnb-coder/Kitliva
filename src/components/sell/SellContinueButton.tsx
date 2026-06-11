@@ -8,14 +8,14 @@ export function SellContinueButton() {
 
 const styles = StyleSheet.create({
   button: {
-    height: 50,
+    height: 46,
     overflow: "hidden",
-    borderRadius: 13,
+    borderRadius: 12,
     backgroundColor: colors.primary,
     color: colors.surface,
     fontSize: 14,
     fontWeight: "800",
-    lineHeight: 50,
+    lineHeight: 46,
     textAlign: "center"
   }
 });
