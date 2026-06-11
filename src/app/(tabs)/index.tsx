@@ -1,43 +1,63 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
-import { Screen } from "@/components/ui/Screen";
+import { CategoryGrid } from "@/components/home/CategoryGrid";
+import { HomeHeader } from "@/components/home/HomeHeader";
+import { HomeSearchBar } from "@/components/home/HomeSearchBar";
+import { ProductGrid } from "@/components/home/ProductGrid";
+import { SectionHeader } from "@/components/home/SectionHeader";
 import { colors } from "@/constants/colors";
 import { spacing } from "@/constants/spacing";
-import { typography } from "@/theme/typography";
+import { mockListings } from "@/data/mockListings";
 
 export default function HomeScreen() {
   return (
-    <Screen centered>
-      <View style={styles.card}>
-        <Text style={styles.title}>Kitliva</Text>
-        <Text style={styles.subtitle}>Used gear for every hobby.</Text>
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={styles.content}
+      showsVerticalScrollIndicator={false}
+    >
+      <HomeHeader />
+
+      <View style={styles.searchWrap}>
+        <HomeSearchBar />
       </View>
-    </Screen>
+
+      <View style={styles.categoriesWrap}>
+        <CategoryGrid />
+      </View>
+
+      <View style={styles.sectionWrap}>
+        <SectionHeader title="Picked for you" />
+      </View>
+
+      <ProductGrid listings={mockListings} />
+
+      <View style={styles.bottomSpacer} />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    width: "100%",
-    alignItems: "center",
-    borderRadius: 28,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.xl
+  screen: {
+    flex: 1,
+    backgroundColor: colors.background
   },
-  title: {
-    color: colors.primary,
-    fontSize: typography.title,
-    fontWeight: "800",
-    letterSpacing: -0.5
+  content: {
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingBottom: 24
   },
-  subtitle: {
+  searchWrap: {
+    marginTop: 12
+  },
+  categoriesWrap: {
+    marginTop: 18
+  },
+  sectionWrap: {
     marginTop: spacing.sm,
-    color: colors.muted,
-    fontSize: typography.body,
-    fontWeight: "500",
-    textAlign: "center"
+    marginBottom: 10
+  },
+  bottomSpacer: {
+    height: 28
   }
 });
