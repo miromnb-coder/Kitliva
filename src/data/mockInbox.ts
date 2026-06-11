@@ -1,9 +1,40 @@
-export const mockInbox = {
+export type InboxContact = {
+  id: string;
+  label: string;
+  type?: "group";
+  unread?: number;
+  avatarUrl?: string;
+};
+
+export type InboxThread = {
+  id: string;
+  name: string;
+  message: string;
+  time: string;
+  unread?: number;
+  avatarUrl: string;
+};
+
+export type ActiveOrder = {
+  title: string;
+  orderId: string;
+  status: string;
+  deliveryLabel: string;
+  deliveryDate: string;
+  progress: number;
+  imageUrl: string;
+};
+
+export const mockInbox: {
+  contacts: InboxContact[];
+  activeOrder: ActiveOrder;
+  threads: InboxThread[];
+} = {
   contacts: [
     {
       id: "all",
       label: "All",
-      type: "group" as const
+      type: "group"
     },
     {
       id: "luca",
@@ -68,7 +99,3 @@ export const mockInbox = {
     }
   ]
 };
-
-export type InboxContact = (typeof mockInbox.contacts)[number];
-export type InboxThread = (typeof mockInbox.threads)[number];
-export type ActiveOrder = typeof mockInbox.activeOrder;
