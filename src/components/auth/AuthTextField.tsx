@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, TextInputProps, View } from "react-native";
 
 import { colors } from "@/constants/colors";
 
@@ -7,19 +7,41 @@ type AuthTextFieldProps = {
   label: string;
   placeholder?: string;
   secure?: boolean;
-};
+  value: string;
+  onChangeText: (value: string) => void;
+} & Pick<
+  TextInputProps,
+  "keyboardType" | "autoCapitalize" | "autoComplete" | "textContentType" | "returnKeyType"
+>;
 
-export function AuthTextField({ label, placeholder, secure = false }: AuthTextFieldProps) {
+export function AuthTextField({
+  label,
+  placeholder,
+  secure = false,
+  value,
+  onChangeText,
+  keyboardType,
+  autoCapitalize = "none",
+  autoComplete,
+  textContentType,
+  returnKeyType
+}: AuthTextFieldProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
       <View style={styles.inputWrap}>
         <TextInput
           style={styles.input}
+          value={value}
+          onChangeText={onChangeText}
           placeholder={placeholder}
           placeholderTextColor="#A2AFAF"
           secureTextEntry={secure}
-          autoCapitalize="none"
+          autoCapitalize={autoCapitalize}
+          keyboardType={keyboardType}
+          autoComplete={autoComplete}
+          textContentType={textContentType}
+          returnKeyType={returnKeyType}
         />
         {secure ? <Ionicons name="eye-outline" size={20} color="#6F7E7E" /> : null}
       </View>
