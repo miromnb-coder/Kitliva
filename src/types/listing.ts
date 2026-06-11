@@ -27,16 +27,22 @@ export type ListingDeliveryOption = {
 
 export type Listing = {
   id: string;
+  sellerId?: string;
   title: string;
   subtitle: string;
+  description?: string | null;
   category: ListingCategory;
+  categoryName?: string;
   price: number;
   originalPrice?: number;
   currency: "EUR" | "USD";
-  imageUrl: string;
+  imageUrl: string | null;
+  imageUrls?: string[];
+  imageCount?: number;
   condition: ListingCondition;
   conditionLabel: string;
   isGreatDeal?: boolean;
+  isFavorite?: boolean;
   sellerName: string;
   sellerInitial: string;
   sellerLocation: string;
@@ -48,6 +54,8 @@ export type Listing = {
   aiSimilarListings: number;
   details: ListingDetailRow[];
   deliveryOptions: ListingDeliveryOption[];
+  createdAt?: string | null;
+  publishedAt?: string | null;
 };
 
 export type CreateListingInput = {
