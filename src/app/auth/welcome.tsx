@@ -37,36 +37,36 @@ export default function AuthWelcomeScreen() {
 
 const styles = StyleSheet.create({
   brandArea: {
-    marginTop: 2
+    marginTop: 0
   },
   brand: {
     color: colors.primary,
-    fontSize: 38,
+    fontSize: 34,
     fontWeight: "800",
     letterSpacing: -0.7,
-    lineHeight: 44
+    lineHeight: 39
   },
   subtitle: {
-    marginTop: 4,
+    marginTop: 3,
     color: "#6F8380",
-    fontSize: 14,
+    fontSize: 13.5,
     fontWeight: "500",
-    lineHeight: 20
+    lineHeight: 19
   },
   actions: {
-    marginBottom: 12
+    marginBottom: 9
   },
   buttonGap: {
-    height: 10
+    height: 8
   },
   continueWrap: {
-    marginTop: 14
+    marginTop: 10
   },
   terms: {
     color: colors.muted,
-    fontSize: 11.5,
+    fontSize: 11,
     fontWeight: "500",
-    lineHeight: 16,
+    lineHeight: 15,
     textAlign: "center"
   },
   termsLink: {
