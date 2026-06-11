@@ -18,7 +18,7 @@ const trustRows = [
   {
     title: "Safer buying and selling",
     subtitle: "Protected every step of the way.",
-    icon: "bag-check-outline" as const
+    icon: "lock-closed-outline" as const
   }
 ];
 
