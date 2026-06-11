@@ -15,7 +15,7 @@ export function HomeTrustRow() {
       {trustItems.map((item, index) => (
         <View key={item.label} style={styles.itemWrap}>
           <View style={styles.item}>
-            <Ionicons name={item.icon} size={11} color={colors.primary} />
+            <Ionicons name={item.icon} size={10.5} color={colors.primary} />
             <Text style={styles.label} maxFontSizeMultiplier={1}>{item.label}</Text>
           </View>
           {index < trustItems.length - 1 ? <Text style={styles.dot}>•</Text> : null}
@@ -27,10 +27,10 @@ export function HomeTrustRow() {
 
 const styles = StyleSheet.create({
   container: {
-    minHeight: 18,
+    minHeight: 17,
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 12
+    marginTop: 11
   },
   itemWrap: {
     flexDirection: "row",
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   label: {
     marginLeft: 4,
     color: "#4F5752",
-    fontSize: 10,
+    fontSize: 9.8,
     fontWeight: "500"
   },
   dot: {
