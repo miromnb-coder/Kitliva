@@ -13,20 +13,20 @@ export function SellHeader() {
 
 const styles = StyleSheet.create({
   container: {
-    height: 36,
+    height: 32,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between"
   },
   title: {
     color: colors.text,
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: "800",
-    lineHeight: 28
+    lineHeight: 25
   },
   saveDraft: {
     color: colors.primary,
-    fontSize: 12,
+    fontSize: 11.5,
     fontWeight: "700"
   }
 });
