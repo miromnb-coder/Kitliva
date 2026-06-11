@@ -1,14 +1,13 @@
 import { useCallback, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { BackendSearchResults } from "@/components/search/BackendSearchResults";
-import { FilterRow } from "@/components/search/FilterRow";
-import { SearchCategoryIcons } from "@/components/search/SearchCategoryIcons";
+import { ExploreFilterRow } from "@/components/search/ExploreFilterRow";
+import { ExploreHeader } from "@/components/search/ExploreHeader";
+import { ExploreResultsHeader } from "@/components/search/ExploreResultsHeader";
+import { ExploreSearchBar } from "@/components/search/ExploreSearchBar";
+import { PopularSearchChips } from "@/components/search/PopularSearchChips";
 import { SearchFiltersSheet } from "@/components/search/SearchFiltersSheet";
-import { SearchHeader } from "@/components/search/SearchHeader";
-import { SearchInputBar } from "@/components/search/SearchInputBar";
-import { SearchResultsHeader } from "@/components/search/SearchResultsHeader";
-import { SuggestedSearches } from "@/components/search/SuggestedSearches";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
 import { defaultSearchFilters, SearchFilters } from "@/types/search";
@@ -32,15 +31,16 @@ export default function SearchScreen() {
     <Screen noPadding>
       <View style={styles.wrapper}>
         <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-          <SearchHeader />
-          <SearchInputBar value={query} onChangeText={setQuery} onClear={() => setQuery("")} />
-          <SuggestedSearches />
-          <SearchCategoryIcons
-            selectedCategory={filters.categoryName}
-            onSelectCategory={(categoryName) => setFilters((current) => ({ ...current, categoryName }))}
-          />
-          <FilterRow onOpenFilters={() => setIsFiltersOpen(true)} />
-          <SearchResultsHeader count={resultCount} query={query} onSortPress={() => setIsFiltersOpen(true)} />
+          <ExploreHeader />
+          <Text style={styles.title} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.9} maxFontSizeMultiplier={1}>
+            Explore gear
+          </Text>
+          <View style={styles.searchWrap}>
+            <ExploreSearchBar value={query} onChangeText={setQuery} />
+          </View>
+          <ExploreFilterRow onOpenFilters={() => setIsFiltersOpen(true)} />
+          <PopularSearchChips onSelectSearch={setQuery} />
+          <ExploreResultsHeader count={resultCount} onSortPress={() => setIsFiltersOpen(true)} />
           <BackendSearchResults query={query} filters={filters} onCountChange={handleCountChange} />
         </ScrollView>
 
@@ -59,5 +59,16 @@ export default function SearchScreen() {
 const styles = StyleSheet.create({
   wrapper: { flex: 1, backgroundColor: colors.background },
   screen: { flex: 1, backgroundColor: colors.background },
-  content: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 118 }
+  content: { paddingHorizontal: 20, paddingTop: 10, paddingBottom: 112 },
+  title: {
+    marginTop: 22,
+    color: colors.text,
+    fontSize: 34,
+    fontWeight: "500",
+    letterSpacing: -0.8,
+    lineHeight: 40
+  },
+  searchWrap: {
+    marginTop: 18
+  }
 });
