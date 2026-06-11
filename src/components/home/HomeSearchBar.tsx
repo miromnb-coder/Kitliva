@@ -6,7 +6,7 @@ import { colors } from "@/constants/colors";
 export function HomeSearchBar() {
   return (
     <View style={styles.container}>
-      <Ionicons name="search-outline" size={18} color="#8C908A" />
+      <Ionicons name="search-outline" size={17} color="#8C908A" />
       <Text style={styles.placeholder}>Search by hobby, brand or item</Text>
     </View>
   );
@@ -14,19 +14,19 @@ export function HomeSearchBar() {
 
 const styles = StyleSheet.create({
   container: {
-    height: 48,
+    height: 44,
     flexDirection: "row",
     alignItems: "center",
-    gap: 11,
-    borderRadius: 15,
+    gap: 10,
+    borderRadius: 14,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
-    paddingHorizontal: 16
+    paddingHorizontal: 14
   },
   placeholder: {
     color: "#8C908A",
-    fontSize: 13.5,
+    fontSize: 12.5,
     fontWeight: "400"
   }
 });
