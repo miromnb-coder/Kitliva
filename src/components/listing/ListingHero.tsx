@@ -1,8 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
-import { Pressable } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { colors } from "@/constants/colors";
@@ -10,9 +9,10 @@ import { Listing } from "@/types/listing";
 
 type ListingHeroProps = {
   listing: Listing;
+  onFavoritePress?: () => void;
 };
 
-export function ListingHero({ listing }: ListingHeroProps) {
+export function ListingHero({ listing, onFavoritePress }: ListingHeroProps) {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -20,7 +20,7 @@ export function ListingHero({ listing }: ListingHeroProps) {
     <View style={styles.container}>
       <Image source={{ uri: listing.imageUrl }} style={styles.image} contentFit="cover" transition={180} />
 
-      <View style={[styles.topActions, { top: insets.top + 8 }]}>
+      <View style={[styles.topActions, { top: insets.top + 8 }]}> 
         <Pressable style={styles.roundButton} onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={22} color={colors.text} />
         </Pressable>
@@ -39,7 +39,7 @@ export function ListingHero({ listing }: ListingHeroProps) {
         <View style={styles.counterPill}>
           <Text style={styles.counterText}>1/8</Text>
         </View>
-        <Pressable style={styles.favoriteButton}>
+        <Pressable style={styles.favoriteButton} onPress={onFavoritePress}>
           <Ionicons name="heart-outline" size={24} color={colors.primary} />
         </Pressable>
       </View>
