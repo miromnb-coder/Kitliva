@@ -8,10 +8,10 @@ const serifFont = Platform.select({ ios: "Georgia", android: "serif", default: u
 export function HomeHeader() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Kitliva</Text>
+      <Text style={styles.title} maxFontSizeMultiplier={1}>Kitliva</Text>
       <View style={styles.actions}>
-        <Ionicons name="notifications-outline" size={22} color={colors.text} />
-        <Ionicons name="bag-handle-outline" size={22} color={colors.text} />
+        <Ionicons name="notifications-outline" size={21} color={colors.text} />
+        <Ionicons name="bag-handle-outline" size={21} color={colors.text} />
       </View>
     </View>
   );
@@ -19,7 +19,7 @@ export function HomeHeader() {
 
 const styles = StyleSheet.create({
   container: {
-    height: 36,
+    height: 34,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between"
@@ -27,14 +27,14 @@ const styles = StyleSheet.create({
   title: {
     color: colors.text,
     fontFamily: serifFont,
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "500",
-    letterSpacing: -0.3,
-    lineHeight: 30
+    letterSpacing: -0.2,
+    lineHeight: 28
   },
   actions: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 16
+    gap: 15
   }
 });
