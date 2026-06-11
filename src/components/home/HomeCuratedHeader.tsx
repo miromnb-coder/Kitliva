@@ -13,7 +13,7 @@ export function HomeCuratedHeader() {
         <Text style={styles.subtitle}>Fresh finds from the Kitliva community</Text>
       </View>
       <View style={styles.sortButton}>
-        <Ionicons name="swap-vertical-outline" size={14} color="#A77C3A" />
+        <Ionicons name="swap-vertical-outline" size={13} color="#A77C3A" />
         <Text style={styles.sortText}>Sort</Text>
       </View>
     </View>
@@ -25,38 +25,38 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-start",
     justifyContent: "space-between",
-    marginTop: 18,
-    marginBottom: 12
+    marginTop: 16,
+    marginBottom: 10
   },
   title: {
     color: colors.text,
     fontFamily: serifFont,
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "500",
-    letterSpacing: -0.3,
-    lineHeight: 29
+    letterSpacing: -0.25,
+    lineHeight: 27
   },
   subtitle: {
-    marginTop: 2,
+    marginTop: 1,
     color: colors.muted,
-    fontSize: 12,
+    fontSize: 11.5,
     fontWeight: "400",
-    lineHeight: 16
+    lineHeight: 15
   },
   sortButton: {
-    height: 34,
+    height: 31,
     flexDirection: "row",
     alignItems: "center",
-    borderRadius: 17,
+    borderRadius: 15.5,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
-    paddingHorizontal: 13
+    paddingHorizontal: 12
   },
   sortText: {
     marginLeft: 5,
     color: "#7B623C",
-    fontSize: 12,
+    fontSize: 11.5,
     fontWeight: "500"
   }
 });
