@@ -1,13 +1,22 @@
 import { useRouter } from "expo-router";
+import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import { AuthButton } from "@/components/auth/AuthButton";
 import { AuthHeroCard } from "@/components/auth/AuthHeroCard";
 import { AuthScreen } from "@/components/auth/AuthScreen";
 import { colors } from "@/constants/colors";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function AuthWelcomeScreen() {
   const router = useRouter();
+  const { isLoading, user } = useAuth();
+
+  useEffect(() => {
+    if (!isLoading && user) {
+      router.replace("/(tabs)");
+    }
+  }, [isLoading, router, user]);
 
   return (
     <AuthScreen>
@@ -28,7 +37,7 @@ export default function AuthWelcomeScreen() {
       </View>
 
       <Text style={styles.terms}>
-        By continuing, you agree to Kitliva’s{`\n`}
+        By continuing, you agree to Kitliva terms{`\n`}
         <Text style={styles.termsLink}>Terms</Text> and <Text style={styles.termsLink}>Privacy Policy</Text>.
       </Text>
     </AuthScreen>
