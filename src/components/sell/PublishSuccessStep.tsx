@@ -5,6 +5,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { SellFlowActions } from "@/components/sell/SellFlowActions";
 import { colors } from "@/constants/colors";
 import { mockSellListing } from "@/data/mockSellListing";
+import { PublishedListing } from "@/types/listing";
 
 const nextSteps = [
   {
@@ -22,10 +23,26 @@ const nextSteps = [
 ];
 
 type PublishSuccessStepProps = {
+  listing: PublishedListing | null;
   onCreateAnother: () => void;
+  onViewListing?: () => void;
 };
 
-export function PublishSuccessStep({ onCreateAnother }: PublishSuccessStepProps) {
+function formatPrice(listing: PublishedListing | null) {
+  if (!listing) {
+    return mockSellListing.price.replace(" ", "");
+  }
+
+  const symbol = listing.priceCurrency === "EUR" ? "€" : listing.priceCurrency;
+
+  return `${symbol}${listing.priceAmount}`;
+}
+
+export function PublishSuccessStep({ listing, onCreateAnother, onViewListing }: PublishSuccessStepProps) {
+  const title = listing?.title ?? mockSellListing.title;
+  const category = listing?.categoryName ?? mockSellListing.category;
+  const condition = listing?.conditionLabel ?? mockSellListing.condition;
+
   return (
     <>
       <View style={styles.successCard}>
@@ -39,19 +56,19 @@ export function PublishSuccessStep({ onCreateAnother }: PublishSuccessStepProps)
       </View>
 
       <View style={styles.previewCard}>
-        <Image source={{ uri: mockSellListing.photos[0] }} style={styles.previewImage} contentFit="cover" transition={180} />
+        <Image source={{ uri: listing?.coverImageUrl ?? mockSellListing.photos[0] }} style={styles.previewImage} contentFit="cover" transition={180} />
 
         <View style={styles.previewContent}>
           <View style={styles.previewTopRow}>
             <Text style={styles.previewTitle} numberOfLines={2}>
-              {mockSellListing.title}
+              {title}
             </Text>
             <View style={styles.liveBadge}>
               <Text style={styles.liveBadgeText}>Live</Text>
             </View>
           </View>
-          <Text style={styles.previewMeta}>{mockSellListing.category} • {mockSellListing.condition} condition</Text>
-          <Text style={styles.previewPrice}>{mockSellListing.price.replace(" ", "")}</Text>
+          <Text style={styles.previewMeta}>{category} • {condition} condition</Text>
+          <Text style={styles.previewPrice}>{formatPrice(listing)}</Text>
         </View>
       </View>
 
@@ -71,7 +88,7 @@ export function PublishSuccessStep({ onCreateAnother }: PublishSuccessStepProps)
 
       <SellFlowActions
         primaryLabel="View listing"
-        onPrimaryPress={() => undefined}
+        onPrimaryPress={onViewListing ?? (() => undefined)}
         secondaryLabel="Create another"
         onSecondaryPress={onCreateAnother}
       />
