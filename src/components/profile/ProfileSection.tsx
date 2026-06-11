@@ -1,35 +1,44 @@
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
 import { ProfileSection as ProfileSectionType } from "@/data/mockProfile";
 
-export function ProfileSection({ section }: { section: ProfileSectionType }) {
+type ProfileSectionProps = {
+  section: ProfileSectionType;
+  onSignOut?: () => void;
+};
+
+export function ProfileSection({ section, onSignOut }: ProfileSectionProps) {
   return (
     <View style={styles.section}>
       <Text style={styles.title}>{section.title}</Text>
       <View style={styles.card}>
-        {section.items.map((item, index) => (
-          <View key={item.label}>
-            <View style={styles.row}>
-              <View style={styles.iconWrap}>
-                <Ionicons name={item.icon} size={20} color={colors.text} />
-              </View>
+        {section.items.map((item, index) => {
+          const isSignOut = item.label === "Sign out";
 
-              <Text style={styles.label}>{item.label}</Text>
-
-              {item.badge ? (
-                <View style={styles.badge}>
-                  <Text style={styles.badgeText}>{item.badge}</Text>
+          return (
+            <View key={item.label}>
+              <Pressable style={styles.row} onPress={isSignOut ? onSignOut : undefined}>
+                <View style={styles.iconWrap}>
+                  <Ionicons name={item.icon} size={20} color={isSignOut ? colors.primary : colors.text} />
                 </View>
-              ) : null}
 
-              <Ionicons name="chevron-forward" size={18} color="#6F7E7E" />
+                <Text style={[styles.label, isSignOut && styles.signOutLabel]}>{item.label}</Text>
+
+                {item.badge ? (
+                  <View style={styles.badge}>
+                    <Text style={styles.badgeText}>{item.badge}</Text>
+                  </View>
+                ) : null}
+
+                <Ionicons name="chevron-forward" size={18} color="#6F7E7E" />
+              </Pressable>
+
+              {index < section.items.length - 1 ? <View style={styles.separator} /> : null}
             </View>
-
-            {index < section.items.length - 1 ? <View style={styles.separator} /> : null}
-          </View>
-        ))}
+          );
+        })}
       </View>
     </View>
   );
@@ -68,6 +77,10 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: 14.5,
     fontWeight: "600"
+  },
+  signOutLabel: {
+    color: colors.primary,
+    fontWeight: "800"
   },
   badge: {
     minWidth: 25,
