@@ -27,12 +27,20 @@ export default function TabsLayout() {
         tabBarInactiveTintColor: colors.muted,
         tabBarLabelStyle: {
           fontSize: typography.tabLabel,
-          fontWeight: "600"
+          fontWeight: "600",
+          marginTop: -2
+        },
+        tabBarIconStyle: {
+          marginBottom: -3
+        },
+        tabBarItemStyle: {
+          paddingTop: 2,
+          paddingBottom: 0
         },
         tabBarStyle: {
-          height: 82,
-          paddingTop: 8,
-          paddingBottom: 22,
+          height: 70,
+          paddingTop: 0,
+          paddingBottom: 10,
           backgroundColor: colors.surface,
           borderTopColor: colors.border
         }
