@@ -14,7 +14,7 @@ type TabIconProps = {
   size?: number;
 };
 
-function TabIcon({ color, focused, focusedIcon, outlineIcon, size = 25 }: TabIconProps) {
+function TabIcon({ color, focused, focusedIcon, outlineIcon, size = 24 }: TabIconProps) {
   return <Ionicons name={focused ? focusedIcon : outlineIcon} size={size} color={color} />;
 }
 
@@ -23,11 +23,11 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.muted,
+        tabBarActiveTintColor: "#A77C3A",
+        tabBarInactiveTintColor: "#4F5752",
         tabBarLabelStyle: {
           fontSize: typography.tabLabel,
-          fontWeight: "600"
+          fontWeight: "500"
         },
         tabBarStyle: {
           position: "absolute",
@@ -37,7 +37,7 @@ export default function TabsLayout() {
           height: 82,
           paddingTop: 8,
           paddingBottom: 22,
-          backgroundColor: colors.surface,
+          backgroundColor: "rgba(255,255,255,0.98)",
           borderTopColor: colors.border
         }
       }}
@@ -46,45 +46,35 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon color={color} focused={focused} focusedIcon="home" outlineIcon="home-outline" />
-          )
+          tabBarIcon: ({ color, focused }) => <TabIcon color={color} focused={focused} focusedIcon="home" outlineIcon="home-outline" />
         }}
       />
       <Tabs.Screen
         name="search"
         options={{
-          title: "Search",
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon color={color} focused={focused} focusedIcon="search" outlineIcon="search-outline" />
-          )
+          title: "Explore",
+          tabBarIcon: ({ color, focused }) => <TabIcon color={color} focused={focused} focusedIcon="compass" outlineIcon="compass-outline" />
         }}
       />
       <Tabs.Screen
         name="sell"
         options={{
           title: "Sell",
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon color={color} focused={focused} focusedIcon="add-circle" outlineIcon="add-circle-outline" size={28} />
-          )
+          tabBarIcon: ({ color }) => <Ionicons name="add-circle-outline" size={28} color={color} />
         }}
       />
       <Tabs.Screen
         name="inbox"
         options={{
-          title: "Inbox",
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon color={color} focused={focused} focusedIcon="chatbubble" outlineIcon="chatbubble-outline" />
-          )
+          title: "Messages",
+          tabBarIcon: ({ color, focused }) => <TabIcon color={color} focused={focused} focusedIcon="chatbox" outlineIcon="chatbox-outline" />
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon color={color} focused={focused} focusedIcon="person" outlineIcon="person-outline" />
-          )
+          title: "Account",
+          tabBarIcon: ({ color, focused }) => <TabIcon color={color} focused={focused} focusedIcon="person" outlineIcon="person-outline" />
         }}
       />
     </Tabs>
