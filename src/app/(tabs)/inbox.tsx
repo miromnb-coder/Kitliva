@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { ActiveOrderCard } from "@/components/inbox/ActiveOrderCard";
@@ -6,8 +8,27 @@ import { InboxHeader } from "@/components/inbox/InboxHeader";
 import { MessageThreadList } from "@/components/inbox/MessageThreadList";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
+import { shouldShowAuthGate } from "@/lib/authGate";
 
 export default function InboxScreen() {
+  const router = useRouter();
+
+  useFocusEffect(
+    useCallback(() => {
+      if (shouldShowAuthGate()) {
+        router.push("/auth/welcome");
+      }
+    }, [router])
+  );
+
+  if (shouldShowAuthGate()) {
+    return (
+      <Screen noPadding>
+        <View style={styles.screen} />
+      </Screen>
+    );
+  }
+
   return (
     <Screen noPadding>
       <ScrollView
