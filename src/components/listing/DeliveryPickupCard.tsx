@@ -8,25 +8,34 @@ type DeliveryPickupCardProps = {
   listing: Listing;
 };
 
-type IconName = keyof typeof Ionicons.glyphMap;
-
 export function DeliveryPickupCard({ listing }: DeliveryPickupCardProps) {
+  const location = listing.sellerLocation && listing.sellerLocation !== "Location not set" ? `Meet in ${listing.sellerLocation}` : "Agree pickup details";
+
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionTitle}>Delivery & pickup</Text>
-      <View style={styles.card}>
-        {listing.deliveryOptions.map((option, index) => (
-          <View key={option.id} style={[styles.row, index > 0 && styles.rowBorder]}>
-            <View style={styles.iconCircle}>
-              <Ionicons name={option.icon as IconName} size={17} color={colors.primary} />
-            </View>
-            <View style={styles.textWrap}>
-              <Text style={styles.title}>{option.title}</Text>
-              <Text style={styles.subtitle}>{option.subtitle}</Text>
-            </View>
-            <Text style={styles.priceLabel}>{option.priceLabel}</Text>
-          </View>
-        ))}
+      <View style={styles.infoCard}>
+        <View style={styles.column}>
+          <Ionicons name="location-outline" size={18} color="#7B623C" />
+          <Text style={styles.title}>Local pickup</Text>
+          <Text style={styles.subtitle}>{location}</Text>
+        </View>
+        <View style={styles.divider} />
+        <View style={styles.column}>
+          <Ionicons name="cube-outline" size={18} color="#7B623C" />
+          <Text style={styles.title}>Delivery</Text>
+          <Text style={styles.subtitle}>Agree with seller</Text>
+        </View>
+        <View style={styles.divider} />
+        <View style={styles.column}>
+          <Ionicons name="lock-closed-outline" size={18} color="#7B623C" />
+          <Text style={styles.title}>Safe chat</Text>
+          <Text style={styles.subtitle}>Keep it on Kitliva</Text>
+        </View>
+      </View>
+
+      <View style={styles.trustNote}>
+        <Ionicons name="shield-checkmark" size={14} color={colors.primary} />
+        <Text style={styles.trustText}>Stay safe: message and agree details on Kitliva</Text>
       </View>
     </View>
   );
@@ -34,57 +43,51 @@ export function DeliveryPickupCard({ listing }: DeliveryPickupCardProps) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 18
+    marginTop: 16
   },
-  sectionTitle: {
-    marginBottom: 10,
-    color: colors.text,
-    fontSize: 15,
-    fontWeight: "800"
-  },
-  card: {
+  infoCard: {
+    height: 78,
     overflow: "hidden",
-    borderRadius: 16,
+    flexDirection: "row",
+    borderRadius: 14,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface
   },
-  row: {
-    minHeight: 54,
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 14
-  },
-  rowBorder: {
-    borderTopWidth: 1,
-    borderTopColor: colors.border
-  },
-  iconCircle: {
-    width: 32,
-    height: 32,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 16,
-    backgroundColor: colors.background
-  },
-  textWrap: {
+  column: {
     flex: 1,
-    marginLeft: 10
+    justifyContent: "center",
+    paddingHorizontal: 10
+  },
+  divider: {
+    width: 1,
+    height: 46,
+    alignSelf: "center",
+    backgroundColor: colors.border
   },
   title: {
+    marginTop: 6,
     color: colors.text,
-    fontSize: 13,
-    fontWeight: "800"
+    fontSize: 11,
+    fontWeight: "700"
   },
   subtitle: {
-    marginTop: 2,
+    marginTop: 3,
     color: colors.muted,
+    fontSize: 9.5,
+    fontWeight: "400",
+    lineHeight: 13
+  },
+  trustNote: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 16
+  },
+  trustText: {
+    marginLeft: 7,
+    color: "#4F5752",
     fontSize: 11,
     fontWeight: "500"
-  },
-  priceLabel: {
-    color: colors.text,
-    fontSize: 12,
-    fontWeight: "700"
   }
 });
