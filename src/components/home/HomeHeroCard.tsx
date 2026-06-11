@@ -10,21 +10,23 @@ const serifFont = Platform.select({ ios: "Georgia", android: "serif", default: u
 export function HomeHeroCard() {
   return (
     <View style={styles.card}>
-      <Image source={heroImage} style={styles.image} contentFit="cover" transition={180} />
-      <View style={styles.overlay} />
-      <View style={styles.content}>
+      <View style={styles.leftPane}>
         <Text style={styles.title} maxFontSizeMultiplier={1}>Give quality gear{"\n"}a second life</Text>
         <Text style={styles.subtitle}>Trusted community.{"\n"}Better choices.</Text>
         <View style={styles.badgeRow}>
           <View style={styles.badge}>
-            <Ionicons name="shield-checkmark" size={10} color={colors.primary} />
+            <Ionicons name="shield-checkmark" size={9} color={colors.primary} />
             <Text style={styles.badgeText}>Verified</Text>
           </View>
           <View style={styles.badge}>
-            <Ionicons name="pricetag-outline" size={10} color="#A77C3A" />
+            <Ionicons name="pricetag-outline" size={9} color="#A77C3A" />
             <Text style={styles.badgeText}>Fair price</Text>
           </View>
         </View>
+      </View>
+
+      <View style={styles.imagePane}>
+        <Image source={heroImage} style={styles.image} contentFit="cover" contentPosition="center" transition={180} />
       </View>
     </View>
   );
@@ -32,70 +34,68 @@ export function HomeHeroCard() {
 
 const styles = StyleSheet.create({
   card: {
-    height: 132,
+    height: 126,
+    flexDirection: "row",
     overflow: "hidden",
     borderRadius: 16,
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: "#EFE8DD",
-    marginTop: 16
+    backgroundColor: "#F4EFE7",
+    marginTop: 14
+  },
+  leftPane: {
+    width: "43%",
+    height: "100%",
+    backgroundColor: "#F4EFE7",
+    paddingLeft: 16,
+    paddingTop: 18,
+    paddingRight: 6,
+    paddingBottom: 12
+  },
+  imagePane: {
+    width: "57%",
+    height: "100%",
+    overflow: "hidden",
+    backgroundColor: "#EFE8DD"
   },
   image: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    width: "66%",
+    width: "100%",
     height: "100%"
-  },
-  overlay: {
-    position: "absolute",
-    left: 0,
-    top: 0,
-    bottom: 0,
-    width: "50%",
-    backgroundColor: "rgba(250,248,243,0.86)"
-  },
-  content: {
-    width: "50%",
-    paddingLeft: 17,
-    paddingTop: 22,
-    paddingBottom: 14
   },
   title: {
     color: colors.text,
     fontFamily: serifFont,
-    fontSize: 18.5,
+    fontSize: 17,
     fontWeight: "500",
-    letterSpacing: -0.25,
-    lineHeight: 23
+    letterSpacing: -0.2,
+    lineHeight: 21
   },
   subtitle: {
-    marginTop: 8,
+    marginTop: 7,
     color: "#5F655F",
-    fontSize: 11,
+    fontSize: 10.5,
     fontWeight: "400",
-    lineHeight: 15
+    lineHeight: 14
   },
   badgeRow: {
     flexDirection: "row",
-    gap: 6,
-    marginTop: 12
+    gap: 5,
+    marginTop: 10
   },
   badge: {
-    height: 22,
+    height: 20,
     flexDirection: "row",
     alignItems: "center",
-    borderRadius: 11,
+    borderRadius: 10,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: "rgba(255,255,255,0.92)",
-    paddingHorizontal: 8
+    paddingHorizontal: 7
   },
   badgeText: {
     marginLeft: 3,
     color: "#39433E",
-    fontSize: 9.5,
+    fontSize: 8.8,
     fontWeight: "500"
   }
 });
