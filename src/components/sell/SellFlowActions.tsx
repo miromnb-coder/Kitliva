@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
 
@@ -7,19 +7,40 @@ type SellFlowActionsProps = {
   onPrimaryPress: () => void;
   secondaryLabel?: string;
   onSecondaryPress?: () => void;
+  isPrimaryLoading?: boolean;
+  isPrimaryDisabled?: boolean;
+  isSecondaryDisabled?: boolean;
 };
 
-export function SellFlowActions({ primaryLabel, onPrimaryPress, secondaryLabel, onSecondaryPress }: SellFlowActionsProps) {
+export function SellFlowActions({
+  primaryLabel,
+  onPrimaryPress,
+  secondaryLabel,
+  onSecondaryPress,
+  isPrimaryLoading = false,
+  isPrimaryDisabled = false,
+  isSecondaryDisabled = false
+}: SellFlowActionsProps) {
+  const primaryDisabled = isPrimaryDisabled || isPrimaryLoading;
+
   return (
     <View style={styles.container}>
       {secondaryLabel && onSecondaryPress ? (
-        <Pressable style={styles.secondaryButton} onPress={onSecondaryPress}>
-          <Text style={styles.secondaryText}>{secondaryLabel}</Text>
+        <Pressable
+          style={[styles.secondaryButton, isSecondaryDisabled && styles.disabledButton]}
+          onPress={onSecondaryPress}
+          disabled={isSecondaryDisabled}
+        >
+          <Text style={[styles.secondaryText, isSecondaryDisabled && styles.disabledSecondaryText]}>{secondaryLabel}</Text>
         </Pressable>
       ) : null}
 
-      <Pressable style={[styles.primaryButton, secondaryLabel ? styles.primaryWithSecondary : null]} onPress={onPrimaryPress}>
-        <Text style={styles.primaryText}>{primaryLabel}</Text>
+      <Pressable
+        style={[styles.primaryButton, secondaryLabel ? styles.primaryWithSecondary : null, primaryDisabled && styles.disabledPrimaryButton]}
+        onPress={onPrimaryPress}
+        disabled={primaryDisabled}
+      >
+        {isPrimaryLoading ? <ActivityIndicator size="small" color={colors.surface} /> : <Text style={styles.primaryText}>{primaryLabel}</Text>}
       </Pressable>
     </View>
   );
@@ -42,10 +63,16 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     paddingHorizontal: 15
   },
+  disabledButton: {
+    opacity: 0.55
+  },
   secondaryText: {
     color: colors.text,
     fontSize: 14,
     fontWeight: "800"
+  },
+  disabledSecondaryText: {
+    color: colors.muted
   },
   primaryButton: {
     height: 46,
@@ -55,6 +82,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: colors.primary,
     paddingHorizontal: 18
+  },
+  disabledPrimaryButton: {
+    opacity: 0.7
   },
   primaryWithSecondary: {
     flex: 1
