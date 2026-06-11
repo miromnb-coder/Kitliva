@@ -16,7 +16,7 @@ export function HomeCategoryCards() {
     <View style={styles.row}>
       {categories.map((category) => (
         <Pressable key={category.label} style={styles.card}>
-          <Ionicons name={category.icon} size={20} color={colors.text} />
+          <Ionicons name={category.icon} size={19} color={colors.text} />
           <Text style={styles.label} numberOfLines={1}>{category.label}</Text>
         </Pressable>
       ))}
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
-    height: 68,
+    height: 64,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 12,
@@ -41,11 +41,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface
   },
   label: {
-    marginTop: 6,
+    marginTop: 5,
     color: colors.text,
-    fontSize: 9.5,
+    fontSize: 9.2,
     fontWeight: "500",
-    lineHeight: 11.5,
+    lineHeight: 11,
     textAlign: "center"
   }
 });
