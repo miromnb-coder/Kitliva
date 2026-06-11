@@ -1,67 +1,64 @@
 import { Ionicons } from "@expo/vector-icons";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
 
 type FilterItem = {
   label: string;
-  minWidth: number;
+  flex: number;
   icon?: keyof typeof Ionicons.glyphMap;
 };
 
 const filters: FilterItem[] = [
-  { label: "Category", minWidth: 99 },
-  { label: "Price", minWidth: 78 },
-  { label: "Distance", minWidth: 112, icon: "location-outline" },
-  { label: "Condition", minWidth: 111 }
+  { label: "Category", flex: 1.14 },
+  { label: "Price", flex: 0.88 },
+  { label: "Distance", flex: 1.24, icon: "location-outline" },
+  { label: "Condition", flex: 1.18 }
 ];
 
 export function FilterRow() {
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      style={styles.scroll}
-      contentContainerStyle={styles.content}
-    >
+    <View style={styles.row}>
       {filters.map((filter) => (
-        <View key={filter.label} style={[styles.pill, { minWidth: filter.minWidth }]}>
-          {filter.icon ? <Ionicons name={filter.icon} size={15} color={colors.primary} style={styles.leftIcon} /> : null}
-          <Text style={styles.label}>{filter.label}</Text>
-          <Ionicons name="chevron-down" size={14} color={colors.text} style={styles.chevron} />
+        <View key={filter.label} style={[styles.pill, { flex: filter.flex }]}>
+          {filter.icon ? <Ionicons name={filter.icon} size={13} color={colors.primary} style={styles.leftIcon} /> : null}
+          <Text style={styles.label} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.86}>
+            {filter.label}
+          </Text>
+          <Ionicons name="chevron-down" size={12} color={colors.text} style={styles.chevron} />
         </View>
       ))}
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  scroll: {
-    marginBottom: 18
-  },
-  content: {
-    gap: 8
+  row: {
+    flexDirection: "row",
+    columnGap: 6,
+    marginBottom: 16
   },
   pill: {
-    height: 36,
+    height: 33,
+    minWidth: 0,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 18,
+    borderRadius: 16.5,
     borderWidth: 1,
     borderColor: "#D8E2DF",
     backgroundColor: colors.surface,
-    paddingHorizontal: 13
+    paddingHorizontal: 8
   },
   leftIcon: {
-    marginRight: 5
+    marginRight: 4
   },
   label: {
     color: colors.text,
-    fontSize: 12.5,
+    fontSize: 11.2,
     fontWeight: "700"
   },
   chevron: {
-    marginLeft: 6
+    marginLeft: 4
   }
 });
