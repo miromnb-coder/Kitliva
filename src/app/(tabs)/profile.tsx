@@ -9,20 +9,26 @@ import { ProfileSummaryCard } from "@/components/profile/ProfileSummaryCard";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
 import { mockProfile } from "@/data/mockProfile";
-import { shouldShowAuthGate } from "@/lib/authGate";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function ProfileScreen() {
   const router = useRouter();
+  const { isLoading, user, signOut } = useAuth();
 
   useFocusEffect(
     useCallback(() => {
-      if (shouldShowAuthGate()) {
+      if (!isLoading && !user) {
         router.push("/auth/welcome");
       }
-    }, [router])
+    }, [isLoading, router, user])
   );
 
-  if (shouldShowAuthGate()) {
+  async function handleSignOut() {
+    await signOut();
+    router.replace("/auth/welcome");
+  }
+
+  if (isLoading || !user) {
     return (
       <Screen noPadding>
         <View style={styles.screen} />
@@ -41,7 +47,7 @@ export default function ProfileScreen() {
         <ProfileSummaryCard />
         <ProfileStatsCard />
         {mockProfile.sections.map((section) => (
-          <ProfileSection key={section.title} section={section} />
+          <ProfileSection key={section.title} section={section} onSignOut={handleSignOut} />
         ))}
       </ScrollView>
     </Screen>
