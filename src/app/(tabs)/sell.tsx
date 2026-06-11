@@ -11,14 +11,20 @@ import { SellHeader } from "@/components/sell/SellHeader";
 import { SellStep, SellStepIndicator } from "@/components/sell/SellStepIndicator";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
+import { mockSellListing } from "@/data/mockSellListing";
 import { useAuth } from "@/hooks/useAuth";
+import { createListingWithoutImages } from "@/services/listings";
+import { PublishedListing } from "@/types/listing";
 
 type SellFlowStep = SellStep | "success";
 
 export default function SellScreen() {
   const router = useRouter();
-  const { isLoading, user } = useAuth();
+  const { isLoading, profile, user } = useAuth();
   const [currentStep, setCurrentStep] = useState<SellFlowStep>("photos");
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [publishError, setPublishError] = useState<string | null>(null);
+  const [publishedListing, setPublishedListing] = useState<PublishedListing | null>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -29,6 +35,8 @@ export default function SellScreen() {
   );
 
   function goToNextStep() {
+    setPublishError(null);
+
     if (currentStep === "photos") {
       setCurrentStep("details");
       return;
@@ -40,6 +48,8 @@ export default function SellScreen() {
   }
 
   function goToPreviousStep() {
+    setPublishError(null);
+
     if (currentStep === "review") {
       setCurrentStep("details");
       return;
@@ -50,17 +60,50 @@ export default function SellScreen() {
     }
   }
 
-  function publishListing() {
+  async function publishListing() {
+    if (isPublishing) {
+      return;
+    }
+
+    if (!user) {
+      router.push("/auth/welcome");
+      return;
+    }
+
+    setIsPublishing(true);
+    setPublishError(null);
+
+    const result = await createListingWithoutImages({
+      sellerId: user.id,
+      title: mockSellListing.title,
+      description: mockSellListing.description,
+      categoryName: mockSellListing.category,
+      conditionLabel: mockSellListing.condition,
+      priceLabel: mockSellListing.price,
+      locationCity: profile?.location_city ?? mockSellListing.location,
+      locationCountry: profile?.location_country ?? "Ireland"
+    });
+
+    setIsPublishing(false);
+
+    if (!result.success) {
+      setPublishError(result.message);
+      return;
+    }
+
+    setPublishedListing(result.listing);
     setCurrentStep("success");
   }
 
   function createAnotherListing() {
+    setPublishError(null);
+    setPublishedListing(null);
     setCurrentStep("photos");
   }
 
   function renderStepContent() {
     if (currentStep === "success") {
-      return <PublishSuccessStep onCreateAnother={createAnotherListing} />;
+      return <PublishSuccessStep listing={publishedListing} onCreateAnother={createAnotherListing} />;
     }
 
     if (currentStep === "details") {
@@ -68,7 +111,7 @@ export default function SellScreen() {
     }
 
     if (currentStep === "review") {
-      return <ReviewStep />;
+      return <ReviewStep publishError={publishError} />;
     }
 
     return <PhotosStep />;
@@ -98,8 +141,10 @@ export default function SellScreen() {
       <SellFlowActions
         secondaryLabel="Back"
         onSecondaryPress={goToPreviousStep}
-        primaryLabel="Publish listing"
+        primaryLabel={isPublishing ? "Publishing..." : "Publish listing"}
         onPrimaryPress={publishListing}
+        isPrimaryLoading={isPublishing}
+        isSecondaryDisabled={isPublishing}
       />
     );
   }
