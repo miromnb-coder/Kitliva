@@ -14,7 +14,7 @@ export function ListingActionButtons({ onMessage, onOffer }: ListingActionButton
         <Text style={styles.primaryText}>Message seller</Text>
       </Pressable>
       <Pressable style={styles.secondaryButton} onPress={onOffer}>
-        <Text style={styles.secondaryText}>Make an offer</Text>
+        <Text style={styles.secondaryText}>Make offer</Text>
       </Pressable>
     </View>
   );
@@ -22,35 +22,35 @@ export function ListingActionButtons({ onMessage, onOffer }: ListingActionButton
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 18
+    marginTop: 16
   },
   primaryButton: {
-    height: 48,
+    height: 52,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
     borderRadius: 12,
-    backgroundColor: colors.primary
+    backgroundColor: "#171717"
   },
   primaryText: {
     color: colors.surface,
-    fontSize: 14,
-    fontWeight: "800"
+    fontSize: 15,
+    fontWeight: "700"
   },
   secondaryButton: {
-    height: 46,
+    height: 50,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 10,
     overflow: "hidden",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.text,
     backgroundColor: colors.surface
   },
   secondaryText: {
-    color: colors.primary,
-    fontSize: 14,
-    fontWeight: "800"
+    color: colors.text,
+    fontSize: 15,
+    fontWeight: "700"
   }
 });
