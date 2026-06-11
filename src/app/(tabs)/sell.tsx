@@ -11,20 +11,21 @@ import { SellHeader } from "@/components/sell/SellHeader";
 import { SellStep, SellStepIndicator } from "@/components/sell/SellStepIndicator";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
-import { shouldShowAuthGate } from "@/lib/authGate";
+import { useAuth } from "@/hooks/useAuth";
 
 type SellFlowStep = SellStep | "success";
 
 export default function SellScreen() {
   const router = useRouter();
+  const { isLoading, user } = useAuth();
   const [currentStep, setCurrentStep] = useState<SellFlowStep>("photos");
 
   useFocusEffect(
     useCallback(() => {
-      if (shouldShowAuthGate()) {
+      if (!isLoading && !user) {
         router.push("/auth/welcome");
       }
-    }, [router])
+    }, [isLoading, router, user])
   );
 
   function goToNextStep() {
@@ -103,7 +104,7 @@ export default function SellScreen() {
     );
   }
 
-  if (shouldShowAuthGate()) {
+  if (isLoading || !user) {
     return (
       <Screen noPadding>
         <View style={styles.screen} />
