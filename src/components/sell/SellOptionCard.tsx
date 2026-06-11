@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
 
@@ -9,11 +9,12 @@ type SellOptionCardProps = {
   icon: keyof typeof Ionicons.glyphMap;
   selected?: boolean;
   showChevron?: boolean;
+  onPress?: () => void;
 };
 
-export function SellOptionCard({ title, subtitle, icon, selected = false, showChevron = false }: SellOptionCardProps) {
+export function SellOptionCard({ title, subtitle, icon, selected = false, showChevron = false, onPress }: SellOptionCardProps) {
   return (
-    <View style={[styles.card, selected && styles.selectedCard]}>
+    <Pressable style={[styles.card, selected && styles.selectedCard]} onPress={onPress}>
       <View style={styles.iconCircle}>
         <Ionicons name={icon} size={18} color={colors.primary} />
       </View>
@@ -25,7 +26,7 @@ export function SellOptionCard({ title, subtitle, icon, selected = false, showCh
 
       {showChevron ? <Ionicons name="chevron-down" size={16} color={colors.muted} /> : null}
       {selected && !showChevron ? <Ionicons name="checkmark-circle" size={18} color={colors.primary} /> : null}
-    </View>
+    </Pressable>
   );
 }
 
