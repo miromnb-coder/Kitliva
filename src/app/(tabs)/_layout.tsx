@@ -30,6 +30,10 @@ export default function TabsLayout() {
           fontWeight: "600"
         },
         tabBarStyle: {
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: 0,
           height: 82,
           paddingTop: 8,
           paddingBottom: 22,
