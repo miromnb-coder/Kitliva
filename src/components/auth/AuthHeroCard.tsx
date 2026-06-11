@@ -1,7 +1,10 @@
+import { Image } from "expo-image";
 import { StyleSheet, Text, View } from "react-native";
 
 import { AuthTrustRow } from "@/components/auth/AuthTrustRow";
 import { colors } from "@/constants/colors";
+
+const authGearIllustration = require("../../../assets/images/auth-gear-illustration.PNG");
 
 const trustRows = [
   {
@@ -24,6 +27,8 @@ const trustRows = [
 export function AuthHeroCard() {
   return (
     <View style={styles.card}>
+      <Image source={authGearIllustration} style={styles.illustration} contentFit="contain" transition={180} />
+
       <Text style={styles.headline}>Give great gear{`\n`}a second life</Text>
       <Text style={styles.body}>
         Join a trusted marketplace for used bikes, skis, cameras, instruments and outdoor gear.
@@ -49,24 +54,29 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     backgroundColor: colors.surface,
     paddingHorizontal: 18,
-    paddingTop: 18,
-    paddingBottom: 16,
-    marginTop: 22,
-    marginBottom: 18
+    paddingTop: 12,
+    paddingBottom: 15,
+    marginTop: 18,
+    marginBottom: 14
+  },
+  illustration: {
+    width: "100%",
+    height: 108,
+    marginBottom: 10
   },
   headline: {
     color: colors.primary,
-    fontSize: 29,
+    fontSize: 27,
     fontWeight: "800",
     letterSpacing: -0.5,
-    lineHeight: 34
+    lineHeight: 31
   },
   body: {
-    marginTop: 8,
-    marginBottom: 13,
+    marginTop: 7,
+    marginBottom: 11,
     color: "#6F8380",
-    fontSize: 13.5,
+    fontSize: 13,
     fontWeight: "500",
-    lineHeight: 19
+    lineHeight: 18
   }
 });
