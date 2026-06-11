@@ -12,7 +12,7 @@ export function SearchHeader() {
       </View>
 
       <View style={styles.iconButton}>
-        <Ionicons name="options-outline" size={23} color={colors.primary} />
+        <Ionicons name="options-outline" size={21} color={colors.primary} />
       </View>
     </View>
   );
@@ -20,32 +20,32 @@ export function SearchHeader() {
 
 const styles = StyleSheet.create({
   header: {
-    minHeight: 58,
+    minHeight: 52,
     flexDirection: "row",
     alignItems: "flex-start",
     justifyContent: "space-between",
-    marginBottom: 12
+    marginBottom: 10
   },
   title: {
     color: colors.text,
-    fontSize: 27,
+    fontSize: 24,
     fontWeight: "800",
-    letterSpacing: -0.4,
-    lineHeight: 32
+    letterSpacing: -0.35,
+    lineHeight: 29
   },
   subtitle: {
-    marginTop: 1,
+    marginTop: 0,
     color: "#4F7370",
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "500",
-    lineHeight: 18
+    lineHeight: 17
   },
   iconButton: {
-    width: 46,
-    height: 46,
+    width: 42,
+    height: 42,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 23,
+    borderRadius: 21,
     borderWidth: 1,
     borderColor: "#BFD5D1",
     backgroundColor: colors.background
