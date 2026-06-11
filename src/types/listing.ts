@@ -28,6 +28,7 @@ export type ListingDeliveryOption = {
 export type Listing = {
   id: string;
   sellerId?: string;
+  status?: ListingStatus;
   title: string;
   subtitle: string;
   description?: string | null;
@@ -54,6 +55,8 @@ export type Listing = {
   aiSimilarListings: number;
   details: ListingDetailRow[];
   deliveryOptions: ListingDeliveryOption[];
+  viewCount?: number;
+  favoriteCount?: number;
   createdAt?: string | null;
   publishedAt?: string | null;
 };
