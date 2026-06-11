@@ -6,27 +6,27 @@ import { colors } from "@/constants/colors";
 export function HomeSearchBar() {
   return (
     <View style={styles.container}>
-      <Ionicons name="search" size={16} color={colors.muted} />
-      <Text style={styles.placeholder}>Search gear, brands or hobbies</Text>
+      <Ionicons name="search-outline" size={18} color="#8C908A" />
+      <Text style={styles.placeholder}>Search by hobby, brand or item</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: 38,
+    height: 48,
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
-    borderRadius: 19,
+    gap: 11,
+    borderRadius: 15,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
-    paddingHorizontal: 13
+    paddingHorizontal: 16
   },
   placeholder: {
-    color: colors.muted,
-    fontSize: 13,
-    fontWeight: "500"
+    color: "#8C908A",
+    fontSize: 13.5,
+    fontWeight: "400"
   }
 });
