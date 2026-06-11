@@ -10,15 +10,16 @@ import { ListingInfo } from "@/components/listing/ListingInfo";
 import { SellerRow } from "@/components/listing/SellerRow";
 import { colors } from "@/constants/colors";
 import { mockListings } from "@/data/mockListings";
-import { shouldShowAuthGate } from "@/lib/authGate";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function ListingDetailScreen() {
   const router = useRouter();
+  const { user } = useAuth();
   const { id } = useLocalSearchParams<{ id: string }>();
   const listing = mockListings.find((item) => item.id === id);
 
-  function openAuthGate() {
-    if (shouldShowAuthGate()) {
+  function requireAuth() {
+    if (!user) {
       router.push("/auth/welcome");
     }
   }
@@ -35,14 +36,14 @@ export default function ListingDetailScreen() {
   return (
     <View style={styles.screen}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <ListingHero listing={listing} onFavoritePress={openAuthGate} />
+        <ListingHero listing={listing} onFavoritePress={requireAuth} />
 
         <View style={styles.contentCard}>
           <ListingInfo listing={listing} />
           <SellerRow listing={listing} />
           <AiPriceEstimateCard listing={listing} />
           <ListingDetails listing={listing} />
-          <ListingActionButtons onMessage={openAuthGate} onOffer={openAuthGate} />
+          <ListingActionButtons onMessage={requireAuth} onOffer={requireAuth} />
           <DeliveryPickupCard listing={listing} />
           <View style={styles.bottomSpacer} />
         </View>
