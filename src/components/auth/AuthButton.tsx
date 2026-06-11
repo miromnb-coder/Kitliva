@@ -4,22 +4,45 @@ import { colors } from "@/constants/colors";
 
 type AuthButtonProps = {
   label: string;
+  loadingLabel?: string;
   variant?: "primary" | "secondary" | "tertiary";
+  disabled?: boolean;
+  loading?: boolean;
   onPress?: () => void;
 };
 
-export function AuthButton({ label, variant = "primary", onPress }: AuthButtonProps) {
+export function AuthButton({
+  label,
+  loadingLabel,
+  variant = "primary",
+  disabled = false,
+  loading = false,
+  onPress
+}: AuthButtonProps) {
+  const isDisabled = disabled || loading;
+  const buttonLabel = loading && loadingLabel ? loadingLabel : label;
+
   if (variant === "tertiary") {
     return (
-      <Pressable style={styles.tertiaryButton} onPress={onPress}>
-        <Text style={styles.tertiaryText}>{label}</Text>
+      <Pressable style={[styles.tertiaryButton, isDisabled && styles.disabled]} disabled={isDisabled} onPress={onPress}>
+        <Text style={styles.tertiaryText}>{buttonLabel}</Text>
       </Pressable>
     );
   }
 
   return (
-    <Pressable style={[styles.button, variant === "secondary" ? styles.secondaryButton : styles.primaryButton]} onPress={onPress}>
-      <Text style={[styles.buttonText, variant === "secondary" ? styles.secondaryText : styles.primaryText]}>{label}</Text>
+    <Pressable
+      style={[
+        styles.button,
+        variant === "secondary" ? styles.secondaryButton : styles.primaryButton,
+        isDisabled && styles.disabled
+      ]}
+      disabled={isDisabled}
+      onPress={onPress}
+    >
+      <Text style={[styles.buttonText, variant === "secondary" ? styles.secondaryText : styles.primaryText]}>
+        {buttonLabel}
+      </Text>
     </Pressable>
   );
 }
@@ -38,6 +61,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#BFD5D1",
     backgroundColor: colors.surface
+  },
+  disabled: {
+    opacity: 0.72
   },
   buttonText: {
     fontSize: 14.5,
