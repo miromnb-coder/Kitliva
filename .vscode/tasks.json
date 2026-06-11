@@ -1,0 +1,75 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Kitliva: Install Dependencies",
+      "type": "shell",
+      "command": "npm install",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Kitliva: Start Expo",
+      "type": "shell",
+      "command": "npm run start",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Kitliva: Start Expo Web",
+      "type": "shell",
+      "command": "npm run web",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Kitliva: Start Expo Tunnel",
+      "type": "shell",
+      "command": "npm run start:tunnel",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Kitliva: Start Expo Clear Cache",
+      "type": "shell",
+      "command": "npm run start:clear",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Kitliva: Typecheck",
+      "type": "shell",
+      "command": "npm run typecheck",
+      "group": "test",
+      "problemMatcher": "$tsc"
+    },
+    {
+      "label": "Kitliva: Expo Doctor",
+      "type": "shell",
+      "command": "npm run doctor",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Kitliva: Check Dependencies",
+      "type": "shell",
+      "command": "npm run check:deps",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Kitliva: Fix Dependencies",
+      "type": "shell",
+      "command": "npm run fix:deps",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Kitliva: Format Code",
+      "type": "shell",
+      "command": "npm run format",
+      "group": "build",
+      "problemMatcher": []
+    }
+  ]
+}
