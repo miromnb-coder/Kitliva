@@ -12,34 +12,17 @@ type SellFlowActionsProps = {
   isSecondaryDisabled?: boolean;
 };
 
-export function SellFlowActions({
-  primaryLabel,
-  onPrimaryPress,
-  secondaryLabel,
-  onSecondaryPress,
-  isPrimaryLoading = false,
-  isPrimaryDisabled = false,
-  isSecondaryDisabled = false
-}: SellFlowActionsProps) {
+export function SellFlowActions({ primaryLabel, onPrimaryPress, secondaryLabel, onSecondaryPress, isPrimaryLoading = false, isPrimaryDisabled = false, isSecondaryDisabled = false }: SellFlowActionsProps) {
   const primaryDisabled = isPrimaryDisabled || isPrimaryLoading;
 
   return (
     <View style={styles.container}>
       {secondaryLabel && onSecondaryPress ? (
-        <Pressable
-          style={[styles.secondaryButton, isSecondaryDisabled && styles.disabledButton]}
-          onPress={onSecondaryPress}
-          disabled={isSecondaryDisabled}
-        >
+        <Pressable style={[styles.secondaryButton, isSecondaryDisabled && styles.disabledButton]} onPress={onSecondaryPress} disabled={isSecondaryDisabled}>
           <Text style={[styles.secondaryText, isSecondaryDisabled && styles.disabledSecondaryText]}>{secondaryLabel}</Text>
         </Pressable>
       ) : null}
-
-      <Pressable
-        style={[styles.primaryButton, secondaryLabel ? styles.primaryWithSecondary : null, primaryDisabled && styles.disabledPrimaryButton]}
-        onPress={onPrimaryPress}
-        disabled={primaryDisabled}
-      >
+      <Pressable style={[styles.primaryButton, secondaryLabel ? styles.primaryWithSecondary : null, primaryDisabled && styles.disabledPrimaryButton]} onPress={onPrimaryPress} disabled={primaryDisabled}>
         {isPrimaryLoading ? <ActivityIndicator size="small" color={colors.surface} /> : <Text style={styles.primaryText}>{primaryLabel}</Text>}
       </Pressable>
     </View>
@@ -47,51 +30,13 @@ export function SellFlowActions({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10
-  },
-  secondaryButton: {
-    height: 46,
-    minWidth: 86,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    paddingHorizontal: 15
-  },
-  disabledButton: {
-    opacity: 0.55
-  },
-  secondaryText: {
-    color: colors.text,
-    fontSize: 14,
-    fontWeight: "800"
-  },
-  disabledSecondaryText: {
-    color: colors.muted
-  },
-  primaryButton: {
-    height: 46,
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 12,
-    backgroundColor: colors.primary,
-    paddingHorizontal: 18
-  },
-  disabledPrimaryButton: {
-    opacity: 0.7
-  },
-  primaryWithSecondary: {
-    flex: 1
-  },
-  primaryText: {
-    color: colors.surface,
-    fontSize: 14,
-    fontWeight: "800"
-  }
+  container: { flexDirection: "row", alignItems: "center", gap: 10, marginTop: 14 },
+  secondaryButton: { height: 50, minWidth: 88, alignItems: "center", justifyContent: "center", borderRadius: 13, borderWidth: 1, borderColor: colors.text, backgroundColor: colors.surface, paddingHorizontal: 15 },
+  disabledButton: { opacity: 0.55 },
+  secondaryText: { color: colors.text, fontSize: 15, fontWeight: "600" },
+  disabledSecondaryText: { color: colors.muted },
+  primaryButton: { height: 58, flex: 1, alignItems: "center", justifyContent: "center", borderRadius: 13, backgroundColor: "#171717", paddingHorizontal: 18 },
+  disabledPrimaryButton: { opacity: 0.7 },
+  primaryWithSecondary: { flex: 1 },
+  primaryText: { color: colors.surface, fontSize: 15, fontWeight: "600" }
 });
