@@ -34,9 +34,9 @@ export default function TabsLayout() {
           left: 0,
           right: 0,
           bottom: 0,
-          height: 82,
-          paddingTop: 8,
-          paddingBottom: 22,
+          height: 78,
+          paddingTop: 7,
+          paddingBottom: 20,
           backgroundColor: "rgba(255,255,255,0.98)",
           borderTopColor: colors.border
         }
@@ -60,7 +60,7 @@ export default function TabsLayout() {
         name="sell"
         options={{
           title: "Sell",
-          tabBarIcon: ({ color }) => <Ionicons name="add-circle-outline" size={28} color={color} />
+          tabBarIcon: ({ color }) => <Ionicons name="add-circle-outline" size={27} color={color} />
         }}
       />
       <Tabs.Screen
