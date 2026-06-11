@@ -27,12 +27,12 @@ export function ProductCard({ listing, onFavoritePress }: ProductCardProps) {
           <Image source={{ uri: listing.imageUrl }} style={styles.image} contentFit="contain" transition={180} />
         ) : (
           <View style={styles.placeholder}>
-            <Ionicons name="image-outline" size={20} color={colors.primary} />
+            <Ionicons name="image-outline" size={18} color={colors.primary} />
           </View>
         )}
         {onFavoritePress ? (
           <Pressable style={styles.favoriteButton} onPress={handleFavoritePress}>
-            <Ionicons name={listing.isFavorite ? "heart" : "heart-outline"} size={18} color={colors.text} />
+            <Ionicons name={listing.isFavorite ? "heart" : "heart-outline"} size={17} color={colors.text} />
           </Pressable>
         ) : null}
       </View>
@@ -46,7 +46,7 @@ export function ProductCard({ listing, onFavoritePress }: ProductCardProps) {
           <View style={styles.smallBadge}><Text style={styles.smallBadgeText}>Fair</Text></View>
         </View>
         <View style={styles.verifiedRow}>
-          <Ionicons name="shield-checkmark" size={9} color={colors.primary} />
+          <Ionicons name="shield-checkmark" size={8.5} color={colors.primary} />
           <Text style={styles.verifiedText}>{listing.sellerTrustLabel ?? "Verified profile"}</Text>
         </View>
       </View>
@@ -57,7 +57,7 @@ export function ProductCard({ listing, onFavoritePress }: ProductCardProps) {
 const styles = StyleSheet.create({
   card: {
     width: "48.5%",
-    minHeight: 188,
+    minHeight: 178,
     overflow: "hidden",
     borderRadius: 13,
     borderWidth: 1,
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface
   },
   imageWrap: {
-    height: 78,
+    height: 74,
     backgroundColor: colors.background
   },
   image: {
@@ -81,37 +81,37 @@ const styles = StyleSheet.create({
   },
   favoriteButton: {
     position: "absolute",
-    top: 8,
-    right: 8,
-    width: 26,
-    height: 26,
+    top: 7,
+    right: 7,
+    width: 25,
+    height: 25,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 13,
+    borderRadius: 12.5,
     backgroundColor: "rgba(255,255,255,0.86)"
   },
   content: {
     paddingHorizontal: 8,
     paddingTop: 7,
-    paddingBottom: 8
+    paddingBottom: 7
   },
   title: {
     color: colors.text,
-    fontSize: 11,
+    fontSize: 10.8,
     fontWeight: "700",
-    lineHeight: 14
+    lineHeight: 13.5
   },
   subtitle: {
     marginTop: 1,
     color: colors.muted,
-    fontSize: 10,
+    fontSize: 9.8,
     fontWeight: "400",
     lineHeight: 12
   },
   price: {
     marginTop: 3,
     color: colors.text,
-    fontSize: 13,
+    fontSize: 12.8,
     fontWeight: "700",
     lineHeight: 16
   },
@@ -121,9 +121,9 @@ const styles = StyleSheet.create({
     marginTop: 5
   },
   smallBadge: {
-    height: 18,
+    height: 17,
     justifyContent: "center",
-    borderRadius: 9,
+    borderRadius: 8.5,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: "#F7F2EB",
@@ -131,18 +131,18 @@ const styles = StyleSheet.create({
   },
   smallBadgeText: {
     color: "#5F655F",
-    fontSize: 7.8,
+    fontSize: 7.5,
     fontWeight: "500"
   },
   verifiedRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 5
+    marginTop: 4
   },
   verifiedText: {
     marginLeft: 4,
     color: "#4F5752",
-    fontSize: 8.8,
+    fontSize: 8.5,
     fontWeight: "500"
   }
 });
