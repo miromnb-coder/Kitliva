@@ -26,10 +26,10 @@ export function AuthButton({ label, variant = "primary", onPress }: AuthButtonPr
 
 const styles = StyleSheet.create({
   button: {
-    height: 48,
+    height: 44,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 13
+    borderRadius: 12
   },
   primaryButton: {
     backgroundColor: colors.primary
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface
   },
   buttonText: {
-    fontSize: 15,
+    fontSize: 14.5,
     fontWeight: "800"
   },
   primaryText: {
@@ -50,13 +50,13 @@ const styles = StyleSheet.create({
     color: colors.text
   },
   tertiaryButton: {
-    height: 28,
+    height: 26,
     alignItems: "center",
     justifyContent: "center"
   },
   tertiaryText: {
     color: colors.text,
-    fontSize: 14,
+    fontSize: 13.5,
     fontWeight: "800"
   }
 });
