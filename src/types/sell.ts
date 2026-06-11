@@ -20,7 +20,7 @@ export type SellFormDraft = {
 export const emptySellFormDraft: SellFormDraft = {
   title: "",
   categoryName: "",
-  conditionLabel: "",
+  conditionLabel: "Good",
   priceLabel: "",
   description: "",
   locationCity: "",
