@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { useCallback, useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { useFocusEffect, useRouter } from "expo-router";
 
 import { DetailsStep } from "@/components/sell/DetailsStep";
 import { PhotosStep } from "@/components/sell/PhotosStep";
@@ -10,11 +11,21 @@ import { SellHeader } from "@/components/sell/SellHeader";
 import { SellStep, SellStepIndicator } from "@/components/sell/SellStepIndicator";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
+import { shouldShowAuthGate } from "@/lib/authGate";
 
 type SellFlowStep = SellStep | "success";
 
 export default function SellScreen() {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState<SellFlowStep>("photos");
+
+  useFocusEffect(
+    useCallback(() => {
+      if (shouldShowAuthGate()) {
+        router.push("/auth/welcome");
+      }
+    }, [router])
+  );
 
   function goToNextStep() {
     if (currentStep === "photos") {
@@ -89,6 +100,14 @@ export default function SellScreen() {
         primaryLabel="Publish listing"
         onPrimaryPress={publishListing}
       />
+    );
+  }
+
+  if (shouldShowAuthGate()) {
+    return (
+      <Screen noPadding>
+        <View style={styles.screen} />
+      </Screen>
     );
   }
 
