@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 16
+    marginBottom: 12
   },
   line: {
     flex: 1,
@@ -24,9 +24,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.border
   },
   text: {
-    marginHorizontal: 14,
+    marginHorizontal: 13,
     color: colors.muted,
-    fontSize: 13,
+    fontSize: 12.5,
     fontWeight: "500"
   }
 });
