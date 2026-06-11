@@ -1,4 +1,4 @@
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { AiPriceEstimateCard } from "@/components/listing/AiPriceEstimateCard";
@@ -10,10 +10,18 @@ import { ListingInfo } from "@/components/listing/ListingInfo";
 import { SellerRow } from "@/components/listing/SellerRow";
 import { colors } from "@/constants/colors";
 import { mockListings } from "@/data/mockListings";
+import { shouldShowAuthGate } from "@/lib/authGate";
 
 export default function ListingDetailScreen() {
+  const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const listing = mockListings.find((item) => item.id === id);
+
+  function openAuthGate() {
+    if (shouldShowAuthGate()) {
+      router.push("/auth/welcome");
+    }
+  }
 
   if (!listing) {
     return (
@@ -27,14 +35,14 @@ export default function ListingDetailScreen() {
   return (
     <View style={styles.screen}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <ListingHero listing={listing} />
+        <ListingHero listing={listing} onFavoritePress={openAuthGate} />
 
         <View style={styles.contentCard}>
           <ListingInfo listing={listing} />
           <SellerRow listing={listing} />
           <AiPriceEstimateCard listing={listing} />
           <ListingDetails listing={listing} />
-          <ListingActionButtons />
+          <ListingActionButtons onMessage={openAuthGate} onOffer={openAuthGate} />
           <DeliveryPickupCard listing={listing} />
           <View style={styles.bottomSpacer} />
         </View>
