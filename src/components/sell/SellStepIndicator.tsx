@@ -29,7 +29,7 @@ export function SellStepIndicator({ currentStep }: { currentStep: SellStep }) {
             <View style={styles.stepContent}>
               <View style={[styles.circle, isActive || isCompleted ? styles.activeCircle : styles.inactiveCircle]}>
                 {isCompleted ? (
-                  <Ionicons name="checkmark" size={12} color={colors.surface} />
+                  <Ionicons name="checkmark" size={13} color={colors.surface} />
                 ) : (
                   <Text style={[styles.number, isActive ? styles.activeNumber : styles.inactiveNumber]}>{index + 1}</Text>
                 )}
@@ -46,39 +46,38 @@ export function SellStepIndicator({ currentStep }: { currentStep: SellStep }) {
 
 const styles = StyleSheet.create({
   container: {
-    height: 24,
-    marginTop: 10,
-    marginBottom: 18,
+    height: 54,
+    marginTop: 22,
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "flex-start"
   },
   stepWrap: {
     flex: 1,
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "flex-start"
   },
   stepContent: {
-    flexDirection: "row",
+    width: 72,
     alignItems: "center"
   },
   circle: {
-    width: 20,
-    height: 20,
+    width: 34,
+    height: 34,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 10
+    borderRadius: 17
   },
   activeCircle: {
-    backgroundColor: colors.primary
+    backgroundColor: "#171717"
   },
   inactiveCircle: {
     borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface
+    borderColor: "#D8D1C7",
+    backgroundColor: colors.background
   },
   number: {
-    fontSize: 10,
-    fontWeight: "800"
+    fontSize: 13,
+    fontWeight: "700"
   },
   activeNumber: {
     color: colors.surface
@@ -87,9 +86,10 @@ const styles = StyleSheet.create({
     color: colors.muted
   },
   label: {
-    marginLeft: 5,
+    marginTop: 7,
     fontSize: 11.5,
-    fontWeight: "700"
+    fontWeight: "500",
+    lineHeight: 14
   },
   activeLabel: {
     color: colors.text
@@ -100,10 +100,11 @@ const styles = StyleSheet.create({
   line: {
     flex: 1,
     height: 1,
-    marginHorizontal: 7,
-    backgroundColor: colors.border
+    marginTop: 17,
+    marginHorizontal: 8,
+    backgroundColor: "#D8D1C7"
   },
   activeLine: {
-    backgroundColor: colors.primary
+    backgroundColor: "#171717"
   }
 });
