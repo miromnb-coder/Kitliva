@@ -1,13 +1,16 @@
 import { Image } from "expo-image";
-import { StyleSheet, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
 import { Listing } from "@/types/listing";
 import { formatPrice } from "@/utils/formatPrice";
 
 export function ProductCard({ listing }: { listing: Listing }) {
+  const router = useRouter();
+
   return (
-    <View style={styles.card}>
+    <Pressable style={styles.card} onPress={() => router.push(`/listing/${listing.id}`)}>
       <View style={styles.imageWrap}>
         <Image source={{ uri: listing.imageUrl }} style={styles.image} contentFit="cover" transition={180} />
         {listing.isGreatDeal ? (
@@ -31,7 +34,7 @@ export function ProductCard({ listing }: { listing: Listing }) {
           ) : null}
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 }
 
