@@ -21,24 +21,24 @@ export function AiConditionCheck() {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 18
+    marginBottom: 15
   },
   label: {
-    marginBottom: 8,
+    marginBottom: 7,
     color: colors.primary,
-    fontSize: 13,
+    fontSize: 12.5,
     fontWeight: "800"
   },
   card: {
-    minHeight: 72,
+    minHeight: 64,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    borderRadius: 16,
+    borderRadius: 15,
     borderWidth: 1,
     borderColor: "#BFE9DC",
     backgroundColor: colors.mint,
-    padding: 14
+    padding: 12
   },
   textWrap: {
     flex: 1,
@@ -46,27 +46,27 @@ const styles = StyleSheet.create({
   },
   title: {
     color: colors.text,
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "800"
   },
   sub: {
-    marginTop: 3,
+    marginTop: 2,
     color: "#51706E",
-    fontSize: 11,
+    fontSize: 10.5,
     fontWeight: "500"
   },
   scoreCircle: {
-    width: 44,
-    height: 44,
+    width: 40,
+    height: 40,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 22,
+    borderRadius: 20,
     borderWidth: 4,
     borderColor: colors.primary
   },
   scoreText: {
     color: colors.primary,
-    fontSize: 12,
+    fontSize: 11.5,
     fontWeight: "800"
   }
 });
