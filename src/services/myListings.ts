@@ -17,6 +17,17 @@ const conditionByLabel: Record<string, ListingCondition> = {
   "poor condition": "poor"
 };
 
+function mapOwnerListing(row: any): Listing {
+  const listing = mapListingRowToListing(row);
+
+  return {
+    ...listing,
+    status: row.status,
+    viewCount: row.view_count ?? 0,
+    favoriteCount: row.favorite_count ?? 0
+  };
+}
+
 function parsePriceAmount(value: string) {
   const parsed = Number.parseFloat(value.replace(/\s/g, "").replace(",", ".").replace(/[^0-9.]/g, ""));
   return Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed) : null;
@@ -38,7 +49,7 @@ export async function getMyListings(userId: string, status: ListingStatus): Prom
     throw error ?? new Error("Could not load your listings.");
   }
 
-  return (data as any[]).map((row) => mapListingRowToListing(row));
+  return (data as any[]).map(mapOwnerListing);
 }
 
 export async function getOwnListingById(userId: string, listingId: string): Promise<Listing | null> {
@@ -53,7 +64,7 @@ export async function getOwnListingById(userId: string, listingId: string): Prom
     throw error;
   }
 
-  return data ? mapListingRowToListing(data as any) : null;
+  return data ? mapOwnerListing(data as any) : null;
 }
 
 export function listingToSellForm(listing: Listing): SellFormDraft {
