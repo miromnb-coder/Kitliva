@@ -13,13 +13,29 @@ const details = [
   { label: "Delivery", value: mockSellListing.delivery }
 ];
 
-export function ReviewStep() {
+type ReviewStepProps = {
+  publishError?: string | null;
+};
+
+export function ReviewStep({ publishError }: ReviewStepProps) {
   return (
     <>
       <View style={styles.headerBlock}>
         <Text style={styles.screenTitle}>Review your listing</Text>
         <Text style={styles.screenSubtitle}>Make sure everything looks right before publishing.</Text>
       </View>
+
+      {publishError ? (
+        <View style={styles.errorCard}>
+          <View style={styles.errorIconCircle}>
+            <Ionicons name="alert-circle-outline" size={18} color={colors.primary} />
+          </View>
+          <View style={styles.errorContent}>
+            <Text style={styles.errorTitle}>Couldn’t publish listing</Text>
+            <Text style={styles.errorText}>{publishError}</Text>
+          </View>
+        </View>
+      ) : null}
 
       <View style={styles.previewCard}>
         <Image source={{ uri: mockSellListing.photos[0] }} style={styles.previewImage} contentFit="cover" transition={180} />
@@ -77,6 +93,41 @@ const styles = StyleSheet.create({
     color: colors.muted,
     fontSize: 12.5,
     fontWeight: "500"
+  },
+  errorCard: {
+    minHeight: 68,
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    padding: 12,
+    marginBottom: 15
+  },
+  errorIconCircle: {
+    width: 36,
+    height: 36,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 18,
+    backgroundColor: colors.mint,
+    marginRight: 11
+  },
+  errorContent: {
+    flex: 1
+  },
+  errorTitle: {
+    color: colors.text,
+    fontSize: 12.5,
+    fontWeight: "800"
+  },
+  errorText: {
+    marginTop: 3,
+    color: colors.muted,
+    fontSize: 12,
+    fontWeight: "500",
+    lineHeight: 16
   },
   previewCard: {
     minHeight: 114,
