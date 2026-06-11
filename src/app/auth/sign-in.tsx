@@ -46,48 +46,48 @@ export default function SignInScreen() {
 
 const styles = StyleSheet.create({
   headerBlock: {
-    marginTop: 42
+    marginTop: 28
   },
   title: {
     color: colors.primary,
-    fontSize: 38,
+    fontSize: 34,
     fontWeight: "800",
     letterSpacing: -0.7,
-    lineHeight: 44
+    lineHeight: 40
   },
   subtitle: {
-    marginTop: 8,
+    marginTop: 6,
     color: "#6F8380",
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "500",
-    lineHeight: 22
+    lineHeight: 20
   },
   formCard: {
     borderRadius: 18,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
-    padding: 16,
-    marginTop: 36,
-    marginBottom: 24
+    padding: 14,
+    marginTop: 24,
+    marginBottom: 16
   },
   forgotText: {
     color: colors.primary,
-    fontSize: 13,
+    fontSize: 12.5,
     fontWeight: "700",
     textAlign: "right",
-    marginTop: -7
+    marginTop: -4
   },
   primaryWrap: {
-    marginBottom: 24
+    marginBottom: 18
   },
   bottomLink: {
     alignItems: "center",
-    marginTop: 20
+    marginTop: 14
   },
   bottomText: {
     color: colors.muted,
-    fontSize: 14,
+    fontSize: 13.5,
     fontWeight: "500"
   },
   linkText: {
