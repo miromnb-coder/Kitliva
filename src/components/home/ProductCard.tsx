@@ -2,7 +2,6 @@ import { Image } from "expo-image";
 import { StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
-import { spacing } from "@/constants/spacing";
 import { Listing } from "@/types/listing";
 import { formatPrice } from "@/utils/formatPrice";
 
@@ -39,15 +38,15 @@ export function ProductCard({ listing }: { listing: Listing }) {
 const styles = StyleSheet.create({
   card: {
     width: "48.5%",
-    height: 176,
+    height: 150,
     overflow: "hidden",
-    borderRadius: 14,
+    borderRadius: 13,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface
   },
   imageWrap: {
-    height: 90,
+    height: 78,
     backgroundColor: "#EDF2F0"
   },
   image: {
@@ -56,49 +55,49 @@ const styles = StyleSheet.create({
   },
   badge: {
     position: "absolute",
-    top: 8,
-    left: 8,
-    height: 20,
+    top: 7,
+    left: 7,
+    height: 19,
     justifyContent: "center",
-    borderRadius: 10,
+    borderRadius: 9.5,
     backgroundColor: colors.primary,
-    paddingHorizontal: 8
+    paddingHorizontal: 7
   },
   badgeText: {
     color: colors.surface,
-    fontSize: 10,
+    fontSize: 9.5,
     fontWeight: "700"
   },
   content: {
-    paddingHorizontal: 10,
-    paddingTop: 8,
-    paddingBottom: 10
+    paddingHorizontal: 9,
+    paddingTop: 7,
+    paddingBottom: 8
   },
   title: {
     color: colors.text,
-    fontSize: 12,
+    fontSize: 11.5,
     fontWeight: "800"
   },
   subtitle: {
-    marginTop: 2,
+    marginTop: 1,
     color: colors.muted,
-    fontSize: 11,
+    fontSize: 10.5,
     fontWeight: "500"
   },
   priceRow: {
-    marginTop: spacing.sm,
+    marginTop: 5,
     flexDirection: "row",
     alignItems: "baseline"
   },
   price: {
     color: colors.text,
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "800"
   },
   originalPrice: {
     marginLeft: 5,
     color: "#A3ADAD",
-    fontSize: 11,
+    fontSize: 10.5,
     fontWeight: "600",
     textDecorationLine: "line-through"
   }
