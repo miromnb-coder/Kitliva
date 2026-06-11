@@ -19,16 +19,16 @@ export function AiPriceRecommendation() {
 
 const styles = StyleSheet.create({
   card: {
-    minHeight: 76,
-    marginBottom: 18,
+    minHeight: 68,
+    marginBottom: 15,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    borderRadius: 16,
+    borderRadius: 15,
     borderWidth: 1,
     borderColor: "#BFE9DC",
     backgroundColor: colors.mint,
-    padding: 14
+    padding: 12
   },
   textWrap: {
     flex: 1,
@@ -36,25 +36,25 @@ const styles = StyleSheet.create({
   },
   label: {
     color: colors.primary,
-    fontSize: 11,
+    fontSize: 10.5,
     fontWeight: "700"
   },
   price: {
-    marginTop: 4,
+    marginTop: 3,
     color: colors.text,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "800"
   },
   sub: {
-    marginTop: 2,
+    marginTop: 1,
     color: "#51706E",
-    fontSize: 11,
+    fontSize: 10.5,
     fontWeight: "500"
   },
   badge: {
-    height: 24,
+    height: 23,
     justifyContent: "center",
-    borderRadius: 12,
+    borderRadius: 11.5,
     borderWidth: 1,
     borderColor: "#BFE9DC",
     backgroundColor: colors.surface,
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     color: colors.primary,
-    fontSize: 10.5,
+    fontSize: 10,
     fontWeight: "800"
   }
 });
