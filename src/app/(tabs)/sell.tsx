@@ -42,10 +42,10 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 18,
-    paddingTop: 8,
-    paddingBottom: 24
+    paddingTop: 6,
+    paddingBottom: 22
   },
   bottomSpacer: {
-    height: 28
+    height: 22
   }
 });
