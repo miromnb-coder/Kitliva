@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 18,
     paddingTop: 8,
-    paddingBottom: 0
+    paddingBottom: 118
   },
   searchWrap: {
     marginTop: 10
