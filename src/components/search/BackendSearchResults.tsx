@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 
-import { MarketplaceStateCard } from "@/components/marketplace/MarketplaceStateCard";
-import { ProductGridSkeleton } from "@/components/marketplace/ProductGridSkeleton";
 import { ExploreProductGrid } from "@/components/search/ExploreProductGrid";
+import { ExploreProductGridSkeleton } from "@/components/search/ExploreProductGridSkeleton";
+import { ExploreStateCard } from "@/components/search/ExploreStateCard";
 import { useAuth } from "@/hooks/useAuth";
 import { getFavoriteListingIds, setListingFavorite } from "@/services/favorites";
 import { searchListings } from "@/services/listings";
@@ -27,6 +27,7 @@ export function BackendSearchResults({ query, filters, onCountChange }: BackendS
   const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
     let isMounted = true;
@@ -67,7 +68,7 @@ export function BackendSearchResults({ query, filters, onCountChange }: BackendS
       isMounted = false;
       clearTimeout(timeout);
     };
-  }, [filters, onCountChange, query, user]);
+  }, [filters, onCountChange, query, retryKey, user]);
 
   async function handleFavoritePress(listing: Listing) {
     if (!user) {
@@ -85,14 +86,14 @@ export function BackendSearchResults({ query, filters, onCountChange }: BackendS
     }
   }
 
-  if (isLoading) return <ProductGridSkeleton />;
+  if (isLoading) return <ExploreProductGridSkeleton />;
 
   if (hasError) {
-    return <MarketplaceStateCard icon="refresh-outline" title="Could not load gear" message="Please try again in a moment." />;
+    return <ExploreStateCard icon="refresh-outline" title="Could not load gear" message="Please try again in a moment." actionLabel="Retry" onActionPress={() => setRetryKey((current) => current + 1)} />;
   }
 
   if (listings.length === 0) {
-    return <MarketplaceStateCard icon="search-outline" title="No gear found" message="Try changing your filters or search terms." />;
+    return <ExploreStateCard icon="search-outline" title="No gear found" message="Try changing your filters or search terms." />;
   }
 
   return <ExploreProductGrid listings={listings} onFavoritePress={handleFavoritePress} />;
