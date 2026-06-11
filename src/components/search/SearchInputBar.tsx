@@ -1,18 +1,32 @@
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, TextInput, View } from "react-native";
 
 import { colors } from "@/constants/colors";
 
-export function SearchInputBar() {
+type SearchInputBarProps = {
+  value: string;
+  onChangeText: (value: string) => void;
+  onClear?: () => void;
+};
+
+export function SearchInputBar({ value, onChangeText, onClear }: SearchInputBarProps) {
   return (
-    <View style={styles.searchBar}>
+    <View style={[styles.searchBar, value ? styles.activeSearchBar : null]}>
       <Ionicons name="search-outline" size={17} color="#6E8080" style={styles.icon} />
       <TextInput
         style={styles.input}
         placeholder="Search gear, brands or hobbies"
         placeholderTextColor={colors.muted}
-        editable={false}
+        value={value}
+        onChangeText={onChangeText}
+        autoCapitalize="none"
+        autoCorrect={false}
       />
+      {value ? (
+        <Pressable style={styles.clearButton} onPress={onClear}>
+          <Ionicons name="close" size={15} color={colors.muted} />
+        </Pressable>
+      ) : null}
     </View>
   );
 }
@@ -29,6 +43,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 13,
     marginBottom: 14
   },
+  activeSearchBar: {
+    borderColor: colors.primary
+  },
   icon: {
     marginRight: 8
   },
@@ -38,5 +55,12 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontSize: 13,
     fontWeight: "500"
+  },
+  clearButton: {
+    width: 28,
+    height: 28,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 14
   }
 });
