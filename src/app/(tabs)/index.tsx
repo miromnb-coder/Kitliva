@@ -1,36 +1,30 @@
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { CategoryGrid } from "@/components/home/CategoryGrid";
+import { HomeCategoryCards } from "@/components/home/HomeCategoryCards";
+import { HomeCuratedHeader } from "@/components/home/HomeCuratedHeader";
 import { HomeHeader } from "@/components/home/HomeHeader";
+import { HomeHeroCard } from "@/components/home/HomeHeroCard";
 import { HomeListingFeed } from "@/components/home/HomeListingFeed";
 import { HomeSearchBar } from "@/components/home/HomeSearchBar";
-import { SectionHeader } from "@/components/home/SectionHeader";
+import { HomeTrustRow } from "@/components/home/HomeTrustRow";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
-import { spacing } from "@/constants/spacing";
+
+const serifFont = Platform.select({ ios: "Georgia", android: "serif", default: undefined });
 
 export default function HomeScreen() {
   return (
     <Screen noPadding>
-      <ScrollView
-        style={styles.screen}
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <HomeHeader />
-
+        <Text style={styles.headline}>Find premium used gear</Text>
         <View style={styles.searchWrap}>
           <HomeSearchBar />
         </View>
-
-        <View style={styles.categoriesWrap}>
-          <CategoryGrid />
-        </View>
-
-        <View style={styles.sectionWrap}>
-          <SectionHeader title="Picked for you" />
-        </View>
-
+        <HomeTrustRow />
+        <HomeHeroCard />
+        <HomeCategoryCards />
+        <HomeCuratedHeader />
         <HomeListingFeed />
       </ScrollView>
     </Screen>
@@ -43,18 +37,20 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background
   },
   content: {
-    paddingHorizontal: 18,
-    paddingTop: 8,
-    paddingBottom: 118
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingBottom: 108
+  },
+  headline: {
+    marginTop: 22,
+    color: colors.text,
+    fontFamily: serifFont,
+    fontSize: 34,
+    fontWeight: "500",
+    letterSpacing: -0.7,
+    lineHeight: 40
   },
   searchWrap: {
-    marginTop: 10
-  },
-  categoriesWrap: {
-    marginTop: 16
-  },
-  sectionWrap: {
-    marginTop: spacing.xs,
-    marginBottom: 8
+    marginTop: 18
   }
 });
