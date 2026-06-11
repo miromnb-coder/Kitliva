@@ -11,6 +11,7 @@ import { ListingInfo } from "@/components/listing/ListingInfo";
 import { SellerRow } from "@/components/listing/SellerRow";
 import { colors } from "@/constants/colors";
 import { useAuth } from "@/hooks/useAuth";
+import { getOrCreateConversation } from "@/services/conversations";
 import { getFavoriteListingIds, setListingFavorite } from "@/services/favorites";
 import { getListingById } from "@/services/listings";
 import { Listing } from "@/types/listing";
@@ -22,6 +23,7 @@ export default function ListingDetailScreen() {
   const [listing, setListing] = useState<Listing | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
+  const [actionMessage, setActionMessage] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -78,6 +80,31 @@ export default function ListingDetailScreen() {
     }
   }
 
+  async function messageSeller() {
+    if (!listing || !requireAuth() || !user) {
+      return;
+    }
+
+    if (!listing.sellerId) {
+      setActionMessage("Could not open chat for this listing.");
+      return;
+    }
+
+    const result = await getOrCreateConversation({ listingId: listing.id, buyerId: user.id, sellerId: listing.sellerId });
+
+    if (result.ownListing) {
+      setActionMessage("This is your listing. Manage it from My listings.");
+      return;
+    }
+
+    if (!result.success || !result.conversationId) {
+      setActionMessage("Could not open chat. Try again.");
+      return;
+    }
+
+    router.push(`/conversation/${result.conversationId}`);
+  }
+
   if (isLoading) {
     return <View style={styles.loadingScreen} />;
   }
@@ -101,7 +128,8 @@ export default function ListingDetailScreen() {
           <SellerRow listing={listing} />
           <AiPriceEstimateCard listing={listing} />
           <ListingDetails listing={listing} />
-          <ListingActionButtons onMessage={requireAuth} onOffer={requireAuth} />
+          {actionMessage ? <View style={styles.actionMessageCard}><Text style={styles.actionMessageText}>{actionMessage}</Text></View> : null}
+          <ListingActionButtons onMessage={messageSeller} onOffer={requireAuth} />
           <DeliveryPickupCard listing={listing} />
           <View style={styles.bottomSpacer} />
         </View>
@@ -127,6 +155,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingTop: 18,
     paddingBottom: 24
+  },
+  actionMessageCard: {
+    borderRadius: 13,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    padding: 12,
+    marginTop: 14
+  },
+  actionMessageText: {
+    color: colors.primary,
+    fontSize: 12.5,
+    fontWeight: "700"
   },
   bottomSpacer: {
     height: 24
