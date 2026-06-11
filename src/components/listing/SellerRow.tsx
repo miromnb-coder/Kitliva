@@ -12,6 +12,7 @@ type SellerRowProps = {
 
 export function SellerRow({ listing }: SellerRowProps) {
   const router = useRouter();
+  const meta = listing.sellerRating > 0 ? `${listing.sellerRating.toFixed(1)} (${listing.sellerReviewCount}) · ${listing.sellerLocation}` : `${listing.sellerTrustLabel ?? "New member"} · ${listing.sellerLocation}`;
 
   return (
     <Pressable style={styles.container} onPress={() => listing.sellerId && router.push(`/seller/${listing.sellerId}`)}>
@@ -25,12 +26,15 @@ export function SellerRow({ listing }: SellerRowProps) {
 
       <View style={styles.textWrap}>
         <View style={styles.nameRow}>
-          <Text style={styles.name}>{listing.sellerName}</Text>
-          <View style={[styles.trustBadge, !listing.sellerIsVerified && !listing.sellerIsTrusted && styles.mutedBadge]}>
-            <Text style={[styles.trustText, !listing.sellerIsVerified && !listing.sellerIsTrusted && styles.mutedTrustText]}>{listing.sellerTrustLabel ?? "New member"}</Text>
-          </View>
+          <Text style={styles.name} numberOfLines={1}>{listing.sellerName}</Text>
+          <Text style={styles.dot}>·</Text>
+          <Ionicons name="shield-checkmark" size={13} color={colors.primary} />
+          <Text style={styles.trustText} numberOfLines={1}>{listing.sellerTrustLabel ?? "New member"}</Text>
         </View>
-        <Text style={styles.meta}>{listing.sellerLocation}</Text>
+        <View style={styles.metaRow}>
+          {listing.sellerRating > 0 ? <Ionicons name="star" size={12} color="#D8A21B" style={styles.starIcon} /> : null}
+          <Text style={styles.meta} numberOfLines={1}>{meta}</Text>
+        </View>
       </View>
 
       <Ionicons name="chevron-forward" size={18} color={colors.muted} />
@@ -40,73 +44,75 @@ export function SellerRow({ listing }: SellerRowProps) {
 
 const styles = StyleSheet.create({
   container: {
-    minHeight: 64,
-    marginTop: 14,
+    height: 72,
+    marginTop: 16,
     flexDirection: "row",
     alignItems: "center",
-    borderRadius: 15,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
-    padding: 12
+    paddingHorizontal: 12
   },
   avatar: {
-    width: 42,
-    height: 42,
+    width: 48,
+    height: 48,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 21,
+    borderRadius: 24,
     backgroundColor: colors.mint
   },
   avatarImage: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: colors.mint
   },
   avatarText: {
     color: colors.primary,
-    fontSize: 16,
-    fontWeight: "800"
+    fontSize: 18,
+    fontWeight: "700"
   },
   textWrap: {
-    marginLeft: 11,
-    flex: 1
+    flex: 1,
+    marginLeft: 12
   },
   nameRow: {
     flexDirection: "row",
-    alignItems: "center",
-    gap: 7
+    alignItems: "center"
   },
   name: {
+    maxWidth: "46%",
     color: colors.text,
-    fontSize: 14,
-    fontWeight: "800"
+    fontSize: 15,
+    fontWeight: "700",
+    lineHeight: 19
   },
-  trustBadge: {
-    height: 22,
-    justifyContent: "center",
-    borderRadius: 11,
-    backgroundColor: colors.mint,
-    paddingHorizontal: 8
-  },
-  mutedBadge: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface
-  },
-  trustText: {
-    color: colors.primary,
-    fontSize: 10.5,
-    fontWeight: "800"
-  },
-  mutedTrustText: {
-    color: colors.muted
-  },
-  meta: {
-    marginTop: 4,
+  dot: {
+    marginHorizontal: 6,
     color: colors.muted,
     fontSize: 12,
-    fontWeight: "500"
+    fontWeight: "600"
+  },
+  trustText: {
+    marginLeft: 4,
+    color: colors.primary,
+    fontSize: 11,
+    fontWeight: "600"
+  },
+  metaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 5
+  },
+  starIcon: {
+    marginRight: 4
+  },
+  meta: {
+    flex: 1,
+    color: colors.muted,
+    fontSize: 11.5,
+    fontWeight: "400",
+    lineHeight: 15
   }
 });
