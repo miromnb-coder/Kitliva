@@ -158,8 +158,8 @@ export default function ListingDetailScreen() {
         <View style={styles.contentCard}>
           <ListingInfo listing={listing} />
           <SellerRow listing={listing} />
-          <AiPriceEstimateCard listing={listing} />
           <ListingDetails listing={listing} />
+          <AiPriceEstimateCard listing={listing} />
           {actionMessage ? <View style={styles.actionMessageCard}><Text style={styles.actionMessageText}>{actionMessage}</Text></View> : null}
           <ListingActionButtons onMessage={messageSeller} onOffer={openOfferSheet} />
           <DeliveryPickupCard listing={listing} />
@@ -185,10 +185,10 @@ export default function ListingDetailScreen() {
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
   loadingScreen: { flex: 1, backgroundColor: colors.background },
-  contentCard: { marginTop: -18, borderTopLeftRadius: 24, borderTopRightRadius: 24, backgroundColor: colors.background, paddingHorizontal: 18, paddingTop: 18, paddingBottom: 24 },
+  contentCard: { marginTop: -24, borderTopLeftRadius: 24, borderTopRightRadius: 24, backgroundColor: colors.background, paddingHorizontal: 20, paddingTop: 24, paddingBottom: 34 },
   actionMessageCard: { borderRadius: 13, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, padding: 12, marginTop: 14 },
   actionMessageText: { color: colors.primary, fontSize: 12.5, fontWeight: "700" },
-  bottomSpacer: { height: 24 },
+  bottomSpacer: { height: 10 },
   notFoundScreen: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.background, paddingHorizontal: 24 },
   notFoundTitle: { color: colors.text, fontSize: 22, fontWeight: "800" },
   notFoundSubtitle: { marginTop: 8, color: colors.muted, fontSize: 14, fontWeight: "500", textAlign: "center" }
