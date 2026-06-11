@@ -1,29 +1,40 @@
-import { StyleSheet, Text } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 
+import { ProfileHeader } from "@/components/profile/ProfileHeader";
+import { ProfileSection } from "@/components/profile/ProfileSection";
+import { ProfileStatsCard } from "@/components/profile/ProfileStatsCard";
+import { ProfileSummaryCard } from "@/components/profile/ProfileSummaryCard";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
-import { spacing } from "@/constants/spacing";
-import { typography } from "@/theme/typography";
+import { mockProfile } from "@/data/mockProfile";
 
 export default function ProfileScreen() {
   return (
-    <Screen centered>
-      <Text style={styles.title}>Profile</Text>
-      <Text style={styles.subtitle}>Your listings, purchases, and settings will appear here.</Text>
+    <Screen noPadding>
+      <ScrollView
+        style={styles.screen}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        <ProfileHeader />
+        <ProfileSummaryCard />
+        <ProfileStatsCard />
+        {mockProfile.sections.map((section) => (
+          <ProfileSection key={section.title} section={section} />
+        ))}
+      </ScrollView>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  title: {
-    color: colors.text,
-    fontSize: typography.heading,
-    fontWeight: "800"
+  screen: {
+    flex: 1,
+    backgroundColor: colors.background
   },
-  subtitle: {
-    marginTop: spacing.sm,
-    color: colors.muted,
-    fontSize: typography.body,
-    textAlign: "center"
+  content: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 118
   }
 });
