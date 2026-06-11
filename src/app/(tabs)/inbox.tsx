@@ -1,29 +1,59 @@
-import { StyleSheet, Text } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
+import { ActiveOrderCard } from "@/components/inbox/ActiveOrderCard";
+import { ContactAvatarRow } from "@/components/inbox/ContactAvatarRow";
+import { InboxHeader } from "@/components/inbox/InboxHeader";
+import { MessageThreadList } from "@/components/inbox/MessageThreadList";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
-import { spacing } from "@/constants/spacing";
-import { typography } from "@/theme/typography";
 
 export default function InboxScreen() {
   return (
-    <Screen centered>
-      <Text style={styles.title}>Inbox</Text>
-      <Text style={styles.subtitle}>Messages and active orders will appear here.</Text>
+    <Screen noPadding>
+      <ScrollView
+        style={styles.screen}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        <InboxHeader />
+        <ContactAvatarRow />
+
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Active orders</Text>
+          <Text style={styles.seeAll}>See all</Text>
+        </View>
+
+        <ActiveOrderCard />
+        <MessageThreadList />
+      </ScrollView>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  title: {
+  screen: {
+    flex: 1,
+    backgroundColor: colors.background
+  },
+  content: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 118
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 13
+  },
+  sectionTitle: {
     color: colors.text,
-    fontSize: typography.heading,
+    fontSize: 18,
     fontWeight: "800"
   },
-  subtitle: {
-    marginTop: spacing.sm,
-    color: colors.muted,
-    fontSize: typography.body,
-    textAlign: "center"
+  seeAll: {
+    color: colors.primary,
+    fontSize: 14,
+    fontWeight: "700"
   }
 });
