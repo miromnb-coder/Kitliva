@@ -8,20 +8,21 @@ import { InboxHeader } from "@/components/inbox/InboxHeader";
 import { MessageThreadList } from "@/components/inbox/MessageThreadList";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
-import { shouldShowAuthGate } from "@/lib/authGate";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function InboxScreen() {
   const router = useRouter();
+  const { isLoading, user } = useAuth();
 
   useFocusEffect(
     useCallback(() => {
-      if (shouldShowAuthGate()) {
+      if (!isLoading && !user) {
         router.push("/auth/welcome");
       }
-    }, [router])
+    }, [isLoading, router, user])
   );
 
-  if (shouldShowAuthGate()) {
+  if (isLoading || !user) {
     return (
       <Screen noPadding>
         <View style={styles.screen} />
