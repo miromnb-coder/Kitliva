@@ -4,6 +4,18 @@ import { StyleSheet, Text, View } from "react-native";
 import { homeCategories } from "@/constants/categories";
 import { colors } from "@/constants/colors";
 
+function getShortLabel(label: string) {
+  if (label === "Kids’ Gear") {
+    return "Kids";
+  }
+
+  if (label === "Cameras") {
+    return "Camera";
+  }
+
+  return label;
+}
+
 export function SearchCategoryIcons() {
   return (
     <View style={styles.section}>
@@ -12,10 +24,10 @@ export function SearchCategoryIcons() {
         {homeCategories.map((category) => (
           <View key={category.id} style={styles.item}>
             <View style={styles.iconCircle}>
-              <Ionicons name={category.icon} size={18} color={colors.primary} />
+              <Ionicons name={category.icon} size={16} color={colors.primary} />
             </View>
-            <Text style={styles.label} numberOfLines={1}>
-              {category.label}
+            <Text style={styles.label} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.82}>
+              {getShortLabel(category.label)}
             </Text>
           </View>
         ))}
@@ -26,12 +38,12 @@ export function SearchCategoryIcons() {
 
 const styles = StyleSheet.create({
   section: {
-    marginBottom: 18
+    marginBottom: 15
   },
   title: {
-    marginBottom: 11,
+    marginBottom: 9,
     color: colors.text,
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "800"
   },
   row: {
@@ -39,25 +51,26 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
   item: {
-    width: 40,
+    width: 37,
     alignItems: "center"
   },
   iconCircle: {
-    width: 34,
-    height: 34,
+    width: 31,
+    height: 31,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 17,
+    borderRadius: 15.5,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
-    marginBottom: 5
+    marginBottom: 4
   },
   label: {
+    width: 42,
     color: colors.text,
-    fontSize: 9.5,
+    fontSize: 8.4,
     fontWeight: "600",
-    lineHeight: 12,
+    lineHeight: 10,
     textAlign: "center"
   }
 });
