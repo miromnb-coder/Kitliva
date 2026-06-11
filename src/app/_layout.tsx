@@ -6,6 +6,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as SystemUI from "expo-system-ui";
 
 import { colors } from "@/constants/colors";
+import { AuthProvider } from "@/context/AuthContext";
 
 export default function RootLayout() {
   useEffect(() => {
@@ -15,8 +16,10 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <StatusBar style="dark" />
-        <Stack screenOptions={{ headerShown: false }} />
+        <AuthProvider>
+          <StatusBar style="dark" />
+          <Stack screenOptions={{ headerShown: false }} />
+        </AuthProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
