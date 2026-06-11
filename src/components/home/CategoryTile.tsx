@@ -8,7 +8,7 @@ export function CategoryTile({ category }: { category: HomeCategory }) {
   return (
     <View style={styles.container}>
       <View style={styles.iconCircle}>
-        <Ionicons name={category.icon} size={22} color={colors.primary} />
+        <Ionicons name={category.icon} size={21} color={colors.primary} />
       </View>
       <Text style={styles.label} numberOfLines={1}>
         {category.label}
@@ -21,22 +21,22 @@ const styles = StyleSheet.create({
   container: {
     width: "25%",
     alignItems: "center",
-    marginBottom: 12
+    marginBottom: 10
   },
   iconCircle: {
-    width: 46,
-    height: 46,
+    width: 44,
+    height: 44,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 23,
+    borderRadius: 22,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface
   },
   label: {
-    marginTop: 6,
+    marginTop: 5,
     color: colors.text,
-    fontSize: 11,
+    fontSize: 10.5,
     fontWeight: "500",
     textAlign: "center"
   }
