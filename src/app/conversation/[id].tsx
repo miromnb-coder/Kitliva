@@ -1,9 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback, useState } from "react";
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import { Keyboard, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useFocusEffect } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
@@ -13,6 +14,7 @@ import { formatPrice } from "@/utils/formatPrice";
 
 export default function ConversationScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { isLoading, user } = useAuth();
   const [conversation, setConversation] = useState<ConversationSummary | null>(null);
@@ -20,6 +22,26 @@ export default function ConversationScreen() {
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [keyboardOffset, setKeyboardOffset] = useState(0);
+
+  useEffect(() => {
+    const showEvent = Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow";
+    const hideEvent = Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
+
+    const showSubscription = Keyboard.addListener(showEvent, (event) => {
+      const nextOffset = Math.max(0, event.endCoordinates.height - insets.bottom + 10);
+      setKeyboardOffset(nextOffset);
+    });
+
+    const hideSubscription = Keyboard.addListener(hideEvent, () => {
+      setKeyboardOffset(0);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, [insets.bottom]);
 
   const loadConversation = useCallback(async () => {
     if (!user || !id) return;
@@ -70,7 +92,7 @@ export default function ConversationScreen() {
 
   return (
     <Screen noPadding>
-      <KeyboardAvoidingView style={styles.screen} behavior={Platform.OS === "ios" ? "padding" : undefined}>
+      <View style={styles.screen}>
         <View style={styles.header}>
           <Pressable style={styles.roundButton} onPress={() => router.back()}>
             <Ionicons name="chevron-back" size={22} color={colors.text} />
@@ -93,7 +115,7 @@ export default function ConversationScreen() {
           </Pressable>
         ) : null}
 
-        <ScrollView style={styles.messages} contentContainerStyle={styles.messagesContent} showsVerticalScrollIndicator={false}>
+        <ScrollView style={styles.messages} contentContainerStyle={styles.messagesContent} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
           {messages.length === 0 ? (
             <View style={styles.emptyChat}>
               <Text style={styles.emptyTitle}>Start the conversation</Text>
@@ -119,7 +141,7 @@ export default function ConversationScreen() {
         </ScrollView>
 
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
-        <View style={styles.composer}>
+        <View style={[styles.composer, { paddingBottom: keyboardOffset > 0 ? 8 : Math.max(insets.bottom + 10, 18) }]}>
           <TextInput
             style={styles.input}
             value={draft}
@@ -132,7 +154,8 @@ export default function ConversationScreen() {
             <Ionicons name="send" size={17} color={draft.trim() ? colors.surface : colors.muted} />
           </Pressable>
         </View>
-      </KeyboardAvoidingView>
+        {keyboardOffset > 0 ? <View style={{ height: keyboardOffset }} /> : null}
+      </View>
     </Screen>
   );
 }
@@ -165,7 +188,7 @@ const styles = StyleSheet.create({
   bubbleText: { color: colors.text, fontSize: 13, fontWeight: "500", lineHeight: 18 },
   myBubbleText: { color: colors.surface },
   errorText: { color: colors.primary, fontSize: 12, fontWeight: "700", paddingHorizontal: 16, marginBottom: 6 },
-  composer: { flexDirection: "row", alignItems: "flex-end", paddingHorizontal: 16, paddingTop: 8, paddingBottom: 18, backgroundColor: colors.background },
+  composer: { flexDirection: "row", alignItems: "flex-end", paddingHorizontal: 16, paddingTop: 8, backgroundColor: colors.background },
   input: { flex: 1, minHeight: 44, maxHeight: 92, borderRadius: 22, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, paddingHorizontal: 14, paddingVertical: 11, color: colors.text, fontSize: 13 },
   sendButton: { width: 42, height: 42, alignItems: "center", justifyContent: "center", borderRadius: 21, backgroundColor: colors.primary, marginLeft: 9 },
   disabledSend: { backgroundColor: colors.border }
