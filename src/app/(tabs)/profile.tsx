@@ -12,11 +12,7 @@ import { ProfileSection as ProfileSectionType } from "@/data/mockProfile";
 import { useAuth } from "@/hooks/useAuth";
 import { getProfileStats, ProfileStats } from "@/services/profileStats";
 
-const emptyStats: ProfileStats = {
-  activeListings: 0,
-  savedItems: 0,
-  soldListings: 0
-};
+const emptyStats: ProfileStats = { activeListings: 0, savedItems: 0, soldListings: 0 };
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -26,9 +22,7 @@ export default function ProfileScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      if (!isLoading && !user) {
-        router.push("/auth/welcome");
-      }
+      if (!isLoading && !user) router.push("/auth/welcome");
     }, [isLoading, router, user])
   );
 
@@ -37,13 +31,9 @@ export default function ProfileScreen() {
       let isMounted = true;
 
       async function loadStats() {
-        if (!user) {
-          return;
-        }
-
+        if (!user) return;
         setIsStatsLoading(true);
         const nextStats = await getProfileStats(user.id);
-
         if (isMounted) {
           setStats(nextStats);
           setIsStatsLoading(false);
@@ -69,21 +59,13 @@ export default function ProfileScreen() {
   }
 
   function handleItemPress(label: string) {
-    if (label === "My listings") {
-      router.push("/my-listings");
-    }
-
-    if (label === "Create listing") {
-      router.push("/sell");
-    }
+    if (label === "My listings") router.push("/my-listings");
+    if (label === "Create listing") router.push("/sell");
+    if (label === "Edit profile" || label === "Account settings") router.push("/profile/edit");
   }
 
   if (isLoading || !user) {
-    return (
-      <Screen noPadding>
-        <View style={styles.screen} />
-      </Screen>
-    );
+    return <Screen noPadding><View style={styles.screen} /></Screen>;
   }
 
   const ratingLabel = profile?.rating_count ? profile.rating_average.toFixed(1) : "New";
@@ -107,8 +89,8 @@ export default function ProfileScreen() {
     {
       title: "Support & account",
       items: [
+        { label: "Edit profile", icon: "person-circle-outline" },
         { label: "Help center", icon: "help-circle-outline" },
-        { label: "Account settings", icon: "settings-outline" },
         { label: "Sign out", icon: "log-out-outline" }
       ]
     }
@@ -116,11 +98,7 @@ export default function ProfileScreen() {
 
   return (
     <Screen noPadding>
-      <ScrollView
-        style={styles.screen}
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <ProfileHeader />
         <ProfileSummaryCard />
         <ProfileStatsCard stats={stats} ratingLabel={ratingLabel} isLoading={isStatsLoading} />
@@ -133,13 +111,6 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background
-  },
-  content: {
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 118
-  }
+  screen: { flex: 1, backgroundColor: colors.background },
+  content: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 118 }
 });
