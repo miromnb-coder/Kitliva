@@ -21,7 +21,7 @@ export function AuthTextField({ label, placeholder, secure = false }: AuthTextFi
           secureTextEntry={secure}
           autoCapitalize="none"
         />
-        {secure ? <Ionicons name="eye-outline" size={21} color="#6F7E7E" /> : null}
+        {secure ? <Ionicons name="eye-outline" size={20} color="#6F7E7E" /> : null}
       </View>
     </View>
   );
@@ -29,29 +29,29 @@ export function AuthTextField({ label, placeholder, secure = false }: AuthTextFi
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 21
+    marginBottom: 15
   },
   label: {
-    marginBottom: 8,
+    marginBottom: 6,
     color: colors.text,
-    fontSize: 13.5,
+    fontSize: 13,
     fontWeight: "800"
   },
   inputWrap: {
-    height: 48,
+    height: 44,
     flexDirection: "row",
     alignItems: "center",
     borderRadius: 11,
     borderWidth: 1,
     borderColor: "#D7E0DD",
     backgroundColor: colors.surface,
-    paddingHorizontal: 14
+    paddingHorizontal: 13
   },
   input: {
     flex: 1,
     paddingVertical: 0,
     color: colors.text,
-    fontSize: 14,
+    fontSize: 13.5,
     fontWeight: "500"
   }
 });
