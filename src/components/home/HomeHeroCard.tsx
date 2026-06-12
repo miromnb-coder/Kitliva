@@ -10,7 +10,7 @@ const serifFont = Platform.select({ ios: "Georgia", android: "serif", default: u
 export function HomeHeroCard() {
   return (
     <View style={styles.card}>
-      <Image source={heroImage} style={styles.image} contentFit="cover" contentPosition="center" transition={180} />
+      <Image source={heroImage} style={styles.image} contentFit="cover" contentPosition="right center" transition={180} />
       <View style={styles.content}>
         <Text style={styles.title} maxFontSizeMultiplier={1}>Give quality gear{"\n"}a second life</Text>
         <Text style={styles.subtitle}>Trusted community.{"\n"}Better choices.</Text>
@@ -40,16 +40,19 @@ const styles = StyleSheet.create({
     marginTop: 14
   },
   image: {
-    ...StyleSheet.absoluteFillObject,
+    position: "absolute",
+    top: 0,
+    right: 0,
+    bottom: 0,
     width: "100%",
     height: "100%"
   },
   content: {
-    width: "48%",
+    width: "44%",
     height: "100%",
     paddingLeft: 16,
     paddingTop: 18,
-    paddingRight: 6,
+    paddingRight: 4,
     paddingBottom: 12
   },
   title: {
@@ -59,9 +62,9 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     letterSpacing: -0.2,
     lineHeight: 21,
-    textShadowColor: "rgba(250, 248, 243, 0.65)",
+    textShadowColor: "rgba(250, 248, 243, 0.72)",
     textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 8
+    textShadowRadius: 9
   },
   subtitle: {
     marginTop: 7,
@@ -69,9 +72,9 @@ const styles = StyleSheet.create({
     fontSize: 10.5,
     fontWeight: "400",
     lineHeight: 14,
-    textShadowColor: "rgba(250, 248, 243, 0.6)",
+    textShadowColor: "rgba(250, 248, 243, 0.7)",
     textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 7
+    textShadowRadius: 8
   },
   badgeRow: {
     flexDirection: "row",
@@ -85,7 +88,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: "rgba(255,255,255,0.9)",
+    backgroundColor: "rgba(255,255,255,0.88)",
     paddingHorizontal: 7
   },
   badgeText: {
