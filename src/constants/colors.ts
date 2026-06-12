@@ -10,6 +10,7 @@ export const colors = {
   primary: "#184E45",
   primaryDark: "#10221F",
   accent: "#A77C3A",
+  link: "#7B623C",
 
   buttonPrimary: "#171717",
   buttonPrimaryText: "#FFFEFA",
@@ -22,5 +23,9 @@ export const colors = {
   inputPlaceholder: "#8C908A",
   sheetHandle: "#D8D1C7",
 
-  danger: "#B42318"
+  danger: "#B42318",
+  dangerText: "#8A4B2A",
+  dangerBorder: "#E0B9A6",
+  dangerSurface: "#FFF7F2",
+  successBorder: "#C6E7DC"
 } as const;
