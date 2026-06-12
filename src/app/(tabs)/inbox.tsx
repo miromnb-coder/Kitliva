@@ -12,19 +12,17 @@ import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
 import { useAuth } from "@/hooks/useAuth";
 import { ConversationSummary, getConversations } from "@/services/conversations";
+import { Deal, getActiveDealsForUser } from "@/services/deals";
 
 function getConversationRole(conversation: ConversationSummary): "buying" | "selling" {
   return conversation.otherName === "Seller" ? "buying" : "selling";
-}
-
-function isAcceptedDeal(conversation: ConversationSummary) {
-  return conversation.lastMessageText.toLowerCase().includes("offer accepted");
 }
 
 export default function InboxScreen() {
   const router = useRouter();
   const { isLoading, user } = useAuth();
   const [conversations, setConversations] = useState<ConversationSummary[]>([]);
+  const [activeDeals, setActiveDeals] = useState<Deal[]>([]);
   const [isInboxLoading, setIsInboxLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [activeFilter, setActiveFilter] = useState<MessageFilter>("all");
@@ -43,10 +41,11 @@ export default function InboxScreen() {
 
         setIsInboxLoading(true);
         setHasError(false);
-        const nextConversations = await getConversations(user.id);
+        const [nextConversations, nextDeals] = await Promise.all([getConversations(user.id), getActiveDealsForUser(user.id)]);
 
         if (isMounted) {
           setConversations(nextConversations);
+          setActiveDeals(nextDeals);
           setIsInboxLoading(false);
         }
       }
@@ -54,6 +53,7 @@ export default function InboxScreen() {
       loadConversations().catch(() => {
         if (isMounted) {
           setConversations([]);
+          setActiveDeals([]);
           setHasError(true);
           setIsInboxLoading(false);
         }
@@ -71,7 +71,7 @@ export default function InboxScreen() {
     return conversations.filter((conversation) => getConversationRole(conversation) === activeFilter);
   }, [activeFilter, conversations]);
 
-  const activeDeal = useMemo(() => conversations.find(isAcceptedDeal) ?? null, [conversations]);
+  const activeDeal = activeDeals[0] ?? null;
 
   if (isLoading || !user) {
     return (
@@ -99,7 +99,7 @@ export default function InboxScreen() {
           </View>
         ) : (
           <>
-            {activeDeal && activeFilter !== "support" ? <ActiveDealCard conversation={activeDeal} onPress={() => router.push(`/conversation/${activeDeal.id}`)} /> : null}
+            {activeDeal && activeFilter !== "support" ? <ActiveDealCard deal={activeDeal} onPress={() => router.push(`/deal/${activeDeal.id}`)} /> : null}
 
             {visibleConversations.length === 0 ? (
               <MessagesEmptyCard
