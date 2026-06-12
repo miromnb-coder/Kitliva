@@ -207,7 +207,7 @@ export async function createListingWithoutImages(input: CreateListingInput): Pro
 }
 
 export async function createListingWithImages(input: CreateListingInput, photos: SellPhoto[]): Promise<CreateListingResult> {
-  return createListing(input, photos.filter((photo) => Boolean(photo?.uri)));
+  return createListing(input, photos.filter((photo) => Boolean(photo?.uri || photo?.base64)));
 }
 
 async function createListing(input: CreateListingInput, photos: SellPhoto[]): Promise<CreateListingResult> {
@@ -248,7 +248,7 @@ async function createListing(input: CreateListingInput, photos: SellPhoto[]): Pr
   let coverImageUrl: string | null = null;
 
   if (photos.length > 0) {
-    const uploadResults = await Promise.all(photos.map((photo, index) => uploadListingImage({ listingId: data.id, uri: photo.uri, fileName: photo.fileName, mimeType: photo.mimeType, sortOrder: index, isCover: index === 0 })));
+    const uploadResults = await Promise.all(photos.map((photo, index) => uploadListingImage({ listingId: data.id, uri: photo.uri, fileName: photo.fileName, mimeType: photo.mimeType, base64: photo.base64, sortOrder: index, isCover: index === 0 })));
     const failedUpload = uploadResults.find((result) => !result.success);
 
     if (failedUpload && !failedUpload.success) {
@@ -262,7 +262,7 @@ async function createListing(input: CreateListingInput, photos: SellPhoto[]): Pr
     userId: input.sellerId,
     type: "listing_published",
     title: "Listing published",
-    body: `${data.title} is now live on Kitliva.`,
+    body: `${data.title} is now live on Kitliva.",
     relatedListingId: data.id
   });
 
