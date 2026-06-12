@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text } from "react-native";
 
 import { colors } from "@/constants/colors";
 
@@ -11,14 +11,7 @@ type AuthButtonProps = {
   onPress?: () => void;
 };
 
-export function AuthButton({
-  label,
-  loadingLabel,
-  variant = "primary",
-  disabled = false,
-  loading = false,
-  onPress
-}: AuthButtonProps) {
+export function AuthButton({ label, loadingLabel, variant = "primary", disabled = false, loading = false, onPress }: AuthButtonProps) {
   const isDisabled = disabled || loading;
   const buttonLabel = loading && loadingLabel ? loadingLabel : label;
 
@@ -31,43 +24,33 @@ export function AuthButton({
   }
 
   return (
-    <Pressable
-      style={[
-        styles.button,
-        variant === "secondary" ? styles.secondaryButton : styles.primaryButton,
-        isDisabled && styles.disabled
-      ]}
-      disabled={isDisabled}
-      onPress={onPress}
-    >
-      <Text style={[styles.buttonText, variant === "secondary" ? styles.secondaryText : styles.primaryText]}>
-        {buttonLabel}
-      </Text>
+    <Pressable style={[styles.button, variant === "secondary" ? styles.secondaryButton : styles.primaryButton, isDisabled && styles.disabled]} disabled={isDisabled} onPress={onPress}>
+      {loading ? <ActivityIndicator size="small" color={colors.surface} /> : <Text style={[styles.buttonText, variant === "secondary" ? styles.secondaryText : styles.primaryText]}>{buttonLabel}</Text>}
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    height: 44,
+    height: 58,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 12
+    borderRadius: 9
   },
   primaryButton: {
-    backgroundColor: colors.primary
+    backgroundColor: "#171717"
   },
   secondaryButton: {
     borderWidth: 1,
-    borderColor: "#BFD5D1",
-    backgroundColor: colors.surface
+    borderColor: colors.text,
+    backgroundColor: "transparent"
   },
   disabled: {
     opacity: 0.72
   },
   buttonText: {
-    fontSize: 14.5,
-    fontWeight: "800"
+    fontSize: 16,
+    fontWeight: "700"
   },
   primaryText: {
     color: colors.surface
@@ -76,13 +59,13 @@ const styles = StyleSheet.create({
     color: colors.text
   },
   tertiaryButton: {
-    height: 26,
+    height: 28,
     alignItems: "center",
     justifyContent: "center"
   },
   tertiaryText: {
     color: colors.text,
-    fontSize: 13.5,
-    fontWeight: "800"
+    fontSize: 15,
+    fontWeight: "600"
   }
 });
