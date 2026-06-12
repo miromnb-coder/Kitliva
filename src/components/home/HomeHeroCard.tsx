@@ -10,7 +10,8 @@ const serifFont = Platform.select({ ios: "Georgia", android: "serif", default: u
 export function HomeHeroCard() {
   return (
     <View style={styles.card}>
-      <View style={styles.leftPane}>
+      <Image source={heroImage} style={styles.image} contentFit="cover" contentPosition="center" transition={180} />
+      <View style={styles.content}>
         <Text style={styles.title} maxFontSizeMultiplier={1}>Give quality gear{"\n"}a second life</Text>
         <Text style={styles.subtitle}>Trusted community.{"\n"}Better choices.</Text>
         <View style={styles.badgeRow}>
@@ -24,10 +25,6 @@ export function HomeHeroCard() {
           </View>
         </View>
       </View>
-
-      <View style={styles.imagePane}>
-        <Image source={heroImage} style={styles.image} contentFit="cover" contentPosition="center" transition={180} />
-      </View>
     </View>
   );
 }
@@ -35,7 +32,6 @@ export function HomeHeroCard() {
 const styles = StyleSheet.create({
   card: {
     height: 126,
-    flexDirection: "row",
     overflow: "hidden",
     borderRadius: 16,
     borderWidth: 1,
@@ -43,24 +39,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#F4EFE7",
     marginTop: 14
   },
-  leftPane: {
-    width: "43%",
+  image: {
+    ...StyleSheet.absoluteFillObject,
+    width: "100%",
+    height: "100%"
+  },
+  content: {
+    width: "48%",
     height: "100%",
-    backgroundColor: "#F4EFE7",
     paddingLeft: 16,
     paddingTop: 18,
     paddingRight: 6,
     paddingBottom: 12
-  },
-  imagePane: {
-    width: "57%",
-    height: "100%",
-    overflow: "hidden",
-    backgroundColor: "#EFE8DD"
-  },
-  image: {
-    width: "100%",
-    height: "100%"
   },
   title: {
     color: colors.text,
@@ -68,14 +58,20 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: "500",
     letterSpacing: -0.2,
-    lineHeight: 21
+    lineHeight: 21,
+    textShadowColor: "rgba(250, 248, 243, 0.65)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 8
   },
   subtitle: {
     marginTop: 7,
-    color: "#5F655F",
+    color: "#4F5752",
     fontSize: 10.5,
     fontWeight: "400",
-    lineHeight: 14
+    lineHeight: 14,
+    textShadowColor: "rgba(250, 248, 243, 0.6)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 7
   },
   badgeRow: {
     flexDirection: "row",
@@ -89,7 +85,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: "rgba(255,255,255,0.92)",
+    backgroundColor: "rgba(255,255,255,0.9)",
     paddingHorizontal: 7
   },
   badgeText: {
