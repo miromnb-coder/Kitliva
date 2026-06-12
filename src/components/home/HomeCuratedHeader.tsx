@@ -1,21 +1,35 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
+import { SearchSortOption } from "@/types/search";
 
 const serifFont = Platform.select({ ios: "Georgia", android: "serif", default: undefined });
 
-export function HomeCuratedHeader() {
+type HomeCuratedHeaderProps = {
+  sort: SearchSortOption;
+  onSortPress: () => void;
+};
+
+function getSortLabel(sort: SearchSortOption) {
+  if (sort === "newest") return "Newest";
+  if (sort === "price_low") return "Price low";
+  if (sort === "price_high") return "Price high";
+  return "Sort";
+}
+
+export function HomeCuratedHeader({ sort, onSortPress }: HomeCuratedHeaderProps) {
   return (
     <View style={styles.container}>
       <View>
         <Text style={styles.title}>Curated gear</Text>
         <Text style={styles.subtitle}>Fresh finds from the Kitliva community</Text>
       </View>
-      <View style={styles.sortButton}>
+      <Pressable style={styles.sortButton} onPress={onSortPress}>
         <Ionicons name="swap-vertical-outline" size={12.5} color="#A77C3A" />
-        <Text style={styles.sortText}>Sort</Text>
-      </View>
+        <Text style={styles.sortText}>{getSortLabel(sort)}</Text>
+        <Ionicons name="chevron-down" size={11} color={colors.muted} style={styles.chevron} />
+      </Pressable>
     </View>
   );
 }
@@ -58,5 +72,8 @@ const styles = StyleSheet.create({
     color: "#7B623C",
     fontSize: 11,
     fontWeight: "500"
+  },
+  chevron: {
+    marginLeft: 4
   }
 });
