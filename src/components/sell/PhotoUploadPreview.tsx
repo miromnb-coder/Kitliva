@@ -13,9 +13,9 @@ export function PhotoUploadPreview({ photos, error, onAddPhotos, onRemovePhoto }
   const [failedPhotoIds, setFailedPhotoIds] = useState<string[]>([]);
 
   async function pickPhotos() {
-    const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images, allowsMultipleSelection: true, selectionLimit: Math.max(1, 6 - photos.length), quality: 0.85 });
+    const result = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.Images, allowsMultipleSelection: true, selectionLimit: Math.max(1, 6 - photos.length), quality: 0.85, base64: true });
     if (result.canceled) return;
-    onAddPhotos(result.assets.slice(0, Math.max(0, 6 - photos.length)).map((asset, index) => ({ id: `${Date.now()}-${index}-${asset.uri}`, uri: asset.uri, fileName: asset.fileName, mimeType: asset.mimeType })));
+    onAddPhotos(result.assets.slice(0, Math.max(0, 6 - photos.length)).map((asset, index) => ({ id: `${Date.now()}-${index}-${asset.uri}`, uri: asset.uri, fileName: asset.fileName, mimeType: asset.mimeType, base64: asset.base64 })));
   }
 
   function markPhotoFailed(photoId: string) {
