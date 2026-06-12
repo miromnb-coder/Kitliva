@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
 
@@ -8,17 +8,20 @@ import { PhotosStep } from "@/components/sell/PhotosStep";
 import { PricingStep } from "@/components/sell/PricingStep";
 import { PublishSuccessStep } from "@/components/sell/PublishSuccessStep";
 import { ReviewStep } from "@/components/sell/ReviewStep";
+import { SellDraftRestoreCard, SellDraftStatusCard } from "@/components/sell/SellDraftCards";
 import { SellFlowActions } from "@/components/sell/SellFlowActions";
-import { SellHeader } from "@/components/sell/SellHeader";
+import { DraftSaveState, SellHeader } from "@/components/sell/SellHeader";
 import { SellStep, SellStepIndicator } from "@/components/sell/SellStepIndicator";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
 import { useAuth } from "@/hooks/useAuth";
 import { createListingWithImages } from "@/services/listings";
+import { getSellDraft, removeSellDraft, saveSellDraft, SellDraftStep, SellListingDraft } from "@/services/sellDrafts";
 import { PublishedListing } from "@/types/listing";
 import { emptySellFormDraft, SellFormDraft, SellPhoto } from "@/types/sell";
 
 type SellFlowStep = SellStep | "success";
+type DraftStatusVariant = "saved" | "error";
 
 const orderedSteps: SellStep[] = ["photos", "details", "pricing", "delivery", "review"];
 
@@ -26,6 +29,30 @@ function parsePriceAmount(priceLabel: string) {
   const normalized = priceLabel.replace(/[^0-9.,]/g, "").replace(",", ".");
   const parsed = Number.parseFloat(normalized);
   return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+}
+
+function isDraftableStep(step: SellFlowStep): step is SellDraftStep {
+  return step !== "success";
+}
+
+function isEmptySellForm(form: SellFormDraft) {
+  return (
+    !form.title.trim() &&
+    !form.categoryName.trim() &&
+    form.conditionLabel === emptySellFormDraft.conditionLabel &&
+    !form.brand.trim() &&
+    !form.model.trim() &&
+    !form.priceLabel.trim() &&
+    !form.description.trim() &&
+    !form.locationCity.trim() &&
+    !form.locationCountry.trim() &&
+    form.allowPickup === emptySellFormDraft.allowPickup &&
+    form.allowShipping === emptySellFormDraft.allowShipping
+  );
+}
+
+function canShowRestoreDraft(form: SellFormDraft, selectedPhotos: SellPhoto[]) {
+  return isEmptySellForm(form) && selectedPhotos.length === 0;
 }
 
 export default function SellScreen() {
@@ -38,6 +65,10 @@ export default function SellScreen() {
   const [isPublishing, setIsPublishing] = useState(false);
   const [publishError, setPublishError] = useState<string | null>(null);
   const [publishedListing, setPublishedListing] = useState<PublishedListing | null>(null);
+  const [draftSaveState, setDraftSaveState] = useState<DraftSaveState>("idle");
+  const [draftStatus, setDraftStatus] = useState<DraftStatusVariant | null>(null);
+  const [availableDraft, setAvailableDraft] = useState<SellListingDraft | null>(null);
+  const [isDraftRestored, setIsDraftRestored] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -47,9 +78,35 @@ export default function SellScreen() {
     }, [isLoading, router, user])
   );
 
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadDraft() {
+      const draft = await getSellDraft();
+
+      if (isMounted && draft && canShowRestoreDraft(form, selectedPhotos)) {
+        setAvailableDraft(draft);
+      }
+    }
+
+    loadDraft().catch(() => undefined);
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (draftSaveState !== "saved") return;
+    const timeout = setTimeout(() => setDraftSaveState("idle"), 2000);
+    return () => clearTimeout(timeout);
+  }, [draftSaveState]);
+
   function updateForm<Key extends keyof SellFormDraft>(key: Key, value: SellFormDraft[Key]) {
     setPublishError(null);
     setFlowError(null);
+    setDraftStatus(null);
+    setDraftSaveState((current) => (current === "error" ? "idle" : current));
     setForm((currentForm) => ({ ...currentForm, [key]: value }));
   }
 
@@ -112,6 +169,49 @@ export default function SellScreen() {
     setCurrentStep(previousStep);
   }
 
+  async function saveDraft() {
+    if (!isDraftableStep(currentStep) || draftSaveState === "saving") return;
+
+    setDraftSaveState("saving");
+    setDraftStatus(null);
+
+    try {
+      await saveSellDraft({
+        form,
+        selectedPhotos,
+        currentStep
+      });
+      setAvailableDraft(null);
+      setDraftStatus("saved");
+      setDraftSaveState("saved");
+    } catch {
+      setDraftStatus("error");
+      setDraftSaveState("error");
+    }
+  }
+
+  function restoreDraft() {
+    if (!availableDraft) return;
+
+    setForm(availableDraft.form);
+    setSelectedPhotos(availableDraft.selectedPhotos);
+    setCurrentStep(availableDraft.currentStep);
+    setFlowError(null);
+    setPublishError(null);
+    setPublishedListing(null);
+    setDraftStatus("saved");
+    setDraftSaveState("saved");
+    setAvailableDraft(null);
+    setIsDraftRestored(true);
+  }
+
+  async function discardDraft() {
+    await removeSellDraft();
+    setAvailableDraft(null);
+    setDraftStatus(null);
+    setDraftSaveState("idle");
+  }
+
   async function publishListing() {
     if (isPublishing) return;
     if (!user) {
@@ -157,6 +257,14 @@ export default function SellScreen() {
       return;
     }
 
+    if (!result.listing.coverImageUrl) {
+      setPublishError("Your listing was not published. Please check your connection and try again.");
+      return;
+    }
+
+    await removeSellDraft().catch(() => undefined);
+    setDraftStatus(null);
+    setAvailableDraft(null);
     setPublishedListing(result.listing);
     setCurrentStep("success");
   }
@@ -167,6 +275,10 @@ export default function SellScreen() {
     setSelectedPhotos([]);
     setPublishError(null);
     setPublishedListing(null);
+    setDraftStatus(null);
+    setDraftSaveState("idle");
+    setAvailableDraft(null);
+    setIsDraftRestored(false);
     setCurrentStep("photos");
   }
 
@@ -185,11 +297,16 @@ export default function SellScreen() {
       <PhotosStep
         photos={selectedPhotos}
         error={flowError}
+        isDraftRestored={isDraftRestored}
         onAddPhotos={(photos) => {
           setFlowError(null);
+          setDraftStatus(null);
           setSelectedPhotos((current) => [...current, ...photos].slice(0, 6));
         }}
-        onRemovePhoto={(photoId) => setSelectedPhotos((current) => current.filter((photo) => photo.id !== photoId))}
+        onRemovePhoto={(photoId) => {
+          setDraftStatus(null);
+          setSelectedPhotos((current) => current.filter((photo) => photo.id !== photoId));
+        }}
       />
     );
   }
@@ -211,11 +328,14 @@ export default function SellScreen() {
   }
 
   const isSuccess = currentStep === "success";
+  const shouldShowRestoreCard = Boolean(availableDraft && !isSuccess && canShowRestoreDraft(form, selectedPhotos));
 
   return (
     <Screen noPadding>
       <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <SellHeader showSaveDraft={!isSuccess} />
+        <SellHeader showSaveDraft={!isSuccess} draftSaveState={draftSaveState} onSaveDraft={saveDraft} />
+        {shouldShowRestoreCard ? <SellDraftRestoreCard onContinue={restoreDraft} onDiscard={discardDraft} /> : null}
+        {draftStatus && !shouldShowRestoreCard && !isSuccess ? <SellDraftStatusCard variant={draftStatus} /> : null}
         {currentStep !== "success" ? <SellStepIndicator currentStep={currentStep} /> : null}
         {renderStepContent()}
         {renderActions()}
