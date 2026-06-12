@@ -30,9 +30,9 @@ const styles = StyleSheet.create({
   },
   content: {
     flexGrow: 1,
-    paddingHorizontal: 20,
-    paddingTop: 14,
-    paddingBottom: 20
+    paddingHorizontal: 28,
+    paddingTop: 18,
+    paddingBottom: 32
   },
   compactContent: {
     justifyContent: "center"
