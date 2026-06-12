@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import { GestureResponderEvent, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
@@ -24,6 +25,12 @@ function getConditionLabel(label: string) {
 
 export function ExploreProductCard({ listing, onFavoritePress }: ExploreProductCardProps) {
   const router = useRouter();
+  const [imageFailed, setImageFailed] = useState(false);
+  const shouldShowImage = Boolean(listing.imageUrl && !imageFailed);
+
+  useEffect(() => {
+    setImageFailed(false);
+  }, [listing.imageUrl]);
 
   function handleFavoritePress(event: GestureResponderEvent) {
     event.stopPropagation();
@@ -33,8 +40,8 @@ export function ExploreProductCard({ listing, onFavoritePress }: ExploreProductC
   return (
     <Pressable style={styles.card} onPress={() => router.push(`/listing/${listing.id}`)}>
       <View style={styles.imageWrap}>
-        {listing.imageUrl ? (
-          <Image source={{ uri: listing.imageUrl }} style={styles.image} contentFit="contain" transition={180} />
+        {shouldShowImage ? (
+          <Image source={{ uri: listing.imageUrl ?? undefined }} style={styles.image} contentFit="contain" transition={180} onError={() => setImageFailed(true)} />
         ) : (
           <View style={styles.placeholder}>
             <Ionicons name="image-outline" size={18} color={colors.primary} />
@@ -43,7 +50,7 @@ export function ExploreProductCard({ listing, onFavoritePress }: ExploreProductC
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.title} numberOfLines={1}>{listing.title}</Text>
+        <Text style={styles.title} numberOfLines={1}>{listing.title || "Untitled item"}</Text>
         <View style={styles.metaRow}>
           <Text style={styles.price}>{formatPrice(listing.price, listing.currency)}</Text>
           <View style={styles.conditionBadge}><Text style={styles.conditionText}>{getConditionLabel(listing.conditionLabel)}</Text></View>
@@ -114,12 +121,12 @@ const styles = StyleSheet.create({
     height: 17,
     justifyContent: "center",
     borderRadius: 8.5,
-    backgroundColor: "#F7F2EB",
+    backgroundColor: colors.softGold,
     paddingHorizontal: 7,
     marginLeft: 8
   },
   conditionText: {
-    color: "#5F655F",
+    color: colors.mutedStrong,
     fontSize: 7.8,
     fontWeight: "500"
   },
@@ -130,7 +137,7 @@ const styles = StyleSheet.create({
   },
   trustText: {
     marginLeft: 4,
-    color: "#4F5752",
+    color: colors.mutedStrong,
     fontSize: 8.5,
     fontWeight: "500"
   },
