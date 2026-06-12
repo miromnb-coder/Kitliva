@@ -9,6 +9,8 @@ export type SellFormDraft = {
   title: string;
   categoryName: string;
   conditionLabel: string;
+  brand: string;
+  model: string;
   priceLabel: string;
   description: string;
   locationCity: string;
@@ -21,6 +23,8 @@ export const emptySellFormDraft: SellFormDraft = {
   title: "",
   categoryName: "",
   conditionLabel: "Good",
+  brand: "",
+  model: "",
   priceLabel: "",
   description: "",
   locationCity: "",
