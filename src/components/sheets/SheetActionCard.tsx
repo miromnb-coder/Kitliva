@@ -15,13 +15,13 @@ export function SheetActionCard({ icon, title, subtitle, selected = false, onPre
   return (
     <Pressable style={[styles.card, selected && styles.selectedCard]} onPress={onPress}>
       <View style={[styles.iconCircle, selected && styles.selectedIconCircle]}>
-        <Ionicons name={icon} size={22} color={selected ? colors.surface : colors.text} />
+        <Ionicons name={icon} size={22} color={selected ? colors.buttonPrimaryText : colors.text} />
       </View>
       <View style={styles.textWrap}>
         <Text style={styles.title}>{title}</Text>
         {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
       </View>
-      {selected ? <Ionicons name="checkmark-circle" size={19} color="#A77C3A" /> : <Ionicons name="chevron-forward" size={17} color={colors.muted} />}
+      {selected ? <Ionicons name="checkmark-circle" size={19} color={colors.accent} /> : <Ionicons name="chevron-forward" size={17} color={colors.muted} />}
     </Pressable>
   );
 }
@@ -39,8 +39,8 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   selectedCard: {
-    borderColor: "#A77C3A",
-    backgroundColor: "#F7F2EB"
+    borderColor: colors.accent,
+    backgroundColor: colors.softGold
   },
   iconCircle: {
     width: 42,
@@ -48,11 +48,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 21,
-    backgroundColor: "#F7F2EB",
+    backgroundColor: colors.softGold,
     marginRight: 12
   },
   selectedIconCircle: {
-    backgroundColor: "#171717"
+    backgroundColor: colors.buttonPrimary
   },
   textWrap: {
     flex: 1
