@@ -32,26 +32,26 @@ export function SellOptionCard({ title, subtitle, icon, selected = false, showCh
 
 const styles = StyleSheet.create({
   card: {
-    minHeight: 44,
+    minHeight: 92,
     flexDirection: "row",
     alignItems: "center",
-    borderRadius: 13,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
-    paddingHorizontal: 12,
-    paddingVertical: 10
+    paddingHorizontal: 14,
+    paddingVertical: 12
   },
   selectedCard: {
-    borderColor: "#BFE9DC",
-    backgroundColor: colors.surface
+    borderColor: colors.buttonPrimary,
+    backgroundColor: colors.softGreen
   },
   iconCircle: {
-    width: 30,
-    height: 30,
+    width: 32,
+    height: 32,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 15,
+    borderRadius: 16,
     backgroundColor: colors.mint,
     marginRight: 10
   },
@@ -64,9 +64,10 @@ const styles = StyleSheet.create({
     fontWeight: "800"
   },
   subtitle: {
-    marginTop: 2,
-    color: colors.muted,
+    marginTop: 3,
+    color: colors.mutedStrong,
     fontSize: 11.5,
-    fontWeight: "500"
+    fontWeight: "500",
+    lineHeight: 15
   }
 });
