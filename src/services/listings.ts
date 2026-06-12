@@ -6,6 +6,7 @@ import { CreateListingInput, CreateListingResult, Listing, ListingCategory, List
 import { SellPhoto } from "@/types/sell";
 
 const listingSelect = "id, seller_id, title, description, price_amount, price_currency, condition, brand, model, location_city, location_country, status, view_count, favorite_count, created_at, published_at, categories(name), listing_images(public_url, sort_order, is_cover), profiles(display_name, avatar_url, location_city, location_country, bio, rating_average, rating_count, is_verified, is_trusted_seller)";
+const PHOTO_UPLOAD_FAILED_MESSAGE = "Your listing was not published. Please check your connection and try again.";
 
 const conditionByLabel: Record<string, ListingCondition> = {
   new: "new",
@@ -99,6 +100,10 @@ function getTrustLabel(profile: ProfileRow | null) {
   if (profile?.is_trusted_seller) return "Trusted seller";
   if (profile?.is_verified) return "Verified profile";
   return "New member";
+}
+
+async function removeFailedListing(listingId: string) {
+  await supabase.from("listings").delete().eq("id", listingId);
 }
 
 export function mapListingRowToListing(row: ListingRow, favoriteIds: string[] = []): Listing {
@@ -249,7 +254,15 @@ async function createListing(input: CreateListingInput, photos: SellPhoto[]): Pr
 
   if (photos.length > 0) {
     const uploadResults = await Promise.all(photos.map((photo, index) => uploadListingImage({ listingId: data.id, uri: photo.uri, fileName: photo.fileName, mimeType: photo.mimeType, base64: photo.base64, sortOrder: index, isCover: index === 0 })));
-    coverImageUrl = uploadResults[0]?.success ? uploadResults[0].publicUrl : null;
+    const coverUpload = uploadResults[0];
+    const hasFailedUpload = uploadResults.some((result) => !result.success);
+
+    if (hasFailedUpload || !coverUpload?.success) {
+      await removeFailedListing(data.id);
+      return { success: false, message: PHOTO_UPLOAD_FAILED_MESSAGE };
+    }
+
+    coverImageUrl = coverUpload.publicUrl;
   }
 
   await createNotification({
