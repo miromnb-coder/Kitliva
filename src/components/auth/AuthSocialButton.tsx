@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
@@ -8,17 +9,7 @@ type AuthSocialButtonProps = {
   onPress?: () => void;
 };
 
-function GoogleMark() {
-  return (
-    <View style={styles.googleMark}>
-      <Text style={[styles.googleLetter, styles.googleBlue]}>G</Text>
-      <Text style={[styles.googleLetter, styles.googleRed]}>G</Text>
-      <Text style={[styles.googleLetter, styles.googleYellow]}>G</Text>
-      <Text style={[styles.googleLetter, styles.googleGreen]}>G</Text>
-      <Text style={styles.googleCenter}>G</Text>
-    </View>
-  );
-}
+const googleMarkSource = { uri: "https://developers.google.com/identity/images/g-logo.png" };
 
 export function AuthSocialButton({ provider, onPress }: AuthSocialButtonProps) {
   const isApple = provider === "apple";
@@ -34,7 +25,7 @@ export function AuthSocialButton({ provider, onPress }: AuthSocialButtonProps) {
   return (
     <Pressable style={styles.button} onPress={handlePress}>
       <View style={styles.iconWrap}>
-        {isApple ? <Ionicons name="logo-apple" size={23} color="#000000" /> : <GoogleMark />}
+        {isApple ? <Ionicons name="logo-apple" size={22} color="#000000" /> : <Image source={googleMarkSource} style={styles.googleImage} contentFit="contain" />}
       </View>
       <Text style={styles.text}>Continue with {isApple ? "Apple" : "Google"}</Text>
     </Pressable>
@@ -43,7 +34,7 @@ export function AuthSocialButton({ provider, onPress }: AuthSocialButtonProps) {
 
 const styles = StyleSheet.create({
   button: {
-    height: 50,
+    height: 46,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -51,52 +42,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.text,
     backgroundColor: "transparent",
-    marginTop: 10
+    marginTop: 8
   },
   iconWrap: {
-    width: 32,
+    width: 30,
     alignItems: "center",
-    marginRight: 10
+    marginRight: 8
   },
-  googleMark: {
-    width: 24,
-    height: 24,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  googleLetter: {
-    position: "absolute",
-    fontSize: 23,
-    fontWeight: "900",
-    lineHeight: 24
-  },
-  googleBlue: {
-    color: "#4285F4"
-  },
-  googleRed: {
-    color: "#EA4335",
-    transform: [{ rotate: "-32deg" }],
-    opacity: 0.92
-  },
-  googleYellow: {
-    color: "#FBBC05",
-    transform: [{ rotate: "28deg" }],
-    opacity: 0.9
-  },
-  googleGreen: {
-    color: "#34A853",
-    transform: [{ rotate: "72deg" }],
-    opacity: 0.86
-  },
-  googleCenter: {
-    color: colors.surface,
-    fontSize: 12,
-    fontWeight: "900",
-    lineHeight: 13
+  googleImage: {
+    width: 21,
+    height: 21
   },
   text: {
     color: colors.text,
-    fontSize: 16,
+    fontSize: 15.5,
     fontWeight: "600"
   }
 });
