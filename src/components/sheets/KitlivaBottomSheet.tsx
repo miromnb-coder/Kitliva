@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { BottomSheetBackdrop, BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { ReactNode, useCallback, useEffect, useMemo, useRef } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -49,7 +49,7 @@ export function KitlivaBottomSheet({
   }, [visible]);
 
   const renderBackdrop = useCallback(
-    (props: Parameters<typeof BottomSheetBackdrop>[0]) => (
+    (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} opacity={0.24} pressBehavior="close" />
     ),
     []
