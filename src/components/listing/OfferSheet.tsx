@@ -26,8 +26,9 @@ export function OfferSheet({ visible, listing, amount, message, error, isSending
     <View style={styles.overlay}>
       <Pressable style={styles.backdrop} onPress={onClose} />
       <View style={styles.sheet}>
+        <View style={styles.handle} />
         <View style={styles.header}>
-          <View>
+          <View style={styles.headerTextWrap}>
             <Text style={styles.title}>Make an offer</Text>
             <Text style={styles.subtitle}>Send a price the seller can accept or decline.</Text>
           </View>
@@ -47,11 +48,11 @@ export function OfferSheet({ visible, listing, amount, message, error, isSending
         <Text style={styles.label}>Your offer</Text>
         <View style={styles.amountBox}>
           <Text style={styles.currency}>€</Text>
-          <TextInput style={styles.amountInput} value={amount} onChangeText={onChangeAmount} placeholder="0" placeholderTextColor={colors.muted} keyboardType="decimal-pad" />
+          <TextInput style={styles.amountInput} value={amount} onChangeText={onChangeAmount} placeholder="0" placeholderTextColor="#A0A6A1" keyboardType="decimal-pad" />
         </View>
 
         <Text style={styles.label}>Message to seller</Text>
-        <TextInput style={styles.messageInput} value={message} onChangeText={onChangeMessage} placeholder="I can pick it up this week." placeholderTextColor={colors.muted} multiline textAlignVertical="top" />
+        <TextInput style={styles.messageInput} value={message} onChangeText={onChangeMessage} placeholder="I can pick it up this week." placeholderTextColor="#A0A6A1" multiline textAlignVertical="top" />
 
         <View style={styles.infoCard}>
           <Ionicons name="shield-checkmark-outline" size={18} color={colors.primary} />
@@ -69,31 +70,33 @@ export function OfferSheet({ visible, listing, amount, message, error, isSending
 
 const styles = StyleSheet.create({
   overlay: { ...StyleSheet.absoluteFillObject, zIndex: 50, justifyContent: "flex-end" },
-  backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(16,42,42,0.18)" },
-  sheet: { borderTopLeftRadius: 24, borderTopRightRadius: 24, backgroundColor: colors.background, paddingHorizontal: 16, paddingTop: 16, paddingBottom: 26 },
+  backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: "rgba(16,22,20,0.28)" },
+  sheet: { borderTopLeftRadius: 26, borderTopRightRadius: 26, backgroundColor: colors.background, paddingHorizontal: 20, paddingTop: 10, paddingBottom: 28 },
+  handle: { width: 42, height: 4, alignSelf: "center", borderRadius: 2, backgroundColor: "#D8D1C7", marginBottom: 14 },
   header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 14 },
-  title: { color: colors.text, fontSize: 22, fontWeight: "800" },
-  subtitle: { marginTop: 2, color: colors.muted, fontSize: 12.5, fontWeight: "500" },
-  closeButton: { width: 36, height: 36, alignItems: "center", justifyContent: "center", borderRadius: 18, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
-  listingCard: { minHeight: 66, flexDirection: "row", alignItems: "center", borderRadius: 15, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, padding: 10, marginBottom: 12 },
-  listingImage: { width: 48, height: 48, borderRadius: 11, marginRight: 10 },
-  listingPlaceholder: { width: 48, height: 48, alignItems: "center", justifyContent: "center", borderRadius: 11, backgroundColor: colors.mint, marginRight: 10 },
+  headerTextWrap: { flex: 1, paddingRight: 12 },
+  title: { color: colors.text, fontSize: 25, fontWeight: "600", letterSpacing: -0.4 },
+  subtitle: { marginTop: 4, color: colors.muted, fontSize: 12.5, fontWeight: "400", lineHeight: 17 },
+  closeButton: { width: 38, height: 38, alignItems: "center", justifyContent: "center", borderRadius: 19, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
+  listingCard: { minHeight: 72, flexDirection: "row", alignItems: "center", borderRadius: 16, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, padding: 11, marginBottom: 12 },
+  listingImage: { width: 52, height: 52, borderRadius: 12, marginRight: 11 },
+  listingPlaceholder: { width: 52, height: 52, alignItems: "center", justifyContent: "center", borderRadius: 12, backgroundColor: "#F7F2EB", marginRight: 11 },
   listingTextWrap: { flex: 1 },
-  listingTitle: { color: colors.text, fontSize: 13.5, fontWeight: "800" },
-  listingPrice: { marginTop: 3, color: colors.primary, fontSize: 12.5, fontWeight: "800" },
-  errorCard: { minHeight: 38, justifyContent: "center", borderRadius: 12, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, paddingHorizontal: 12, marginBottom: 12 },
-  errorText: { color: colors.primary, fontSize: 12, fontWeight: "800" },
-  label: { color: colors.text, fontSize: 14, fontWeight: "800", marginBottom: 7, marginTop: 8 },
-  amountBox: { height: 44, flexDirection: "row", alignItems: "center", borderRadius: 12, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, paddingHorizontal: 13 },
-  currency: { color: colors.text, fontSize: 15, fontWeight: "800", marginRight: 7 },
-  amountInput: { flex: 1, color: colors.text, fontSize: 15, fontWeight: "800", paddingVertical: 0 },
-  messageInput: { minHeight: 78, borderRadius: 13, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, padding: 12, color: colors.text, fontSize: 13, fontWeight: "500", lineHeight: 18 },
-  infoCard: { minHeight: 48, flexDirection: "row", alignItems: "center", borderRadius: 13, borderWidth: 1, borderColor: "#BFE9DC", backgroundColor: colors.mint, paddingHorizontal: 12, marginTop: 13 },
-  infoText: { flex: 1, marginLeft: 9, color: colors.primary, fontSize: 11.5, fontWeight: "700", lineHeight: 16 },
+  listingTitle: { color: colors.text, fontSize: 14, fontWeight: "700" },
+  listingPrice: { marginTop: 4, color: "#7B623C", fontSize: 12.5, fontWeight: "600" },
+  errorCard: { minHeight: 38, justifyContent: "center", borderRadius: 12, borderWidth: 1, borderColor: "#E0B9A6", backgroundColor: "#FFF7F2", paddingHorizontal: 12, marginBottom: 12 },
+  errorText: { color: "#8A4B2A", fontSize: 12, fontWeight: "700" },
+  label: { color: colors.text, fontSize: 13.5, fontWeight: "700", marginBottom: 7, marginTop: 8 },
+  amountBox: { height: 48, flexDirection: "row", alignItems: "center", borderRadius: 12, borderWidth: 1, borderColor: "#D8D1C7", backgroundColor: colors.surface, paddingHorizontal: 14 },
+  currency: { color: colors.text, fontSize: 15, fontWeight: "700", marginRight: 7 },
+  amountInput: { flex: 1, color: colors.text, fontSize: 15, fontWeight: "700", paddingVertical: 0 },
+  messageInput: { minHeight: 82, borderRadius: 13, borderWidth: 1, borderColor: "#D8D1C7", backgroundColor: colors.surface, padding: 12, color: colors.text, fontSize: 13, fontWeight: "400", lineHeight: 18 },
+  infoCard: { minHeight: 50, flexDirection: "row", alignItems: "center", borderRadius: 14, borderWidth: 1, borderColor: colors.border, backgroundColor: "#F7F2EB", paddingHorizontal: 12, marginTop: 13 },
+  infoText: { flex: 1, marginLeft: 9, color: "#5F655F", fontSize: 11.5, fontWeight: "500", lineHeight: 16 },
   actions: { flexDirection: "row", gap: 9, marginTop: 16 },
-  secondaryButton: { height: 46, flex: 1, alignItems: "center", justifyContent: "center", borderRadius: 12, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
-  secondaryText: { color: colors.text, fontSize: 13, fontWeight: "800" },
-  primaryButton: { height: 46, flex: 1, alignItems: "center", justifyContent: "center", borderRadius: 12, backgroundColor: colors.primary },
+  secondaryButton: { height: 48, flex: 1, alignItems: "center", justifyContent: "center", borderRadius: 12, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
+  secondaryText: { color: colors.text, fontSize: 13, fontWeight: "700" },
+  primaryButton: { height: 48, flex: 1, alignItems: "center", justifyContent: "center", borderRadius: 12, backgroundColor: "#171717" },
   disabledButton: { opacity: 0.7 },
-  primaryText: { color: colors.surface, fontSize: 13, fontWeight: "800" }
+  primaryText: { color: colors.surface, fontSize: 13, fontWeight: "700" }
 });
