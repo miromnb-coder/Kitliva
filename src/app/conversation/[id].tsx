@@ -218,8 +218,9 @@ export default function ConversationScreen() {
   const dateSeparator = getDateSeparator(messages);
   const latestOffer = offers[offers.length - 1] ?? null;
   const acceptedOffer = offers.find((offer) => offer.status === "accepted");
+  const hasActiveOrderCard = Boolean(deal || acceptedOffer);
   const displayOrderId = getConversationDisplayId(conversation?.id);
-  const statusLabel = deal || acceptedOffer ? "In transit" : latestOffer ? `Offer ${getOfferStatusLabel(latestOffer)}` : "Active chat";
+  const statusLabel = hasActiveOrderCard ? "In transit" : latestOffer ? `Offer ${getOfferStatusLabel(latestOffer)}` : "Active chat";
 
   const offerListing = useMemo<Listing | null>(() => {
     if (!conversation) return null;
@@ -347,18 +348,20 @@ export default function ConversationScreen() {
             })
           )}
 
-          <Pressable style={styles.systemCard} onPress={() => conversation && (deal ? router.push(`/deal/${deal.id}`) : router.push(`/listing/${conversation.listingId}`))}>
-            <View style={styles.systemIcon}><Ionicons name="cube-outline" size={20} color={colors.buttonPrimaryText} /></View>
-            <View style={styles.systemTextWrap}>
-              <Text style={styles.systemTitle}>{deal || acceptedOffer ? "Order is in transit" : "Active conversation"}</Text>
-              <Text style={styles.systemSub}>{deal || acceptedOffer ? "Est. delivery: 18 May" : "Keep pickup, offer and delivery details in chat."}</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={18} color={colors.muted} />
-          </Pressable>
+          {hasActiveOrderCard ? (
+            <Pressable style={styles.systemCard} onPress={() => deal ? router.push(`/deal/${deal.id}`) : conversation && router.push(`/listing/${conversation.listingId}`)}>
+              <View style={styles.systemIcon}><Ionicons name="cube-outline" size={20} color={colors.buttonPrimaryText} /></View>
+              <View style={styles.systemTextWrap}>
+                <Text style={styles.systemTitle}>Order is in transit</Text>
+                <Text style={styles.systemSub}>Est. delivery: 18 May</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={colors.muted} />
+            </Pressable>
+          ) : null}
         </ScrollView>
 
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
-        <View style={[styles.composer, { paddingBottom: keyboardOffset > 0 ? 8 : Math.max(insets.bottom + 8, 16) }]}>
+        <View style={[styles.composer, { paddingBottom: keyboardOffset > 0 ? 8 : Math.max(insets.bottom + 8, 16) }]}> 
           <Pressable style={styles.plusButton} onPress={toggleAttachmentSheet}><Ionicons name={isAttachmentSheetOpen ? "close" : "add"} size={25} color={isAttachmentSheetOpen ? colors.text : colors.accent} /></Pressable>
           <TextInput style={styles.input} value={draft} onChangeText={setDraft} placeholder="Write a message" placeholderTextColor={colors.inputPlaceholder} multiline />
           <Pressable style={[styles.sendButton, (!draft.trim() || sending) && styles.disabledSend]} onPress={handleSend} disabled={!draft.trim() || sending}><Ionicons name="paper-plane" size={21} color={colors.buttonPrimaryText} /></Pressable>
