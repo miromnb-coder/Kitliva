@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   topRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 12
+    marginTop: 6
   },
   logo: {
     marginLeft: 18,
@@ -91,35 +91,35 @@ const styles = StyleSheet.create({
     fontWeight: "500"
   },
   headerBlock: {
-    marginTop: 38
+    marginTop: 24
   },
   title: {
     color: colors.text,
-    fontSize: 46,
+    fontSize: 42,
     fontWeight: "700",
-    letterSpacing: -1.2,
-    lineHeight: 52
+    letterSpacing: -1.1,
+    lineHeight: 46
   },
   subtitle: {
-    marginTop: 14,
+    marginTop: 9,
     color: "#4F5752",
-    fontSize: 17,
+    fontSize: 15.5,
     fontWeight: "400",
-    lineHeight: 25
+    lineHeight: 22
   },
   formCard: {
     borderRadius: 18,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
-    padding: 24,
-    marginTop: 28
+    padding: 20,
+    marginTop: 22
   },
   helperText: {
     color: "#5F655F",
     fontSize: 12.5,
     fontWeight: "400",
-    marginTop: -10
+    marginTop: -6
   },
   errorText: {
     borderRadius: 12,
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     lineHeight: 17,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    marginTop: 14
+    marginTop: 12
   },
   successText: {
     borderRadius: 12,
@@ -145,18 +145,18 @@ const styles = StyleSheet.create({
     lineHeight: 17,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    marginTop: 14
+    marginTop: 12
   },
   primaryWrap: {
-    marginTop: 26
+    marginTop: 22
   },
   bottomLink: {
     alignItems: "center",
-    marginTop: 34
+    marginTop: 24
   },
   bottomText: {
     color: colors.muted,
-    fontSize: 15,
+    fontSize: 14.5,
     fontWeight: "400"
   },
   linkText: {
