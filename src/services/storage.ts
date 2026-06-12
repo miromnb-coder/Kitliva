@@ -7,6 +7,7 @@ type UploadListingImageParams = {
   uri?: string | null;
   fileName?: string | null;
   mimeType?: string | null;
+  base64?: string | null;
   sortOrder: number;
   isCover: boolean;
 };
@@ -44,6 +45,35 @@ function getFileExtension(params: UploadListingImageParams) {
   return "jpg";
 }
 
+function base64ToArrayBuffer(base64: string) {
+  const binaryString = globalThis.atob(base64);
+  const bytes = new Uint8Array(binaryString.length);
+
+  for (let index = 0; index < binaryString.length; index += 1) {
+    bytes[index] = binaryString.charCodeAt(index);
+  }
+
+  return bytes.buffer;
+}
+
+async function getImageArrayBuffer(params: UploadListingImageParams) {
+  if (params.base64) {
+    return base64ToArrayBuffer(params.base64);
+  }
+
+  if (!params.uri) {
+    throw new Error("missing image uri");
+  }
+
+  const response = await fetch(params.uri);
+
+  if (!response.ok) {
+    throw new Error("image fetch failed");
+  }
+
+  return response.arrayBuffer();
+}
+
 function getFriendlyStorageError(message?: string) {
   const normalized = message?.toLowerCase() ?? "";
 
@@ -51,7 +81,7 @@ function getFriendlyStorageError(message?: string) {
     return "We couldn’t upload your photos. Please try again.";
   }
 
-  if (normalized.includes("network") || normalized.includes("fetch")) {
+  if (normalized.includes("missing image") || normalized.includes("network") || normalized.includes("fetch")) {
     return "We couldn’t read one of your photos. Please choose it again.";
   }
 
@@ -60,14 +90,13 @@ function getFriendlyStorageError(message?: string) {
 
 export async function uploadListingImage(params: UploadListingImageParams): Promise<UploadListingImageResult> {
   try {
-    if (!params.uri) {
+    if (!params.uri && !params.base64) {
       return { success: false, message: "One photo was missing. Please choose it again." };
     }
 
     const extension = getFileExtension(params);
     const storagePath = `${params.listingId}/${Date.now()}-${params.sortOrder}.${extension}`;
-    const response = await fetch(params.uri);
-    const arrayBuffer = await response.arrayBuffer();
+    const arrayBuffer = await getImageArrayBuffer(params);
 
     const { error: uploadError } = await supabase.storage.from(LISTING_IMAGES_BUCKET).upload(storagePath, arrayBuffer, {
       contentType: params.mimeType ?? "image/jpeg",
