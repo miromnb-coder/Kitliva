@@ -11,13 +11,13 @@ type HomeSearchBarProps = {
 export function HomeSearchBar({ value, onChangeText }: HomeSearchBarProps) {
   return (
     <View style={styles.container}>
-      <Ionicons name="search-outline" size={17} color="#8C908A" />
+      <Ionicons name="search-outline" size={17} color={colors.inputPlaceholder} />
       <TextInput
         style={styles.input}
         value={value}
         onChangeText={onChangeText}
         placeholder="Search by hobby, brand or item"
-        placeholderTextColor="#8C908A"
+        placeholderTextColor={colors.inputPlaceholder}
         returnKeyType="search"
         clearButtonMode="while-editing"
       />
