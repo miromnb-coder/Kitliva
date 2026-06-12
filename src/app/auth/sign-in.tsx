@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     marginTop: 10,
-    color: "#4F5752",
+    color: colors.mutedStrong,
     fontSize: 15.5,
     fontWeight: "400",
     lineHeight: 22
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   },
   forgotText: {
     alignSelf: "flex-end",
-    color: "#7B623C",
+    color: colors.link,
     fontSize: 13.5,
     fontWeight: "500",
     marginTop: -4
@@ -100,9 +100,9 @@ const styles = StyleSheet.create({
   errorText: {
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#E0B9A6",
-    backgroundColor: "#FFF7F2",
-    color: "#8A4B2A",
+    borderColor: colors.dangerBorder,
+    backgroundColor: colors.dangerSurface,
+    color: colors.dangerText,
     fontSize: 12.5,
     fontWeight: "700",
     lineHeight: 17,
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     fontWeight: "400"
   },
   linkText: {
-    color: "#7B623C",
+    color: colors.link,
     fontWeight: "600"
   }
 });
