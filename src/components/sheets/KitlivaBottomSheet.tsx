@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     width: 42,
     height: 4,
     borderRadius: 2,
-    backgroundColor: "#D8D1C7"
+    backgroundColor: colors.sheetHandle
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 14,
-    backgroundColor: "#171717"
+    backgroundColor: colors.buttonPrimary
   },
   fullButton: {
     flex: 0,
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     opacity: 0.55
   },
   primaryText: {
-    color: colors.surface,
+    color: colors.buttonPrimaryText,
     fontSize: 14,
     fontWeight: "700"
   }
