@@ -7,9 +7,15 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { colors } from "@/constants/colors";
 import { SellPhoto } from "@/types/sell";
 
-type PhotoUploadPreviewProps = { photos: SellPhoto[]; error?: string | null; onAddPhotos: (photos: SellPhoto[]) => void; onRemovePhoto: (photoId: string) => void };
+type PhotoUploadPreviewProps = {
+  photos: SellPhoto[];
+  error?: string | null;
+  isDraftRestored?: boolean;
+  onAddPhotos: (photos: SellPhoto[]) => void;
+  onRemovePhoto: (photoId: string) => void;
+};
 
-export function PhotoUploadPreview({ photos, error, onAddPhotos, onRemovePhoto }: PhotoUploadPreviewProps) {
+export function PhotoUploadPreview({ photos, error, isDraftRestored = false, onAddPhotos, onRemovePhoto }: PhotoUploadPreviewProps) {
   const [failedPhotoIds, setFailedPhotoIds] = useState<string[]>([]);
 
   async function pickPhotos() {
@@ -26,6 +32,7 @@ export function PhotoUploadPreview({ photos, error, onAddPhotos, onRemovePhoto }
     <View style={styles.card}>
       <Text style={styles.title}>Add photos</Text>
       <Text style={styles.tip}>Start with clear photos. The first photo becomes your cover.</Text>
+      {isDraftRestored ? <View style={styles.restoredBadge}><Text style={styles.restoredBadgeText}>Draft restored from this device.</Text></View> : null}
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
         {photos.map((photo) => {
@@ -53,6 +60,8 @@ const styles = StyleSheet.create({
   card: { marginTop: 18, borderRadius: 18, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, padding: 16 },
   title: { color: colors.text, fontSize: 18, fontWeight: "700", lineHeight: 23 },
   tip: { marginTop: 6, color: colors.mutedStrong, fontSize: 13, fontWeight: "500", lineHeight: 18 },
+  restoredBadge: { height: 26, alignSelf: "flex-start", justifyContent: "center", borderRadius: 13, backgroundColor: colors.softGreen, paddingHorizontal: 9, marginTop: 8 },
+  restoredBadgeText: { color: colors.primary, fontSize: 11.5, fontWeight: "800" },
   errorText: { marginTop: 8, color: colors.danger, fontSize: 12, fontWeight: "700", lineHeight: 16 },
   row: { flexDirection: "row", gap: 10, paddingTop: 16, paddingRight: 2 },
   tile: { width: 92, height: 124, overflow: "hidden", borderRadius: 12, backgroundColor: colors.softGold },
