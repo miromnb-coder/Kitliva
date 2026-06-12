@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -16,12 +17,18 @@ type ListingHeroProps = {
 export function ListingHero({ listing, onFavoritePress, isFavoriteLoading = false }: ListingHeroProps) {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const [imageFailed, setImageFailed] = useState(false);
   const imageCount = listing.imageCount ?? listing.imageUrls?.length ?? (listing.imageUrl ? 1 : 0);
+  const shouldShowImage = Boolean(listing.imageUrl && !imageFailed);
+
+  useEffect(() => {
+    setImageFailed(false);
+  }, [listing.imageUrl]);
 
   return (
     <View style={styles.container}>
-      {listing.imageUrl ? (
-        <Image source={{ uri: listing.imageUrl }} style={styles.image} contentFit="cover" contentPosition="center" transition={180} />
+      {shouldShowImage ? (
+        <Image source={{ uri: listing.imageUrl ?? undefined }} style={styles.image} contentFit="cover" contentPosition="center" transition={180} onError={() => setImageFailed(true)} />
       ) : (
         <View style={styles.placeholder}>
           <Ionicons name="image-outline" size={36} color={colors.primary} />
