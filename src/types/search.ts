@@ -1,6 +1,7 @@
 import { ListingCondition } from "@/types/listing";
 
-export type SearchSortOption = "newest" | "price_low" | "price_high";
+export type SearchSortOption = "recommended" | "newest" | "price_low" | "price_high";
+export type SearchDeliveryOption = "any" | "pickup" | "shipping";
 
 export type SearchFilters = {
   categoryName: string;
@@ -8,6 +9,7 @@ export type SearchFilters = {
   minPrice: string;
   maxPrice: string;
   city: string;
+  deliveryOption: SearchDeliveryOption;
   sort: SearchSortOption;
 };
 
@@ -17,5 +19,6 @@ export const defaultSearchFilters: SearchFilters = {
   minPrice: "",
   maxPrice: "",
   city: "",
-  sort: "newest"
+  deliveryOption: "any",
+  sort: "recommended"
 };
