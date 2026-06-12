@@ -8,11 +8,12 @@ import { colors } from "@/constants/colors";
 
 type KitlivaBottomSheetProps = {
   visible: boolean;
-  title: string;
+  title?: string;
   subtitle?: string;
   children: ReactNode;
   snapPoints?: string[];
   showHandle?: boolean;
+  showHeader?: boolean;
   showCloseButton?: boolean;
   primaryLabel?: string;
   secondaryLabel?: string;
@@ -30,6 +31,7 @@ export function KitlivaBottomSheet({
   children,
   snapPoints = ["62%"],
   showHandle = true,
+  showHeader = true,
   showCloseButton = true,
   primaryLabel,
   secondaryLabel,
@@ -50,7 +52,7 @@ export function KitlivaBottomSheet({
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
-      <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} opacity={0.24} pressBehavior="close" />
+      <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} opacity={0.08} pressBehavior="close" />
     ),
     []
   );
@@ -73,17 +75,19 @@ export function KitlivaBottomSheet({
       onDismiss={onClose}
     >
       <BottomSheetScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <View style={styles.headerTextWrap}>
-            <Text style={styles.title}>{title}</Text>
-            {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+        {showHeader ? (
+          <View style={styles.header}>
+            <View style={styles.headerTextWrap}>
+              {title ? <Text style={styles.title}>{title}</Text> : null}
+              {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+            </View>
+            {showCloseButton ? (
+              <Pressable style={styles.closeButton} onPress={() => sheetRef.current?.dismiss()}>
+                <Ionicons name="close" size={20} color={colors.text} />
+              </Pressable>
+            ) : null}
           </View>
-          {showCloseButton ? (
-            <Pressable style={styles.closeButton} onPress={() => sheetRef.current?.dismiss()}>
-              <Ionicons name="close" size={20} color={colors.text} />
-            </Pressable>
-          ) : null}
-        </View>
+        ) : null}
         {children}
       </BottomSheetScrollView>
 
@@ -109,7 +113,12 @@ const styles = StyleSheet.create({
   sheetBackground: {
     backgroundColor: colors.background,
     borderTopLeftRadius: 28,
-    borderTopRightRadius: 28
+    borderTopRightRadius: 28,
+    shadowColor: colors.text,
+    shadowOffset: { width: 0, height: -6 },
+    shadowOpacity: 0.08,
+    shadowRadius: 18,
+    elevation: 12
   },
   handle: {
     width: 42,
