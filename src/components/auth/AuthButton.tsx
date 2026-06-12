@@ -32,7 +32,7 @@ export function AuthButton({ label, loadingLabel, variant = "primary", disabled 
 
 const styles = StyleSheet.create({
   button: {
-    height: 52,
+    height: 48,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 9
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     opacity: 0.72
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: 15.5,
     fontWeight: "700"
   },
   primaryText: {
@@ -59,13 +59,13 @@ const styles = StyleSheet.create({
     color: colors.text
   },
   tertiaryButton: {
-    height: 26,
+    height: 24,
     alignItems: "center",
     justifyContent: "center"
   },
   tertiaryText: {
     color: colors.text,
-    fontSize: 15,
+    fontSize: 14.5,
     fontWeight: "600"
   }
 });
