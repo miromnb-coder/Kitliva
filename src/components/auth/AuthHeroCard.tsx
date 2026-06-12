@@ -36,7 +36,7 @@ export function AuthHeroCard() {
         {trustRows.map((row, index) => (
           <View key={row.title} style={[styles.trustRow, index === trustRows.length - 1 && styles.lastTrustRow]}>
             <View style={styles.iconCircle}>
-              <Ionicons name={row.icon} size={23} color={colors.primary} />
+              <Ionicons name={row.icon} size={21} color={colors.primary} />
             </View>
             <View style={styles.trustTextWrap}>
               <Text style={styles.trustTitle}>{row.title}</Text>
@@ -51,34 +51,34 @@ export function AuthHeroCard() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 28
+    marginTop: 18
   },
   heroImage: {
     width: "100%",
-    height: 300,
+    height: 212,
     borderRadius: 18,
     backgroundColor: "#F7F2EB"
   },
   headline: {
-    marginTop: 26,
+    marginTop: 18,
     color: colors.text,
-    fontSize: 42,
+    fontSize: 36,
     fontWeight: "700",
-    letterSpacing: -1.1,
-    lineHeight: 46
+    letterSpacing: -1,
+    lineHeight: 39
   },
   body: {
-    marginTop: 12,
+    marginTop: 8,
     color: "#4F5752",
-    fontSize: 15,
+    fontSize: 13.5,
     fontWeight: "400",
-    lineHeight: 22
+    lineHeight: 19
   },
   trustList: {
-    marginTop: 16
+    marginTop: 10
   },
   trustRow: {
-    minHeight: 68,
+    minHeight: 54,
     flexDirection: "row",
     alignItems: "center",
     borderBottomWidth: 1,
@@ -88,28 +88,28 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0
   },
   iconCircle: {
-    width: 48,
-    height: 48,
+    width: 40,
+    height: 40,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 24,
+    borderRadius: 20,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.background
   },
   trustTextWrap: {
     flex: 1,
-    marginLeft: 16
+    marginLeft: 14
   },
   trustTitle: {
     color: colors.text,
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "700"
   },
   trustSubtitle: {
-    marginTop: 3,
+    marginTop: 2,
     color: "#5F655F",
-    fontSize: 12.5,
-    lineHeight: 16
+    fontSize: 12,
+    lineHeight: 15
   }
 });
