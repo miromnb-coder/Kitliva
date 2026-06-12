@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import { GestureResponderEvent, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
@@ -14,6 +15,12 @@ type ProductCardProps = {
 
 export function ProductCard({ listing, onFavoritePress }: ProductCardProps) {
   const router = useRouter();
+  const [imageFailed, setImageFailed] = useState(false);
+  const shouldShowImage = Boolean(listing.imageUrl && !imageFailed);
+
+  useEffect(() => {
+    setImageFailed(false);
+  }, [listing.imageUrl]);
 
   function handleFavoritePress(event: GestureResponderEvent) {
     event.stopPropagation();
@@ -23,23 +30,23 @@ export function ProductCard({ listing, onFavoritePress }: ProductCardProps) {
   return (
     <Pressable style={styles.card} onPress={() => router.push(`/listing/${listing.id}`)}>
       <View style={styles.imageWrap}>
-        {listing.imageUrl ? (
-          <Image source={{ uri: listing.imageUrl }} style={styles.image} contentFit="contain" transition={180} />
+        {shouldShowImage ? (
+          <Image source={{ uri: listing.imageUrl ?? undefined }} style={styles.image} contentFit="contain" transition={180} onError={() => setImageFailed(true)} />
         ) : (
           <View style={styles.placeholder}>
             <Ionicons name="image-outline" size={18} color={colors.primary} />
           </View>
         )}
         {onFavoritePress ? (
-          <Pressable style={styles.favoriteButton} onPress={handleFavoritePress}>
+          <Pressable style={styles.favoriteButton} onPress={handleFavoritePress} hitSlop={8}>
             <Ionicons name={listing.isFavorite ? "heart" : "heart-outline"} size={17} color={colors.text} />
           </Pressable>
         ) : null}
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.title} numberOfLines={1}>{listing.title}</Text>
-        <Text style={styles.subtitle} numberOfLines={1}>{listing.subtitle}</Text>
+        <Text style={styles.title} numberOfLines={1}>{listing.title || "Untitled item"}</Text>
+        <Text style={styles.subtitle} numberOfLines={1}>{listing.subtitle || listing.categoryName || "Kitliva gear"}</Text>
         <Text style={styles.price}>{formatPrice(listing.price, listing.currency)}</Text>
         <View style={styles.badgeRow}>
           <View style={styles.smallBadge}><Text style={styles.smallBadgeText}>{listing.conditionLabel.replace(" condition", "")}</Text></View>
