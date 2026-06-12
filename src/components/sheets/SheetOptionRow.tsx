@@ -14,12 +14,12 @@ type SheetOptionRowProps = {
 export function SheetOptionRow({ icon, title, subtitle, selected = false, onPress }: SheetOptionRowProps) {
   return (
     <Pressable style={[styles.row, selected && styles.selectedRow]} onPress={onPress}>
-      {icon ? <View style={styles.iconWrap}><Ionicons name={icon} size={20} color={selected ? "#A77C3A" : colors.text} /></View> : null}
+      {icon ? <View style={styles.iconWrap}><Ionicons name={icon} size={20} color={selected ? colors.accent : colors.text} /></View> : null}
       <View style={styles.textWrap}>
         <Text style={styles.title}>{title}</Text>
         {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
       </View>
-      {selected ? <Ionicons name="checkmark-circle" size={20} color="#A77C3A" /> : null}
+      {selected ? <Ionicons name="checkmark-circle" size={20} color={colors.accent} /> : null}
     </Pressable>
   );
 }
@@ -38,8 +38,8 @@ const styles = StyleSheet.create({
     marginBottom: 9
   },
   selectedRow: {
-    borderColor: "#A77C3A",
-    backgroundColor: "#F7F2EB"
+    borderColor: colors.accent,
+    backgroundColor: colors.softGold
   },
   iconWrap: {
     width: 30,
