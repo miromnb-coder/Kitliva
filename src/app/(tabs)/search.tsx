@@ -53,14 +53,16 @@ export default function SearchScreen() {
           <BackendSearchResults query={query} filters={filters} onCountChange={handleCountChange} />
         </ScrollView>
 
-        <SearchFiltersSheet
-          visible={activeSheet !== null}
-          activeSheet={activeSheet}
-          filters={filters}
-          onChange={setFilters}
-          onClose={() => setActiveSheet(null)}
-          onClear={clearFilters}
-        />
+        {activeSheet ? (
+          <SearchFiltersSheet
+            visible
+            activeSheet={activeSheet}
+            filters={filters}
+            onChange={setFilters}
+            onClose={() => setActiveSheet(null)}
+            onClear={clearFilters}
+          />
+        ) : null}
       </View>
     </Screen>
   );
