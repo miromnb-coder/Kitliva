@@ -5,6 +5,7 @@ import { useCallback, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useFocusEffect } from "expo-router";
 
+import { EmptyStateCard } from "@/components/ui/EmptyStateCard";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
 import { useAuth } from "@/hooks/useAuth";
@@ -71,7 +72,7 @@ export default function MyListingsScreen() {
           <Pressable style={styles.roundButton} onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={22} color={colors.text} />
           </Pressable>
-          <Pressable style={styles.createButton} onPress={() => router.push("/sell")}> 
+          <Pressable style={styles.createButton} onPress={() => router.push("/sell")}>
             <Ionicons name="add" size={18} color={colors.surface} />
             <Text style={styles.createButtonText}>Sell</Text>
           </Pressable>
@@ -92,16 +93,17 @@ export default function MyListingsScreen() {
         </View>
 
         {loadingListings ? (
-          <View style={styles.stateCard}><Text style={styles.stateTitle}>Loading listings...</Text></View>
+          <EmptyStateCard icon="pricetag-outline" title="Loading listings..." body="Your selling activity will appear here in a moment." />
         ) : listings.length === 0 ? (
-          <View style={styles.stateCard}>
-            <View style={styles.stateIcon}><Ionicons name="pricetag-outline" size={22} color="#A77C3A" /></View>
-            <Text style={styles.stateTitle}>No {status} listings</Text>
-            <Text style={styles.stateBody}>Your items will appear here when they match this status.</Text>
-            {status === "active" ? (
-              <Pressable style={styles.primaryAction} onPress={() => router.push("/sell")}><Text style={styles.primaryActionText}>Create listing</Text></Pressable>
-            ) : null}
-          </View>
+          <EmptyStateCard
+            icon="pricetag-outline"
+            title={status === "active" ? "No active listings" : `No ${status} listings`}
+            body={status === "active" ? "Sell unused hobby gear and give it a second life." : "Your items will appear here when they match this status."}
+            primaryLabel={status === "active" ? "Create listing" : undefined}
+            onPrimaryPress={status === "active" ? () => router.push("/sell") : undefined}
+            secondaryLabel={status === "active" ? "View seller tips" : undefined}
+            onSecondaryPress={status === "active" ? () => router.push("/seller-dashboard") : undefined}
+          />
         ) : (
           <View style={styles.list}>
             {listings.map((listing) => (
@@ -145,12 +147,6 @@ const styles = StyleSheet.create({
   selectedStatusChip: { borderColor: "#171717", backgroundColor: "#171717" },
   statusText: { color: colors.muted, fontSize: 12.5, fontWeight: "600" },
   selectedStatusText: { color: colors.surface },
-  stateCard: { minHeight: 190, alignItems: "center", justifyContent: "center", borderRadius: 18, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, padding: 20 },
-  stateIcon: { width: 48, height: 48, alignItems: "center", justifyContent: "center", borderRadius: 24, backgroundColor: "#F7F2EB", marginBottom: 12 },
-  stateTitle: { color: colors.text, fontSize: 17, fontWeight: "700", textTransform: "capitalize" },
-  stateBody: { marginTop: 6, color: colors.muted, fontSize: 13, fontWeight: "400", textAlign: "center", lineHeight: 18 },
-  primaryAction: { height: 42, justifyContent: "center", borderRadius: 21, backgroundColor: "#171717", paddingHorizontal: 18, marginTop: 14 },
-  primaryActionText: { color: colors.surface, fontSize: 13, fontWeight: "700" },
   list: { gap: 12 },
   card: { flexDirection: "row", borderRadius: 18, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, padding: 12 },
   image: { width: 92, height: 92, borderRadius: 14, marginRight: 13, backgroundColor: "#F7F2EB" },
