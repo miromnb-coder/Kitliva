@@ -1,17 +1,24 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
 
 const serifFont = Platform.select({ ios: "Georgia", android: "serif", default: undefined });
 
 export function HomeHeader() {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
       <Text style={styles.title} maxFontSizeMultiplier={1}>Kitliva</Text>
       <View style={styles.actions}>
-        <Ionicons name="notifications-outline" size={21} color={colors.text} />
-        <Ionicons name="bag-handle-outline" size={21} color={colors.text} />
+        <Pressable style={styles.iconButton} onPress={() => router.push("/notifications")}>
+          <Ionicons name="notifications-outline" size={21} color={colors.text} />
+        </Pressable>
+        <Pressable style={styles.iconButton} onPress={() => router.push("/my-listings")}>
+          <Ionicons name="bag-handle-outline" size={21} color={colors.text} />
+        </Pressable>
       </View>
     </View>
   );
@@ -35,6 +42,12 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 15
+    gap: 12
+  },
+  iconButton: {
+    width: 34,
+    height: 34,
+    alignItems: "center",
+    justifyContent: "center"
   }
 });
