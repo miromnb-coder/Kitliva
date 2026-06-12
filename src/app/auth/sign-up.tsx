@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     marginTop: 6,
-    color: "#4F5752",
+    color: colors.mutedStrong,
     fontSize: 14,
     fontWeight: "400",
     lineHeight: 19
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     marginTop: 14
   },
   helperText: {
-    color: "#5F655F",
+    color: colors.mutedStrong,
     fontSize: 11.5,
     fontWeight: "400",
     marginTop: -4
@@ -124,9 +124,9 @@ const styles = StyleSheet.create({
   errorText: {
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#E0B9A6",
-    backgroundColor: "#FFF7F2",
-    color: "#8A4B2A",
+    borderColor: colors.dangerBorder,
+    backgroundColor: colors.dangerSurface,
+    color: colors.dangerText,
     fontSize: 12,
     fontWeight: "700",
     lineHeight: 16,
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   successText: {
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#C6E7DC",
+    borderColor: colors.successBorder,
     backgroundColor: colors.mint,
     color: colors.primary,
     fontSize: 12,
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     fontWeight: "400"
   },
   linkText: {
-    color: "#7B623C",
+    color: colors.link,
     fontWeight: "600"
   }
 });
