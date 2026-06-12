@@ -2,13 +2,22 @@ import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
+import { SearchSortOption } from "@/types/search";
 
 type ExploreResultsHeaderProps = {
   count: number;
+  sort: SearchSortOption;
   onSortPress: () => void;
 };
 
-export function ExploreResultsHeader({ count, onSortPress }: ExploreResultsHeaderProps) {
+function getSortLabel(sort: SearchSortOption) {
+  if (sort === "newest") return "Newest";
+  if (sort === "price_low") return "Price low";
+  if (sort === "price_high") return "Price high";
+  return "Recommended";
+}
+
+export function ExploreResultsHeader({ count, sort, onSortPress }: ExploreResultsHeaderProps) {
   return (
     <View style={styles.container}>
       <View>
@@ -18,7 +27,7 @@ export function ExploreResultsHeader({ count, onSortPress }: ExploreResultsHeade
 
       <Pressable style={styles.sortButton} onPress={onSortPress}>
         <Ionicons name="swap-vertical-outline" size={13} color="#A77C3A" style={styles.sortIcon} />
-        <Text style={styles.sortText}>Sort: Recommended</Text>
+        <Text style={styles.sortText}>Sort: {getSortLabel(sort)}</Text>
         <Ionicons name="chevron-down" size={12} color={colors.muted} style={styles.chevron} />
       </Pressable>
     </View>
