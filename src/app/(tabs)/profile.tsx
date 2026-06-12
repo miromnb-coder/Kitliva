@@ -96,8 +96,8 @@ export default function ProfileScreen() {
         <ProfileStatsCard stats={stats} ratingLabel={ratingLabel} isLoading={isStatsLoading} />
 
         <View style={styles.shortcutRow}>
-          <ShortcutCard icon="pricetag-outline" title="My listings" subtitle="Manage your active listings" onPress={() => router.push("/my-listings")} />
-          <ShortcutCard icon="briefcase-outline" title="Offers" subtitle="Review buying and selling offers" onPress={() => router.push("/inbox")} />
+          <ShortcutCard icon="pricetag-outline" title="My listings" subtitle="Manage active listings" onPress={() => router.push("/my-listings")} />
+          <ShortcutCard icon="briefcase-outline" title="Offers" subtitle="Review your offers" onPress={() => router.push("/inbox")} />
         </View>
 
         <AccountSection title="Selling dashboard" rows={sellingRows} />
@@ -124,10 +124,10 @@ export default function ProfileScreen() {
 function ShortcutCard({ icon, title, subtitle, onPress }: { icon: IconName; title: string; subtitle: string; onPress: () => void }) {
   return (
     <Pressable style={styles.shortcutCard} onPress={onPress}>
-      <Ionicons name={icon} size={23} color={colors.text} />
-      <Text style={styles.shortcutTitle}>{title}</Text>
-      <Text style={styles.shortcutSubtitle}>{subtitle}</Text>
-      <Ionicons name="chevron-forward" size={18} color={colors.text} style={styles.shortcutChevron} />
+      <Ionicons name={icon} size={24} color={colors.text} />
+      <Text style={styles.shortcutTitle} numberOfLines={1}>{title}</Text>
+      <Text style={styles.shortcutSubtitle} numberOfLines={2}>{subtitle}</Text>
+      <Ionicons name="chevron-forward" size={19} color={colors.text} style={styles.shortcutChevron} />
     </Pressable>
   );
 }
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 20,
     paddingTop: 10,
-    paddingBottom: 112
+    paddingBottom: 128
   },
   shortcutRow: {
     flexDirection: "row",
@@ -185,34 +185,38 @@ const styles = StyleSheet.create({
   },
   shortcutCard: {
     flex: 1,
-    height: 96,
+    height: 112,
     borderRadius: 16,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
-    padding: 14
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 14
   },
   shortcutTitle: {
-    marginTop: 10,
+    marginTop: 13,
+    paddingRight: 22,
     color: colors.text,
-    fontSize: 14,
-    fontWeight: "700"
+    fontSize: 15,
+    fontWeight: "700",
+    lineHeight: 19
   },
   shortcutSubtitle: {
-    marginTop: 4,
+    marginTop: 5,
+    paddingRight: 18,
     color: colors.muted,
-    fontSize: 12,
+    fontSize: 12.5,
     fontWeight: "400",
-    lineHeight: 16,
-    paddingRight: 16
+    lineHeight: 17
   },
   shortcutChevron: {
     position: "absolute",
     right: 14,
-    top: 38
+    top: 47
   },
   sectionWrap: {
-    marginTop: 22
+    marginTop: 20
   },
   sectionTitle: {
     marginBottom: 8,
