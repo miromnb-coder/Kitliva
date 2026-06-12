@@ -102,11 +102,15 @@ export default function InboxScreen() {
             {activeDeal && activeFilter !== "support" ? <ActiveDealCard deal={activeDeal} onPress={() => router.push(`/deal/${activeDeal.id}`)} /> : null}
 
             {visibleConversations.length === 0 ? (
-              <MessagesEmptyCard
-                icon="chatbubble-ellipses-outline"
-                title={activeFilter === "support" ? "No support messages yet" : "No messages yet"}
-                message={activeFilter === "support" ? "Support conversations will appear here when you contact Kitliva." : "Start a conversation from a listing you like."}
-              />
+              <View style={styles.emptyWrap}>
+                <MessagesEmptyCard
+                  icon="chatbubble-ellipses-outline"
+                  title={activeFilter === "support" ? "No support messages yet" : "No messages yet"}
+                  message={activeFilter === "support" ? "Support conversations will appear here when you contact Kitliva." : "When you ask about gear or receive buyer messages, conversations will appear here."}
+                  primaryLabel={activeFilter === "support" ? "Safety center" : "Explore gear"}
+                  onPrimaryPress={() => router.push(activeFilter === "support" ? "/safety" : "/(tabs)/search")}
+                />
+              </View>
             ) : (
               <View style={styles.list}>
                 {visibleConversations.map((conversation, index) => (
@@ -143,6 +147,9 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     letterSpacing: -0.8,
     lineHeight: 40
+  },
+  emptyWrap: {
+    marginTop: 24
   },
   list: {
     marginTop: 22
