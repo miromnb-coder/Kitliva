@@ -29,7 +29,7 @@ export function AuthTextField({ label, placeholder, secure = false, value, onCha
           textContentType={textContentType}
           returnKeyType={returnKeyType}
         />
-        {secure ? <Ionicons name="eye-outline" size={22} color="#4F5752" /> : null}
+        {secure ? <Ionicons name="eye-outline" size={21} color="#4F5752" /> : null}
       </View>
     </View>
   );
@@ -37,29 +37,29 @@ export function AuthTextField({ label, placeholder, secure = false, value, onCha
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 18
+    marginBottom: 12
   },
   label: {
-    marginBottom: 8,
+    marginBottom: 6,
     color: colors.text,
-    fontSize: 14,
+    fontSize: 13.5,
     fontWeight: "600"
   },
   inputWrap: {
-    height: 52,
+    height: 46,
     flexDirection: "row",
     alignItems: "center",
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#D8D1C7",
     backgroundColor: colors.surface,
-    paddingHorizontal: 18
+    paddingHorizontal: 16
   },
   input: {
     flex: 1,
     paddingVertical: 0,
     color: colors.text,
-    fontSize: 15,
+    fontSize: 14.5,
     fontWeight: "400"
   }
 });
