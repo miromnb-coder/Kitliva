@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { AiPriceEstimateCard } from "@/components/listing/AiPriceEstimateCard";
 import { DeliveryPickupCard } from "@/components/listing/DeliveryPickupCard";
@@ -37,7 +37,14 @@ export default function ListingDetailScreen() {
     let isMounted = true;
 
     async function loadListing() {
+      if (!id) {
+        setListing(null);
+        setIsLoading(false);
+        return;
+      }
+
       setIsLoading(true);
+      setActionMessage(null);
       const favoriteIds = user ? await getFavoriteListingIds(user.id) : [];
       const nextListing = await getListingById(id, favoriteIds);
 
@@ -49,14 +56,12 @@ export default function ListingDetailScreen() {
       }
     }
 
-    if (id) {
-      loadListing().catch(() => {
-        if (isMounted) {
-          setListing(null);
-          setIsLoading(false);
-        }
-      });
-    }
+    loadListing().catch(() => {
+      if (isMounted) {
+        setListing(null);
+        setIsLoading(false);
+      }
+    });
 
     return () => {
       isMounted = false;
@@ -143,13 +148,23 @@ export default function ListingDetailScreen() {
     if (result.conversationId) router.push(`/conversation/${result.conversationId}`);
   }
 
-  if (isLoading) return <View style={styles.loadingScreen} />;
+  if (isLoading) {
+    return (
+      <View style={styles.loadingScreen}>
+        <ActivityIndicator color={colors.accent} />
+        <Text style={styles.loadingText}>Loading listing...</Text>
+      </View>
+    );
+  }
 
   if (!listing) {
     return (
       <View style={styles.notFoundScreen}>
         <Text style={styles.notFoundTitle}>Listing not found</Text>
         <Text style={styles.notFoundSubtitle}>This item may have been sold, removed or archived.</Text>
+        <Pressable style={styles.notFoundButton} onPress={() => router.back()}>
+          <Text style={styles.notFoundButtonText}>Go back</Text>
+        </Pressable>
       </View>
     );
   }
@@ -187,12 +202,15 @@ export default function ListingDetailScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
-  loadingScreen: { flex: 1, backgroundColor: colors.background },
+  loadingScreen: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.background, paddingHorizontal: 24 },
+  loadingText: { marginTop: 10, color: colors.mutedStrong, fontSize: 13, fontWeight: "600" },
   contentCard: { marginTop: -24, borderTopLeftRadius: 24, borderTopRightRadius: 24, backgroundColor: colors.background, paddingHorizontal: 20, paddingTop: 24, paddingBottom: 34 },
   actionMessageCard: { borderRadius: 13, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, padding: 12, marginTop: 14 },
   actionMessageText: { color: colors.primary, fontSize: 12.5, fontWeight: "700" },
   bottomSpacer: { height: 10 },
   notFoundScreen: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.background, paddingHorizontal: 24 },
   notFoundTitle: { color: colors.text, fontSize: 22, fontWeight: "800" },
-  notFoundSubtitle: { marginTop: 8, color: colors.muted, fontSize: 14, fontWeight: "500", textAlign: "center" }
+  notFoundSubtitle: { marginTop: 8, color: colors.muted, fontSize: 14, fontWeight: "500", textAlign: "center", lineHeight: 20 },
+  notFoundButton: { height: 46, alignItems: "center", justifyContent: "center", borderRadius: 14, backgroundColor: colors.buttonPrimary, paddingHorizontal: 22, marginTop: 18 },
+  notFoundButtonText: { color: colors.buttonPrimaryText, fontSize: 14, fontWeight: "700" }
 });
