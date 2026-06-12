@@ -10,12 +10,12 @@ type ProfileStatsCardProps = {
   isLoading?: boolean;
 };
 
-export function ProfileStatsCard({ stats, ratingLabel, isLoading = false }: ProfileStatsCardProps) {
+export function ProfileStatsCard({ stats, isLoading = false }: ProfileStatsCardProps) {
   const items = [
-    { label: "Active", value: isLoading ? "-" : String(stats.activeListings), icon: "pricetag-outline" as const },
-    { label: "Saved", value: isLoading ? "-" : String(stats.savedItems), icon: "heart-outline" as const },
+    { label: "Listings", value: isLoading ? "-" : String(stats.activeListings), icon: "pricetag-outline" as const },
     { label: "Sold", value: isLoading ? "-" : String(stats.soldListings), icon: "bag-handle-outline" as const },
-    { label: "Rating", value: isLoading ? "-" : ratingLabel, icon: "star-outline" as const }
+    { label: "Saved", value: isLoading ? "-" : String(stats.savedItems), icon: "heart-outline" as const },
+    { label: "Offers", value: isLoading ? "-" : String(stats.offers), icon: "briefcase-outline" as const }
   ];
 
   return (
@@ -23,11 +23,10 @@ export function ProfileStatsCard({ stats, ratingLabel, isLoading = false }: Prof
       {items.map((stat, index) => (
         <View key={stat.label} style={styles.statWrap}>
           <View style={styles.stat}>
-            <Ionicons name={stat.icon} size={18} color={colors.text} style={styles.icon} />
+            <Ionicons name={stat.icon} size={22} color={colors.text} />
             <Text style={styles.value}>{stat.value}</Text>
             <Text style={styles.label}>{stat.label}</Text>
           </View>
-
           {index < items.length - 1 ? <View style={styles.separator} /> : null}
         </View>
       ))}
@@ -37,14 +36,14 @@ export function ProfileStatsCard({ stats, ratingLabel, isLoading = false }: Prof
 
 const styles = StyleSheet.create({
   card: {
-    height: 86,
+    height: 92,
     flexDirection: "row",
     alignItems: "center",
-    borderRadius: 15,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
-    marginBottom: 18
+    marginTop: 14
   },
   statWrap: {
     flex: 1,
@@ -57,24 +56,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center"
   },
-  icon: {
-    marginBottom: 4
-  },
   value: {
+    marginTop: 7,
     color: colors.text,
-    fontSize: 17,
-    fontWeight: "800",
-    lineHeight: 21
+    fontSize: 20,
+    fontWeight: "700",
+    lineHeight: 23
   },
   label: {
     marginTop: 2,
-    color: "#657575",
-    fontSize: 11.5,
-    fontWeight: "500"
+    color: colors.muted,
+    fontSize: 11,
+    fontWeight: "400"
   },
   separator: {
     width: 1,
-    height: 54,
+    height: 48,
     backgroundColor: colors.border
   }
 });
