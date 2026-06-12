@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
 
+import { AIListingAssistantCard } from "@/components/sell/AIListingAssistantCard";
 import { DeliveryStep } from "@/components/sell/DeliveryStep";
 import { DetailsStep } from "@/components/sell/DetailsStep";
 import { PhotosStep } from "@/components/sell/PhotosStep";
@@ -25,14 +26,12 @@ const orderedSteps: SellStep[] = ["photos", "details", "pricing", "delivery", "r
 function parsePriceAmount(priceLabel: string) {
   const normalized = priceLabel.replace(/[^0-9.,]/g, "").replace(",", ".");
   const parsed = Number.parseFloat(normalized);
-
   return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
 }
 
 export default function SellScreen() {
   const router = useRouter();
   const { isLoading, user } = useAuth();
-
   const [currentStep, setCurrentStep] = useState<SellFlowStep>("photos");
   const [form, setForm] = useState<SellFormDraft>(emptySellFormDraft);
   const [selectedPhotos, setSelectedPhotos] = useState<SellPhoto[]>([]);
@@ -53,6 +52,12 @@ export default function SellScreen() {
     setPublishError(null);
     setFlowError(null);
     setForm((currentForm) => ({ ...currentForm, [key]: value }));
+  }
+
+  function applyAIChanges(patch: Partial<SellFormDraft>) {
+    setPublishError(null);
+    setFlowError(null);
+    setForm((currentForm) => ({ ...currentForm, ...patch }));
   }
 
   function getPhotosError() {
@@ -86,25 +91,19 @@ export default function SellScreen() {
     if (step === "details") return getDetailsError();
     if (step === "pricing") return getPricingError();
     if (step === "delivery") return getDeliveryError();
-
     return null;
   }
 
   function goToNextStep() {
     setPublishError(null);
-
     if (currentStep === "success" || currentStep === "review") return;
-
     const error = getCurrentStepError(currentStep);
-
     if (error) {
       setFlowError(error);
       return;
     }
-
     const currentIndex = orderedSteps.indexOf(currentStep);
     const nextStep = orderedSteps[currentIndex + 1];
-
     if (nextStep) {
       setFlowError(null);
       setCurrentStep(nextStep);
@@ -114,18 +113,14 @@ export default function SellScreen() {
   function goToPreviousStep() {
     setPublishError(null);
     setFlowError(null);
-
     if (currentStep === "success" || currentStep === "photos") return;
-
     const currentIndex = orderedSteps.indexOf(currentStep);
     const previousStep = orderedSteps[Math.max(0, currentIndex - 1)];
-
     setCurrentStep(previousStep);
   }
 
   async function publishListing() {
     if (isPublishing) return;
-
     if (!user) {
       router.push("/auth/welcome");
       return;
@@ -137,9 +132,7 @@ export default function SellScreen() {
       { step: "pricing", error: getPricingError() },
       { step: "delivery", error: getDeliveryError() }
     ];
-
     const failedValidation = validations.find((item) => item.error);
-
     if (failedValidation) {
       setFlowError(failedValidation.error);
       setPublishError(null);
@@ -149,7 +142,6 @@ export default function SellScreen() {
 
     setIsPublishing(true);
     setPublishError(null);
-
     const result = await createListingWithImages(
       {
         sellerId: user.id,
@@ -165,7 +157,6 @@ export default function SellScreen() {
       },
       selectedPhotos
     );
-
     setIsPublishing(false);
 
     if (!result.success) {
@@ -187,37 +178,34 @@ export default function SellScreen() {
   }
 
   function viewPublishedListing() {
-    if (publishedListing) {
-      router.push(`/listing/${publishedListing.id}`);
-    }
+    if (publishedListing) router.push(`/listing/${publishedListing.id}`);
   }
 
   function renderStepContent() {
     if (currentStep === "success") {
-      return (
-        <PublishSuccessStep
-          listing={publishedListing}
-          onCreateAnother={createAnotherListing}
-          onViewListing={viewPublishedListing}
-        />
-      );
+      return <PublishSuccessStep listing={publishedListing} onCreateAnother={createAnotherListing} onViewListing={viewPublishedListing} />;
     }
 
     if (currentStep === "details") {
-      return <DetailsStep form={form} error={flowError} onChange={updateForm} />;
+      return (
+        <>
+          <AIListingAssistantCard mode="details" form={form} onApply={applyAIChanges} />
+          <DetailsStep form={form} error={flowError} onChange={updateForm} />
+        </>
+      );
     }
 
     if (currentStep === "pricing") {
-      return <PricingStep form={form} error={flowError} onChange={updateForm} />;
+      return (
+        <>
+          <AIListingAssistantCard mode="pricing" form={form} onApply={applyAIChanges} />
+          <PricingStep form={form} error={flowError} onChange={updateForm} />
+        </>
+      );
     }
 
-    if (currentStep === "delivery") {
-      return <DeliveryStep form={form} error={flowError} onChange={updateForm} />;
-    }
-
-    if (currentStep === "review") {
-      return <ReviewStep form={form} photos={selectedPhotos} publishError={publishError} />;
-    }
+    if (currentStep === "delivery") return <DeliveryStep form={form} error={flowError} onChange={updateForm} />;
+    if (currentStep === "review") return <ReviewStep form={form} photos={selectedPhotos} publishError={publishError} />;
 
     return (
       <PhotosStep
@@ -227,52 +215,17 @@ export default function SellScreen() {
           setFlowError(null);
           setSelectedPhotos((current) => [...current, ...photos].slice(0, 6));
         }}
-        onRemovePhoto={(photoId) => {
-          setSelectedPhotos((current) => current.filter((photo) => photo.id !== photoId));
-        }}
+        onRemovePhoto={(photoId) => setSelectedPhotos((current) => current.filter((photo) => photo.id !== photoId))}
       />
     );
   }
 
   function renderActions() {
     if (currentStep === "success") return null;
-
-    if (currentStep === "photos") {
-      return <SellFlowActions primaryLabel="Continue" onPrimaryPress={goToNextStep} />;
-    }
-
-    if (currentStep === "details" || currentStep === "pricing") {
-      return (
-        <SellFlowActions
-          secondaryLabel="Back"
-          onSecondaryPress={goToPreviousStep}
-          primaryLabel="Continue"
-          onPrimaryPress={goToNextStep}
-        />
-      );
-    }
-
-    if (currentStep === "delivery") {
-      return (
-        <SellFlowActions
-          secondaryLabel="Back"
-          onSecondaryPress={goToPreviousStep}
-          primaryLabel="Continue to review"
-          onPrimaryPress={goToNextStep}
-        />
-      );
-    }
-
-    return (
-      <SellFlowActions
-        secondaryLabel="Back"
-        onSecondaryPress={goToPreviousStep}
-        primaryLabel={isPublishing ? "Publishing..." : "Publish listing"}
-        onPrimaryPress={publishListing}
-        isPrimaryLoading={isPublishing}
-        isSecondaryDisabled={isPublishing}
-      />
-    );
+    if (currentStep === "photos") return <SellFlowActions primaryLabel="Continue" onPrimaryPress={goToNextStep} />;
+    if (currentStep === "details" || currentStep === "pricing") return <SellFlowActions secondaryLabel="Back" onSecondaryPress={goToPreviousStep} primaryLabel="Continue" onPrimaryPress={goToNextStep} />;
+    if (currentStep === "delivery") return <SellFlowActions secondaryLabel="Back" onSecondaryPress={goToPreviousStep} primaryLabel="Continue to review" onPrimaryPress={goToNextStep} />;
+    return <SellFlowActions secondaryLabel="Back" onSecondaryPress={goToPreviousStep} primaryLabel={isPublishing ? "Publishing..." : "Publish listing"} onPrimaryPress={publishListing} isPrimaryLoading={isPublishing} isSecondaryDisabled={isPublishing} />;
   }
 
   if (isLoading || !user) {
@@ -289,9 +242,7 @@ export default function SellScreen() {
     <Screen noPadding>
       <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <SellHeader showSaveDraft={!isSuccess} />
-
         {currentStep !== "success" ? <SellStepIndicator currentStep={currentStep} /> : null}
-
         {renderStepContent()}
         {renderActions()}
       </ScrollView>
@@ -300,13 +251,6 @@ export default function SellScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background
-  },
-  content: {
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 112
-  }
+  screen: { flex: 1, backgroundColor: colors.background },
+  content: { paddingHorizontal: 20, paddingTop: 10, paddingBottom: 112 }
 });
