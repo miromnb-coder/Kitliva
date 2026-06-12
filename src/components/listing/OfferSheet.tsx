@@ -55,7 +55,7 @@ export function OfferSheet({ visible, listing, amount, message, error, isSending
                 value={amount}
                 onChangeText={onChangeAmount}
                 placeholder="0"
-                placeholderTextColor="#A0A6A1"
+                placeholderTextColor={colors.inputPlaceholder}
                 keyboardType="decimal-pad"
                 returnKeyType="done"
               />
@@ -67,7 +67,7 @@ export function OfferSheet({ visible, listing, amount, message, error, isSending
               value={message}
               onChangeText={onChangeMessage}
               placeholder="I can pick it up this week."
-              placeholderTextColor="#A0A6A1"
+              placeholderTextColor={colors.inputPlaceholder}
               multiline
               textAlignVertical="top"
               returnKeyType="default"
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   keyboardAvoider: { flex: 1, justifyContent: "flex-end" },
   sheet: { maxHeight: "92%", borderTopLeftRadius: 26, borderTopRightRadius: 26, backgroundColor: colors.background, overflow: "hidden" },
   sheetContent: { paddingHorizontal: 20, paddingTop: 10, paddingBottom: Platform.OS === "ios" ? 28 : 22 },
-  handle: { width: 42, height: 4, alignSelf: "center", borderRadius: 2, backgroundColor: "#D8D1C7", marginBottom: 14 },
+  handle: { width: 42, height: 4, alignSelf: "center", borderRadius: 2, backgroundColor: colors.sheetHandle, marginBottom: 14 },
   header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 14 },
   headerTextWrap: { flex: 1, paddingRight: 12 },
   title: { color: colors.text, fontSize: 25, fontWeight: "600", letterSpacing: -0.4 },
@@ -103,23 +103,23 @@ const styles = StyleSheet.create({
   closeButton: { width: 38, height: 38, alignItems: "center", justifyContent: "center", borderRadius: 19, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
   listingCard: { minHeight: 72, flexDirection: "row", alignItems: "center", borderRadius: 16, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, padding: 11, marginBottom: 12 },
   listingImage: { width: 52, height: 52, borderRadius: 12, marginRight: 11 },
-  listingPlaceholder: { width: 52, height: 52, alignItems: "center", justifyContent: "center", borderRadius: 12, backgroundColor: "#F7F2EB", marginRight: 11 },
+  listingPlaceholder: { width: 52, height: 52, alignItems: "center", justifyContent: "center", borderRadius: 12, backgroundColor: colors.softGold, marginRight: 11 },
   listingTextWrap: { flex: 1 },
   listingTitle: { color: colors.text, fontSize: 14, fontWeight: "700" },
-  listingPrice: { marginTop: 4, color: "#7B623C", fontSize: 12.5, fontWeight: "600" },
+  listingPrice: { marginTop: 4, color: colors.accent, fontSize: 12.5, fontWeight: "600" },
   errorCard: { minHeight: 38, justifyContent: "center", borderRadius: 12, borderWidth: 1, borderColor: "#E0B9A6", backgroundColor: "#FFF7F2", paddingHorizontal: 12, marginBottom: 12 },
   errorText: { color: "#8A4B2A", fontSize: 12, fontWeight: "700" },
   label: { color: colors.text, fontSize: 13.5, fontWeight: "700", marginBottom: 7, marginTop: 8 },
-  amountBox: { height: 48, flexDirection: "row", alignItems: "center", borderRadius: 12, borderWidth: 1, borderColor: "#D8D1C7", backgroundColor: colors.surface, paddingHorizontal: 14 },
+  amountBox: { height: 48, flexDirection: "row", alignItems: "center", borderRadius: 12, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, paddingHorizontal: 14 },
   currency: { color: colors.text, fontSize: 15, fontWeight: "700", marginRight: 7 },
   amountInput: { flex: 1, color: colors.text, fontSize: 15, fontWeight: "700", paddingVertical: 0 },
-  messageInput: { minHeight: 96, maxHeight: 126, borderRadius: 13, borderWidth: 1, borderColor: "#D8D1C7", backgroundColor: colors.surface, padding: 12, color: colors.text, fontSize: 13, fontWeight: "400", lineHeight: 18 },
-  infoCard: { minHeight: 50, flexDirection: "row", alignItems: "center", borderRadius: 14, borderWidth: 1, borderColor: colors.border, backgroundColor: "#F7F2EB", paddingHorizontal: 12, marginTop: 13 },
-  infoText: { flex: 1, marginLeft: 9, color: "#5F655F", fontSize: 11.5, fontWeight: "500", lineHeight: 16 },
+  messageInput: { minHeight: 96, maxHeight: 126, borderRadius: 13, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, padding: 12, color: colors.text, fontSize: 13, fontWeight: "400", lineHeight: 18 },
+  infoCard: { minHeight: 50, flexDirection: "row", alignItems: "center", borderRadius: 14, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.softGold, paddingHorizontal: 12, marginTop: 13 },
+  infoText: { flex: 1, marginLeft: 9, color: colors.mutedStrong, fontSize: 11.5, fontWeight: "500", lineHeight: 16 },
   actions: { flexDirection: "row", gap: 9, marginTop: 16 },
   secondaryButton: { height: 48, flex: 1, alignItems: "center", justifyContent: "center", borderRadius: 12, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
   secondaryText: { color: colors.text, fontSize: 13, fontWeight: "700" },
-  primaryButton: { height: 48, flex: 1, alignItems: "center", justifyContent: "center", borderRadius: 12, backgroundColor: "#171717" },
+  primaryButton: { height: 48, flex: 1, alignItems: "center", justifyContent: "center", borderRadius: 12, backgroundColor: colors.buttonPrimary },
   disabledButton: { opacity: 0.7 },
-  primaryText: { color: colors.surface, fontSize: 13, fontWeight: "700" }
+  primaryText: { color: colors.buttonPrimaryText, fontSize: 13, fontWeight: "700" }
 });
