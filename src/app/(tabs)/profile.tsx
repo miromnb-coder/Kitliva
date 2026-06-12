@@ -1,18 +1,30 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useCallback, useState } from "react";
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
-import { ScrollView, StyleSheet, View } from "react-native";
 
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
-import { ProfileSection } from "@/components/profile/ProfileSection";
 import { ProfileStatsCard } from "@/components/profile/ProfileStatsCard";
 import { ProfileSummaryCard } from "@/components/profile/ProfileSummaryCard";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
-import { ProfileSection as ProfileSectionType } from "@/data/mockProfile";
 import { useAuth } from "@/hooks/useAuth";
 import { getProfileStats, ProfileStats } from "@/services/profileStats";
 
-const emptyStats: ProfileStats = { activeListings: 0, savedItems: 0, soldListings: 0 };
+type IconName = keyof typeof Ionicons.glyphMap;
+
+type AccountRowItem = {
+  label: string;
+  icon: IconName;
+  badge?: number | string;
+  onPress: () => void;
+};
+
+const emptyStats: ProfileStats = { activeListings: 0, savedItems: 0, soldListings: 0, offers: 0 };
+
+function showComingLater(label: string) {
+  Alert.alert(label, `${label} is coming later.`);
+}
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -58,59 +70,237 @@ export default function ProfileScreen() {
     router.replace("/auth/welcome");
   }
 
-  function handleItemPress(label: string) {
-    if (label === "My listings") router.push("/my-listings");
-    if (label === "Create listing") router.push("/sell");
-    if (label === "Edit profile" || label === "Account settings") router.push("/profile/edit");
-  }
-
   if (isLoading || !user) {
     return <Screen noPadding><View style={styles.screen} /></Screen>;
   }
 
   const ratingLabel = profile?.rating_count ? profile.rating_average.toFixed(1) : "New";
-  const sections: ProfileSectionType[] = [
-    {
-      title: "My activity",
-      items: [
-        { label: "Saved items", icon: "heart-outline", badge: stats.savedItems },
-        { label: "My listings", icon: "pricetag-outline", badge: stats.activeListings },
-        { label: "Recently viewed", icon: "time-outline" }
-      ]
-    },
-    {
-      title: "Selling tools",
-      items: [
-        { label: "Create listing", icon: "add-circle-outline" },
-        { label: "Seller tips", icon: "bulb-outline" },
-        { label: "Price guidance", icon: "analytics-outline" }
-      ]
-    },
-    {
-      title: "Support & account",
-      items: [
-        { label: "Edit profile", icon: "person-circle-outline" },
-        { label: "Help center", icon: "help-circle-outline" },
-        { label: "Sign out", icon: "log-out-outline" }
-      ]
-    }
+
+  const sellingRows: AccountRowItem[] = [
+    { label: "Drafts", icon: "document-text-outline", badge: 0, onPress: () => showComingLater("Drafts") },
+    { label: "Price insights", icon: "analytics-outline", onPress: () => showComingLater("Price insights") },
+    { label: "Shipping preferences", icon: "cube-outline", onPress: () => showComingLater("Shipping preferences") }
+  ];
+
+  const buyingRows: AccountRowItem[] = [
+    { label: "Saved items", icon: "heart-outline", badge: stats.savedItems, onPress: () => showComingLater("Saved items") },
+    { label: "Offers", icon: "pricetag-outline", badge: stats.offers, onPress: () => router.push("/inbox") },
+    { label: "Purchase history", icon: "bag-handle-outline", onPress: () => showComingLater("Purchase history") }
   ];
 
   return (
     <Screen noPadding>
       <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <ProfileHeader />
-        <ProfileSummaryCard />
+        <ProfileHeader onSettingsPress={() => router.push("/profile/edit")} />
+        <ProfileSummaryCard stats={stats} ratingLabel={ratingLabel} isLoading={isStatsLoading} />
         <ProfileStatsCard stats={stats} ratingLabel={ratingLabel} isLoading={isStatsLoading} />
-        {sections.map((section) => (
-          <ProfileSection key={section.title} section={section} onSignOut={handleSignOut} onItemPress={handleItemPress} />
-        ))}
+
+        <View style={styles.shortcutRow}>
+          <ShortcutCard icon="pricetag-outline" title="My listings" subtitle="Manage your active listings" onPress={() => router.push("/my-listings")} />
+          <ShortcutCard icon="briefcase-outline" title="Offers" subtitle="Review buying and selling offers" onPress={() => router.push("/inbox")} />
+        </View>
+
+        <AccountSection title="Selling dashboard" rows={sellingRows} />
+        <AccountSection title="Buying" rows={buyingRows} />
+
+        <Text style={styles.sectionTitle}>Support & account</Text>
+        <View style={styles.gridRow}>
+          <GridAction icon="person-circle-outline" label="Edit profile" onPress={() => router.push("/profile/edit")} />
+          <GridAction icon="notifications-outline" label="Notifications" onPress={() => showComingLater("Notifications")} />
+          <GridAction icon="help-circle-outline" label="Help center" onPress={() => showComingLater("Help center")} />
+          <GridAction icon="settings-outline" label="Settings" onPress={() => router.push("/profile/edit")} />
+        </View>
+
+        <Pressable style={styles.signOutRow} onPress={handleSignOut}>
+          <Ionicons name="log-out-outline" size={22} color="#A77C3A" />
+          <Text style={styles.signOutText}>Sign out</Text>
+          <Ionicons name="chevron-forward" size={17} color={colors.muted} />
+        </Pressable>
       </ScrollView>
     </Screen>
   );
 }
 
+function ShortcutCard({ icon, title, subtitle, onPress }: { icon: IconName; title: string; subtitle: string; onPress: () => void }) {
+  return (
+    <Pressable style={styles.shortcutCard} onPress={onPress}>
+      <Ionicons name={icon} size={23} color={colors.text} />
+      <Text style={styles.shortcutTitle}>{title}</Text>
+      <Text style={styles.shortcutSubtitle}>{subtitle}</Text>
+      <Ionicons name="chevron-forward" size={18} color={colors.text} style={styles.shortcutChevron} />
+    </Pressable>
+  );
+}
+
+function AccountSection({ title, rows }: { title: string; rows: AccountRowItem[] }) {
+  return (
+    <View style={styles.sectionWrap}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      <View style={styles.sectionCard}>
+        {rows.map((row, index) => (
+          <View key={row.label}>
+            <Pressable style={styles.sectionRow} onPress={row.onPress}>
+              <View style={styles.rowIconWrap}>
+                <Ionicons name={row.icon} size={21} color={colors.text} />
+              </View>
+              <Text style={styles.rowText}>{row.label}</Text>
+              {row.badge !== undefined ? (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeText}>{row.badge}</Text>
+                </View>
+              ) : null}
+              <Ionicons name="chevron-forward" size={17} color={colors.muted} />
+            </Pressable>
+            {index < rows.length - 1 ? <View style={styles.rowSeparator} /> : null}
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+}
+
+function GridAction({ icon, label, onPress }: { icon: IconName; label: string; onPress: () => void }) {
+  return (
+    <Pressable style={styles.gridCard} onPress={onPress}>
+      <Ionicons name={icon} size={22} color={colors.text} />
+      <Text style={styles.gridLabel}>{label}</Text>
+    </Pressable>
+  );
+}
+
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.background },
-  content: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 118 }
+  screen: {
+    flex: 1,
+    backgroundColor: colors.background
+  },
+  content: {
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingBottom: 112
+  },
+  shortcutRow: {
+    flexDirection: "row",
+    gap: 12,
+    marginTop: 14
+  },
+  shortcutCard: {
+    flex: 1,
+    height: 96,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    padding: 14
+  },
+  shortcutTitle: {
+    marginTop: 10,
+    color: colors.text,
+    fontSize: 14,
+    fontWeight: "700"
+  },
+  shortcutSubtitle: {
+    marginTop: 4,
+    color: colors.muted,
+    fontSize: 12,
+    fontWeight: "400",
+    lineHeight: 16,
+    paddingRight: 16
+  },
+  shortcutChevron: {
+    position: "absolute",
+    right: 14,
+    top: 38
+  },
+  sectionWrap: {
+    marginTop: 22
+  },
+  sectionTitle: {
+    marginBottom: 8,
+    color: colors.muted,
+    fontSize: 13,
+    fontWeight: "500"
+  },
+  sectionCard: {
+    overflow: "hidden",
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface
+  },
+  sectionRow: {
+    height: 56,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 16
+  },
+  rowIconWrap: {
+    width: 24,
+    alignItems: "center"
+  },
+  rowText: {
+    flex: 1,
+    marginLeft: 14,
+    color: colors.text,
+    fontSize: 14,
+    fontWeight: "600"
+  },
+  badge: {
+    minWidth: 26,
+    height: 26,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 13,
+    backgroundColor: "#F7F2EB",
+    paddingHorizontal: 9,
+    marginRight: 10
+  },
+  badgeText: {
+    color: "#7B623C",
+    fontSize: 12,
+    fontWeight: "600"
+  },
+  rowSeparator: {
+    height: 1,
+    marginLeft: 54,
+    backgroundColor: colors.border
+  },
+  gridRow: {
+    flexDirection: "row",
+    gap: 10
+  },
+  gridCard: {
+    flex: 1,
+    height: 72,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface
+  },
+  gridLabel: {
+    marginTop: 7,
+    color: colors.text,
+    fontSize: 11,
+    fontWeight: "500",
+    textAlign: "center"
+  },
+  signOutRow: {
+    height: 54,
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    paddingHorizontal: 16,
+    marginTop: 10
+  },
+  signOutText: {
+    flex: 1,
+    marginLeft: 14,
+    color: colors.text,
+    fontSize: 14,
+    fontWeight: "600"
+  }
 });
