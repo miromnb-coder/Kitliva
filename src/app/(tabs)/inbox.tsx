@@ -159,12 +159,12 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "center",
     borderRadius: 18,
-    backgroundColor: "#171717",
+    backgroundColor: colors.buttonPrimary,
     paddingHorizontal: 18,
     marginTop: 14
   },
   retryText: {
-    color: colors.surface,
+    color: colors.buttonPrimaryText,
     fontSize: 12.5,
     fontWeight: "700"
   }
