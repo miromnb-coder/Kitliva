@@ -66,36 +66,36 @@ export default function SignInScreen() {
 
 const styles = StyleSheet.create({
   headerBlock: {
-    marginTop: 52
+    marginTop: 34
   },
   title: {
     color: colors.text,
-    fontSize: 46,
+    fontSize: 42,
     fontWeight: "700",
-    letterSpacing: -1.2,
-    lineHeight: 52
+    letterSpacing: -1.1,
+    lineHeight: 47
   },
   subtitle: {
-    marginTop: 14,
+    marginTop: 10,
     color: "#4F5752",
-    fontSize: 17,
+    fontSize: 15.5,
     fontWeight: "400",
-    lineHeight: 25
+    lineHeight: 22
   },
   formCard: {
     borderRadius: 18,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
-    padding: 24,
-    marginTop: 42
+    padding: 20,
+    marginTop: 28
   },
   forgotText: {
     alignSelf: "flex-end",
     color: "#7B623C",
-    fontSize: 14,
+    fontSize: 13.5,
     fontWeight: "500",
-    marginTop: -8
+    marginTop: -4
   },
   errorText: {
     borderRadius: 12,
@@ -108,18 +108,18 @@ const styles = StyleSheet.create({
     lineHeight: 17,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    marginTop: 14
+    marginTop: 12
   },
   primaryWrap: {
-    marginTop: 40
+    marginTop: 28
   },
   bottomLink: {
     alignItems: "center",
-    marginTop: 34
+    marginTop: 24
   },
   bottomText: {
     color: colors.muted,
-    fontSize: 15,
+    fontSize: 14.5,
     fontWeight: "400"
   },
   linkText: {
