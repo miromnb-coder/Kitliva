@@ -28,8 +28,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14
   },
   selectedChip: {
-    borderColor: "#171717",
-    backgroundColor: "#171717"
+    borderColor: colors.buttonPrimary,
+    backgroundColor: colors.buttonPrimary
   },
   text: {
     color: colors.text,
@@ -37,6 +37,6 @@ const styles = StyleSheet.create({
     fontWeight: "700"
   },
   selectedText: {
-    color: colors.surface
+    color: colors.buttonPrimaryText
   }
 });
