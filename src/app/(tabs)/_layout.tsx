@@ -23,8 +23,8 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#A77C3A",
-        tabBarInactiveTintColor: "#4F5752",
+        tabBarActiveTintColor: colors.accent,
+        tabBarInactiveTintColor: colors.mutedStrong,
         tabBarLabelStyle: {
           fontSize: typography.tabLabel,
           fontWeight: "500"
@@ -37,8 +37,9 @@ export default function TabsLayout() {
           height: 78,
           paddingTop: 7,
           paddingBottom: 20,
-          backgroundColor: "rgba(255,255,255,0.98)",
-          borderTopColor: colors.border
+          backgroundColor: colors.background,
+          borderTopColor: colors.border,
+          borderTopWidth: 1
         }
       }}
     >
