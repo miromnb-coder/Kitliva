@@ -34,7 +34,7 @@ export function ListingHero({ listing, onFavoritePress, isFavoriteLoading = fals
       </Pressable>
 
       <Pressable style={[styles.floatingButton, styles.favoriteButton, { top: insets.top + 14 }]} onPress={onFavoritePress} disabled={isFavoriteLoading}>
-        <Ionicons name={listing.isFavorite ? "heart" : "heart-outline"} size={22} color={listing.isFavorite ? "#A77C3A" : colors.text} />
+        <Ionicons name={listing.isFavorite ? "heart" : "heart-outline"} size={22} color={listing.isFavorite ? colors.accent : colors.text} />
       </Pressable>
 
       {imageCount > 1 ? (
@@ -49,7 +49,7 @@ export function ListingHero({ listing, onFavoritePress, isFavoriteLoading = fals
 const styles = StyleSheet.create({
   container: {
     height: 318,
-    backgroundColor: "#EFE8DD"
+    backgroundColor: colors.highlight
   },
   image: {
     width: "100%",
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#F7F2EB"
+    backgroundColor: colors.softGold
   },
   placeholderText: {
     marginTop: 8,
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 20,
-    backgroundColor: "rgba(255,255,255,0.92)"
+    backgroundColor: "rgba(255,254,250,0.92)"
   },
   backButton: {
     left: 20
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 14,
-    backgroundColor: "rgba(255,255,255,0.92)",
+    backgroundColor: "rgba(255,254,250,0.92)",
     paddingHorizontal: 12
   },
   counterText: {
