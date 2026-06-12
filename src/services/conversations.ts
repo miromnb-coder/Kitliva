@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { createNotification } from "@/services/notifications";
 
 export type ConversationSummary = {
   id: string;
@@ -6,6 +7,8 @@ export type ConversationSummary = {
   listingTitle: string;
   listingPrice: number;
   listingImageUrl: string | null;
+  buyerId: string;
+  sellerId: string;
   otherName: string;
   otherInitial: string;
   lastMessageText: string;
@@ -48,6 +51,17 @@ export async function getOrCreateConversation(params: { listingId: string; buyer
     return { success: false, ownListing: true, conversationId: null as string | null };
   }
 
+  const { data: blocked } = await supabase
+    .from("blocked_users")
+    .select("id")
+    .or(`and(blocker_id.eq.${params.buyerId},blocked_user_id.eq.${params.sellerId}),and(blocker_id.eq.${params.sellerId},blocked_user_id.eq.${params.buyerId})`)
+    .limit(1)
+    .maybeSingle();
+
+  if (blocked?.id) {
+    return { success: false, ownListing: false, conversationId: null as string | null, blocked: true };
+  }
+
   const { data: existing } = await supabase
     .from("conversations")
     .select("id")
@@ -74,6 +88,9 @@ export async function getOrCreateConversation(params: { listingId: string; buyer
 }
 
 export async function getConversations(userId: string): Promise<ConversationSummary[]> {
+  const { data: blockedRows } = await supabase.from("blocked_users").select("blocked_user_id").eq("blocker_id", userId);
+  const blockedIds = (blockedRows ?? []).map((row) => row.blocked_user_id as string);
+
   const { data, error } = await supabase
     .from("conversations")
     .select("id, listing_id, buyer_id, seller_id, last_message_text, last_message_at, listings(title, price_amount, listing_images(public_url, is_cover, sort_order))")
@@ -84,20 +101,27 @@ export async function getConversations(userId: string): Promise<ConversationSumm
     throw error ?? new Error("Could not load conversations.");
   }
 
-  return (data as ConversationRow[]).map((row) => {
-    const otherRole = row.buyer_id === userId ? "Seller" : "Buyer";
-    return {
-      id: row.id,
-      listingId: row.listing_id,
-      listingTitle: row.listings?.title ?? "Listing",
-      listingPrice: row.listings?.price_amount ?? 0,
-      listingImageUrl: getCoverImage(row.listings?.listing_images),
-      otherName: otherRole,
-      otherInitial: otherRole.charAt(0),
-      lastMessageText: row.last_message_text ?? "Start the conversation",
-      lastMessageAt: row.last_message_at
-    };
-  });
+  return (data as ConversationRow[])
+    .filter((row) => {
+      const otherUserId = row.buyer_id === userId ? row.seller_id : row.buyer_id;
+      return !blockedIds.includes(otherUserId);
+    })
+    .map((row) => {
+      const otherRole = row.buyer_id === userId ? "Seller" : "Buyer";
+      return {
+        id: row.id,
+        listingId: row.listing_id,
+        listingTitle: row.listings?.title ?? "Listing",
+        listingPrice: row.listings?.price_amount ?? 0,
+        listingImageUrl: getCoverImage(row.listings?.listing_images),
+        buyerId: row.buyer_id,
+        sellerId: row.seller_id,
+        otherName: otherRole,
+        otherInitial: otherRole.charAt(0),
+        lastMessageText: row.last_message_text ?? "Start the conversation",
+        lastMessageAt: row.last_message_at
+      };
+    });
 }
 
 export async function getConversation(conversationId: string, userId: string): Promise<ConversationSummary | null> {
@@ -145,6 +169,24 @@ export async function sendMessage(conversationId: string, senderId: string, body
     .from("conversations")
     .update({ last_message_text: trimmedBody, last_message_at: new Date().toISOString(), updated_at: new Date().toISOString() })
     .eq("id", conversationId);
+
+  const { data: conversation } = await supabase
+    .from("conversations")
+    .select("buyer_id, seller_id, listing_id, listings(title)")
+    .eq("id", conversationId)
+    .single();
+
+  if (conversation) {
+    const recipientId = conversation.buyer_id === senderId ? conversation.seller_id : conversation.buyer_id;
+    await createNotification({
+      userId: recipientId,
+      type: "message",
+      title: "New message",
+      body: trimmedBody.length > 80 ? `${trimmedBody.slice(0, 77)}...` : trimmedBody,
+      relatedListingId: conversation.listing_id as string,
+      relatedConversationId: conversationId
+    });
+  }
 
   return { success: true };
 }
