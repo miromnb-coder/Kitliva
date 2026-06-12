@@ -3,6 +3,7 @@ export type SellPhoto = {
   uri: string;
   fileName?: string | null;
   mimeType?: string | null;
+  base64?: string | null;
 };
 
 export type SellFormDraft = {
