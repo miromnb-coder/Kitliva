@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.mint
+    backgroundColor: colors.softGreen
   },
   favoriteButton: {
     position: "absolute",
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 12.5,
-    backgroundColor: "rgba(255,255,255,0.86)"
+    backgroundColor: "rgba(255,254,250,0.88)"
   },
   content: {
     paddingHorizontal: 8,
@@ -126,11 +126,11 @@ const styles = StyleSheet.create({
     borderRadius: 8.5,
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: "#F7F2EB",
+    backgroundColor: colors.softGold,
     paddingHorizontal: 5
   },
   smallBadgeText: {
-    color: "#5F655F",
+    color: colors.mutedStrong,
     fontSize: 7.5,
     fontWeight: "500"
   },
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
   verifiedText: {
     marginLeft: 4,
-    color: "#4F5752",
+    color: colors.mutedStrong,
     fontSize: 8.5,
     fontWeight: "500"
   }
