@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   },
   terms: {
     marginTop: 12,
-    color: "#5F655F",
+    color: colors.mutedStrong,
     fontSize: 11,
     fontWeight: "400",
     lineHeight: 15,
