@@ -79,7 +79,7 @@ function formatConditionLabel(condition: ListingCondition) {
 }
 
 function mapCategoryNameToSlug(name?: string | null): ListingCategory {
-  const normalized = name?.toLowerCase().replace(/[’']/g, "").replace(/\s+/g, "_");
+  const normalized = name?.toLowerCase().replace(/[’\']/g, "").replace(/\s+/g, "_");
   if (normalized === "kids_gear") return "kids";
   if (normalized === "cameras") return "cameras";
   if (normalized === "cycling") return "cycling";
@@ -207,7 +207,7 @@ export async function createListingWithoutImages(input: CreateListingInput): Pro
 }
 
 export async function createListingWithImages(input: CreateListingInput, photos: SellPhoto[]): Promise<CreateListingResult> {
-  return createListing(input, photos);
+  return createListing(input, photos.filter((photo) => Boolean(photo?.uri)));
 }
 
 async function createListing(input: CreateListingInput, photos: SellPhoto[]): Promise<CreateListingResult> {
@@ -248,7 +248,7 @@ async function createListing(input: CreateListingInput, photos: SellPhoto[]): Pr
   let coverImageUrl: string | null = null;
 
   if (photos.length > 0) {
-    const uploadResults = await Promise.all(photos.map((photo, index) => uploadListingImage({ listingId: data.id, uri: photo.uri, sortOrder: index, isCover: index === 0 })));
+    const uploadResults = await Promise.all(photos.map((photo, index) => uploadListingImage({ listingId: data.id, uri: photo.uri, fileName: photo.fileName, mimeType: photo.mimeType, sortOrder: index, isCover: index === 0 })));
     const failedUpload = uploadResults.find((result) => !result.success);
 
     if (failedUpload && !failedUpload.success) {
