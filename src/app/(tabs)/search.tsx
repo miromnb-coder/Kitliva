@@ -7,7 +7,7 @@ import { ExploreHeader } from "@/components/search/ExploreHeader";
 import { ExploreResultsHeader } from "@/components/search/ExploreResultsHeader";
 import { ExploreSearchBar } from "@/components/search/ExploreSearchBar";
 import { PopularSearchChips } from "@/components/search/PopularSearchChips";
-import { SearchFiltersSheet } from "@/components/search/SearchFiltersSheet";
+import { SearchFilterSheetType, SearchFiltersSheet } from "@/components/search/SearchFiltersSheet";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
 import { defaultSearchFilters, SearchFilters } from "@/types/search";
@@ -15,7 +15,7 @@ import { defaultSearchFilters, SearchFilters } from "@/types/search";
 export default function SearchScreen() {
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState<SearchFilters>(defaultSearchFilters);
-  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [activeSheet, setActiveSheet] = useState<SearchFilterSheetType | null>(null);
   const [resultCount, setResultCount] = useState(0);
 
   const handleCountChange = useCallback((count: number) => {
@@ -25,6 +25,15 @@ export default function SearchScreen() {
   function clearFilters() {
     setFilters(defaultSearchFilters);
     setQuery("");
+  }
+
+  function clearSingleFilter(filter: SearchFilterSheetType) {
+    if (filter === "category") setFilters((current) => ({ ...current, categoryName: "All" }));
+    if (filter === "price") setFilters((current) => ({ ...current, minPrice: "", maxPrice: "" }));
+    if (filter === "condition") setFilters((current) => ({ ...current, condition: "any" }));
+    if (filter === "location") setFilters((current) => ({ ...current, city: "" }));
+    if (filter === "shipping") setFilters((current) => ({ ...current, deliveryOption: "any" }));
+    if (filter === "sort") setFilters((current) => ({ ...current, sort: "recommended" }));
   }
 
   return (
@@ -38,17 +47,18 @@ export default function SearchScreen() {
           <View style={styles.searchWrap}>
             <ExploreSearchBar value={query} onChangeText={setQuery} />
           </View>
-          <ExploreFilterRow onOpenFilters={() => setIsFiltersOpen(true)} />
+          <ExploreFilterRow filters={filters} onOpenFilter={setActiveSheet} onClearFilter={clearSingleFilter} />
           <PopularSearchChips onSelectSearch={setQuery} />
-          <ExploreResultsHeader count={resultCount} onSortPress={() => setIsFiltersOpen(true)} />
+          <ExploreResultsHeader count={resultCount} sort={filters.sort} onSortPress={() => setActiveSheet("sort")} />
           <BackendSearchResults query={query} filters={filters} onCountChange={handleCountChange} />
         </ScrollView>
 
         <SearchFiltersSheet
-          visible={isFiltersOpen}
+          visible={activeSheet !== null}
+          activeSheet={activeSheet}
           filters={filters}
           onChange={setFilters}
-          onClose={() => setIsFiltersOpen(false)}
+          onClose={() => setActiveSheet(null)}
           onClear={clearFilters}
         />
       </View>
