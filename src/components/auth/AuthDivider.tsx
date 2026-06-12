@@ -16,17 +16,17 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 12
+    marginTop: 34
   },
   line: {
     flex: 1,
     height: 1,
-    backgroundColor: colors.border
+    backgroundColor: "#D8D1C7"
   },
   text: {
-    marginHorizontal: 13,
+    marginHorizontal: 18,
     color: colors.muted,
-    fontSize: 12.5,
-    fontWeight: "500"
+    fontSize: 13,
+    fontWeight: "400"
   }
 });
