@@ -12,7 +12,7 @@ export function HomeHeroCard() {
     <View style={styles.card}>
       <Image source={heroImage} style={styles.image} contentFit="cover" contentPosition="72% center" transition={180} />
       <LinearGradient
-        colors={["rgba(250,248,243,0.9)", "rgba(250,248,243,0.42)", "rgba(250,248,243,0)"]}
+        colors={["rgba(250,248,243,0.78)", "rgba(250,248,243,0.2)", "rgba(250,248,243,0)"]}
         locations={[0, 0.46, 1]}
         start={{ x: 0, y: 0.5 }}
         end={{ x: 1, y: 0.5 }}
