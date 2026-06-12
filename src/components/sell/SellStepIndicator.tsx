@@ -1,13 +1,14 @@
-import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
 
-export type SellStep = "photos" | "details" | "review";
+export type SellStep = "photos" | "details" | "pricing" | "delivery" | "review";
 
 const steps: { key: SellStep; label: string }[] = [
   { key: "photos", label: "Photos" },
   { key: "details", label: "Details" },
+  { key: "pricing", label: "Price" },
+  { key: "delivery", label: "Delivery" },
   { key: "review", label: "Review" }
 ];
 
@@ -17,94 +18,49 @@ function getStepIndex(step: SellStep) {
 
 export function SellStepIndicator({ currentStep }: { currentStep: SellStep }) {
   const currentIndex = getStepIndex(currentStep);
+  const currentLabel = steps[currentIndex]?.label ?? "Photos";
+  const progressWidth = `${((currentIndex + 1) / steps.length) * 100}%` as `${number}%`;
 
   return (
     <View style={styles.container}>
-      {steps.map((step, index) => {
-        const isActive = index === currentIndex;
-        const isCompleted = index < currentIndex;
-
-        return (
-          <View key={step.key} style={styles.stepWrap}>
-            <View style={styles.stepContent}>
-              <View style={[styles.circle, isActive || isCompleted ? styles.activeCircle : styles.inactiveCircle]}>
-                {isCompleted ? (
-                  <Ionicons name="checkmark" size={13} color={colors.surface} />
-                ) : (
-                  <Text style={[styles.number, isActive ? styles.activeNumber : styles.inactiveNumber]}>{index + 1}</Text>
-                )}
-              </View>
-              <Text style={[styles.label, isActive ? styles.activeLabel : styles.inactiveLabel]}>{step.label}</Text>
-            </View>
-            {index < steps.length - 1 ? <View style={[styles.line, isCompleted && styles.activeLine]} /> : null}
-          </View>
-        );
-      })}
+      <Text style={styles.stepCount}>Step {currentIndex + 1} of {steps.length}</Text>
+      <Text style={styles.activeTitle}>{currentLabel}</Text>
+      <View style={styles.progressTrack}>
+        <View style={[styles.progressFill, { width: progressWidth }]} />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: 54,
     marginTop: 22,
-    flexDirection: "row",
-    alignItems: "flex-start"
+    marginBottom: 18
   },
-  stepWrap: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "flex-start"
+  stepCount: {
+    color: colors.mutedStrong,
+    fontSize: 12.5,
+    fontWeight: "700",
+    lineHeight: 16
   },
-  stepContent: {
-    width: 72,
-    alignItems: "center"
+  activeTitle: {
+    marginTop: 3,
+    color: colors.text,
+    fontSize: 18,
+    fontWeight: "800",
+    letterSpacing: -0.2,
+    lineHeight: 23
   },
-  circle: {
-    width: 34,
-    height: 34,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 17
+  progressTrack: {
+    height: 5,
+    overflow: "hidden",
+    borderRadius: 999,
+    backgroundColor: colors.border,
+    marginTop: 10
   },
-  activeCircle: {
-    backgroundColor: "#171717"
-  },
-  inactiveCircle: {
-    borderWidth: 1,
-    borderColor: "#D8D1C7",
-    backgroundColor: colors.background
-  },
-  number: {
-    fontSize: 13,
-    fontWeight: "700"
-  },
-  activeNumber: {
-    color: colors.surface
-  },
-  inactiveNumber: {
-    color: colors.muted
-  },
-  label: {
-    marginTop: 7,
-    fontSize: 11.5,
-    fontWeight: "500",
-    lineHeight: 14
-  },
-  activeLabel: {
-    color: colors.text
-  },
-  inactiveLabel: {
-    color: colors.muted
-  },
-  line: {
-    flex: 1,
-    height: 1,
-    marginTop: 17,
-    marginHorizontal: 8,
-    backgroundColor: "#D8D1C7"
-  },
-  activeLine: {
-    backgroundColor: "#171717"
+  progressFill: {
+    height: "100%",
+    borderRadius: 999,
+    backgroundColor: colors.buttonPrimary
   }
 });
