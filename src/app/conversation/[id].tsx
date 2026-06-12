@@ -14,7 +14,6 @@ import { ConversationMessage, ConversationSummary, getConversation, getMessages,
 import { Deal, getDealForConversation } from "@/services/deals";
 import { createOffer, getConversationOffers, Offer, updateOfferStatus } from "@/services/offers";
 import { Listing } from "@/types/listing";
-import { formatPrice } from "@/utils/formatPrice";
 
 type IconName = keyof typeof Ionicons.glyphMap;
 type AttachmentActionId = "take_photo" | "choose_photo" | "share_listing" | "send_location" | "make_offer" | "order_details";
