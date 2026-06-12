@@ -16,6 +16,7 @@ import { getOrCreateConversation } from "@/services/conversations";
 import { getFavoriteListingIds, setListingFavorite } from "@/services/favorites";
 import { getListingById } from "@/services/listings";
 import { createOffer } from "@/services/offers";
+import { addRecentlyViewedListing } from "@/services/recentlyViewed";
 import { Listing } from "@/types/listing";
 
 export default function ListingDetailScreen() {
@@ -39,6 +40,8 @@ export default function ListingDetailScreen() {
       setIsLoading(true);
       const favoriteIds = user ? await getFavoriteListingIds(user.id) : [];
       const nextListing = await getListingById(id, favoriteIds);
+
+      if (nextListing) addRecentlyViewedListing(nextListing.id).catch(() => undefined);
 
       if (isMounted) {
         setListing(nextListing);
