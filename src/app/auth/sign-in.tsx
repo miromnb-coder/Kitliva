@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { AuthBackButton } from "@/components/auth/AuthBackButton";
 import { AuthButton } from "@/components/auth/AuthButton";
@@ -40,38 +40,17 @@ export default function SignInScreen() {
       </View>
 
       <View style={styles.formCard}>
-        <AuthTextField
-          label="Email address"
-          placeholder="Enter your email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoComplete="email"
-          textContentType="emailAddress"
-          returnKeyType="next"
-        />
-        <AuthTextField
-          label="Password"
-          placeholder="Enter your password"
-          value={password}
-          onChangeText={setPassword}
-          secure
-          autoComplete="password"
-          textContentType="password"
-          returnKeyType="done"
-        />
-        <Text style={styles.forgotText}>Forgot password?</Text>
+        <AuthTextField label="Email address" placeholder="Enter your email" value={email} onChangeText={setEmail} keyboardType="email-address" autoComplete="email" textContentType="emailAddress" returnKeyType="next" />
+        <AuthTextField label="Password" placeholder="Enter your password" value={password} onChangeText={setPassword} secure autoComplete="password" textContentType="password" returnKeyType="done" />
+        <Pressable onPress={() => Alert.alert("Forgot password", "Password reset is coming later.")}>
+          <Text style={styles.forgotText}>Forgot password?</Text>
+        </Pressable>
       </View>
 
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
       <View style={styles.primaryWrap}>
-        <AuthButton
-          label="Sign in"
-          loadingLabel="Signing in..."
-          loading={isSigningIn}
-          onPress={handleSignIn}
-        />
+        <AuthButton label="Sign in" loadingLabel="Signing in..." loading={isSigningIn} onPress={handleSignIn} />
       </View>
 
       <AuthDivider />
@@ -79,9 +58,7 @@ export default function SignInScreen() {
       <AuthSocialButton provider="google" />
 
       <Pressable style={styles.bottomLink} onPress={() => router.push("/auth/sign-up")}>
-        <Text style={styles.bottomText}>
-          New to Kitliva? <Text style={styles.linkText}>Create account</Text>
-        </Text>
+        <Text style={styles.bottomText}>New to Kitliva? <Text style={styles.linkText}>Create account</Text></Text>
       </Pressable>
     </AuthScreen>
   );
@@ -89,65 +66,64 @@ export default function SignInScreen() {
 
 const styles = StyleSheet.create({
   headerBlock: {
-    marginTop: 28
+    marginTop: 52
   },
   title: {
-    color: colors.primary,
-    fontSize: 34,
-    fontWeight: "800",
-    letterSpacing: -0.7,
-    lineHeight: 40
+    color: colors.text,
+    fontSize: 46,
+    fontWeight: "700",
+    letterSpacing: -1.2,
+    lineHeight: 52
   },
   subtitle: {
-    marginTop: 6,
-    color: "#6F8380",
-    fontSize: 14,
-    fontWeight: "500",
-    lineHeight: 20
+    marginTop: 14,
+    color: "#4F5752",
+    fontSize: 17,
+    fontWeight: "400",
+    lineHeight: 25
   },
   formCard: {
     borderRadius: 18,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
-    padding: 14,
-    marginTop: 24,
-    marginBottom: 12
+    padding: 24,
+    marginTop: 42
   },
   forgotText: {
-    color: colors.primary,
-    fontSize: 12.5,
-    fontWeight: "700",
-    textAlign: "right",
-    marginTop: -4
+    alignSelf: "flex-end",
+    color: "#7B623C",
+    fontSize: 14,
+    fontWeight: "500",
+    marginTop: -8
   },
   errorText: {
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#F1C8C2",
-    backgroundColor: "#FFF4F2",
-    color: "#9F2E23",
+    borderColor: "#E0B9A6",
+    backgroundColor: "#FFF7F2",
+    color: "#8A4B2A",
     fontSize: 12.5,
     fontWeight: "700",
     lineHeight: 17,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    marginBottom: 12
+    marginTop: 14
   },
   primaryWrap: {
-    marginBottom: 18
+    marginTop: 40
   },
   bottomLink: {
     alignItems: "center",
-    marginTop: 14
+    marginTop: 34
   },
   bottomText: {
     color: colors.muted,
-    fontSize: 13.5,
-    fontWeight: "500"
+    fontSize: 15,
+    fontWeight: "400"
   },
   linkText: {
-    color: colors.primary,
-    fontWeight: "800"
+    color: "#7B623C",
+    fontWeight: "600"
   }
 });
