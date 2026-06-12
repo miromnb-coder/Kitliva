@@ -262,7 +262,7 @@ async function createListing(input: CreateListingInput, photos: SellPhoto[]): Pr
     userId: input.sellerId,
     type: "listing_published",
     title: "Listing published",
-    body: `${data.title} is now live on Kitliva.",
+    body: `${data.title} is now live on Kitliva.`,
     relatedListingId: data.id
   });
 
