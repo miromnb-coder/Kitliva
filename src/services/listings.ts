@@ -52,7 +52,7 @@ export type ListingSearchFilters = {
   minPrice?: number | null;
   maxPrice?: number | null;
   city?: string;
-  sort?: "newest" | "price_low" | "price_high";
+  sort?: "recommended" | "newest" | "price_low" | "price_high";
 };
 
 function getFriendlyListingError(message?: string) {
@@ -68,41 +68,31 @@ function normalizeCondition(label: string): ListingCondition | null {
 }
 
 function parsePriceAmount(priceLabel: string): number | null {
-  const normalized = priceLabel.replace(/\s/g, "").replace(",", ".").replace(/[^0-9.]/g, "");
+  const normalized = priceLabel.replace(/[^0-9.,]/g, "").replace(",", ".");
   const parsed = Number.parseFloat(normalized);
-  return Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed) : null;
+  return Number.isFinite(parsed) ? Math.round(parsed) : null;
 }
 
 function formatConditionLabel(condition: ListingCondition) {
-  const labels: Record<ListingCondition, string> = { new: "New", like_new: "Like new", good: "Good condition", fair: "Fair condition", poor: "Poor condition" };
-  return labels[condition];
+  if (condition === "like_new") return "Like new";
+  return condition.charAt(0).toUpperCase() + condition.slice(1);
 }
 
 function mapCategoryNameToSlug(name?: string | null): ListingCategory {
-  const normalized = name?.toLowerCase() ?? "";
-  if (normalized.includes("cycl")) return "cycling";
-  if (normalized.includes("winter")) return "winter";
-  if (normalized.includes("music")) return "music";
-  if (normalized.includes("camera")) return "cameras";
-  if (normalized.includes("fitness")) return "fitness";
-  if (normalized.includes("gaming")) return "gaming";
-  if (normalized.includes("kid")) return "kids";
+  const normalized = name?.toLowerCase().replace(/[’']/g, "").replace(/\s+/g, "_");
+  if (normalized === "kids_gear") return "kids";
+  if (normalized === "cameras") return "cameras";
+  if (normalized === "cycling") return "cycling";
+  if (normalized === "winter") return "winter";
+  if (normalized === "outdoor") return "outdoor";
+  if (normalized === "music") return "music";
+  if (normalized === "fitness") return "fitness";
+  if (normalized === "gaming") return "gaming";
   return "outdoor";
 }
 
 function getInitial(name: string) {
   return name.trim().charAt(0).toUpperCase() || "K";
-}
-
-function getImageUrls(images: ListingImageRow[] | null) {
-  return (images ?? [])
-    .filter((image) => Boolean(image.public_url))
-    .sort((a, b) => {
-      if (a.is_cover && !b.is_cover) return -1;
-      if (!a.is_cover && b.is_cover) return 1;
-      return (a.sort_order ?? 0) - (b.sort_order ?? 0);
-    })
-    .map((image) => image.public_url as string);
 }
 
 function getTrustLabel(profile: ProfileRow | null) {
@@ -113,10 +103,13 @@ function getTrustLabel(profile: ProfileRow | null) {
 
 export function mapListingRowToListing(row: ListingRow, favoriteIds: string[] = []): Listing {
   const categoryName = row.categories?.name ?? "Outdoor";
-  const imageUrls = getImageUrls(row.listing_images);
-  const subtitleParts = [row.brand, row.model].filter(Boolean);
-  const subtitle = subtitleParts.length > 0 ? subtitleParts.join(" ") : categoryName;
-  const price = Number(row.price_amount ?? 0);
+  const price = row.price_amount ?? 0;
+  const subtitle = [row.brand, row.model].filter(Boolean).join(" · ") || categoryName;
+  const imageUrls = (row.listing_images ?? [])
+    .slice()
+    .sort((a, b) => Number(b.is_cover) - Number(a.is_cover) || (a.sort_order ?? 0) - (b.sort_order ?? 0))
+    .map((image) => image.public_url)
+    .filter(Boolean) as string[];
   const profile = row.profiles;
   const sellerName = profile?.display_name?.trim() || "Kitliva seller";
   const listingLocation = [row.location_city, row.location_country].filter(Boolean).join(", ");
@@ -218,49 +211,77 @@ export async function createListingWithImages(input: CreateListingInput, photos:
 }
 
 async function createListing(input: CreateListingInput, photos: SellPhoto[]): Promise<CreateListingResult> {
-  const title = input.title.trim();
-  const description = input.description.trim();
-  const categoryName = input.categoryName.trim();
-  const condition = normalizeCondition(input.conditionLabel);
-  const priceAmount = parsePriceAmount(input.priceLabel);
+  const category = await getCategoryByName(input.categoryName);
 
-  if (!input.sellerId) return { success: false, message: "Please sign in before publishing your listing." };
-  if (!title) return { success: false, message: "Please add a title before publishing." };
-  if (!categoryName) return { success: false, message: "Please choose a valid category before publishing." };
-  if (!condition) return { success: false, message: "Please choose a valid condition before publishing." };
-  if (!priceAmount) return { success: false, message: "Please add a valid price before publishing." };
-  if (photos.length === 0) return { success: false, message: "Please add at least one photo before publishing." };
-
-  const category = await getCategoryByName(categoryName);
   if (!category) return { success: false, message: "Please choose a valid category before publishing." };
 
-  const priceCurrency = "EUR";
-  const locationCity = input.locationCity?.trim() || null;
-  const locationCountry = input.locationCountry?.trim() || null;
+  const condition = normalizeCondition(input.conditionLabel);
+  if (!condition) return { success: false, message: "Please choose a valid condition before publishing." };
 
-  const { data: draft, error: draftError } = await supabase
+  const priceAmount = parsePriceAmount(input.priceLabel);
+  if (!priceAmount) return { success: false, message: "Please enter a valid price before publishing." };
+
+  const { data, error } = await supabase
     .from("listings")
-    .insert({ seller_id: input.sellerId, category_id: category.id, title, description: description || null, price_amount: priceAmount, price_currency: priceCurrency, condition, brand: input.brand?.trim() || null, model: input.model?.trim() || null, location_city: locationCity, location_country: locationCountry, status: "draft" })
-    .select("id, title, description, price_amount, price_currency, condition, location_city, location_country, status, published_at")
+    .insert({
+      seller_id: input.sellerId,
+      category_id: category.id,
+      title: input.title.trim(),
+      description: input.description.trim(),
+      price_amount: priceAmount,
+      price_currency: "EUR",
+      condition,
+      brand: input.brand?.trim() || null,
+      model: input.model?.trim() || null,
+      location_city: input.locationCity?.trim() || null,
+      location_country: input.locationCountry?.trim() || "Finland",
+      status: "active",
+      published_at: new Date().toISOString()
+    })
+    .select("id, title, description, price_amount, price_currency, condition, location_city, location_country, status, published_at, categories(name)")
     .single();
 
-  if (draftError || !draft) return { success: false, message: getFriendlyListingError(draftError?.message) };
-
-  try {
-    const uploadedImages = await Promise.all(photos.map((photo, index) => uploadListingImage({ listingId: draft.id, sellerId: input.sellerId, photo, index })));
-    const { error: imagesError } = await supabase.from("listing_images").insert(uploadedImages.map((image, index) => ({ listing_id: draft.id, storage_path: image.storagePath, public_url: image.publicUrl, sort_order: index, is_cover: index === 0 })));
-    if (imagesError) throw imagesError;
-
-    const publishedAt = new Date().toISOString();
-    const { data, error } = await supabase.from("listings").update({ status: "active", published_at: publishedAt }).eq("id", draft.id).eq("seller_id", input.sellerId).select("id, title, description, price_amount, price_currency, condition, location_city, location_country, status, published_at").single();
-    if (error || !data) return { success: false, message: getFriendlyListingError(error?.message) };
-
-    await createNotification({ userId: input.sellerId, type: "listing_published", title: "Listing published", body: `${data.title} is now live on Kitliva.`, relatedListingId: data.id });
-
-    return { success: true, listing: { id: data.id, title: data.title, description: data.description, categoryName: category.name, condition: data.condition, conditionLabel: input.conditionLabel, priceAmount: data.price_amount, priceCurrency: data.price_currency, locationCity: data.location_city, locationCountry: data.location_country, status: data.status, publishedAt: data.published_at, coverImageUrl: uploadedImages[0]?.publicUrl ?? null } };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : undefined;
-    await supabase.from("listings").update({ status: "archived" }).eq("id", draft.id).eq("seller_id", input.sellerId);
-    return { success: false, message: getFriendlyListingError(message) };
+  if (error || !data) {
+    return { success: false, message: getFriendlyListingError(error?.message) };
   }
+
+  let coverImageUrl: string | null = null;
+
+  if (photos.length > 0) {
+    const uploadResults = await Promise.all(photos.map((photo, index) => uploadListingImage({ listingId: data.id, uri: photo.uri, sortOrder: index, isCover: index === 0 })));
+    const failedUpload = uploadResults.find((result) => !result.success);
+
+    if (failedUpload && !failedUpload.success) {
+      return { success: false, message: failedUpload.message };
+    }
+
+    coverImageUrl = uploadResults[0]?.success ? uploadResults[0].publicUrl : null;
+  }
+
+  await createNotification({
+    userId: input.sellerId,
+    type: "listing_published",
+    title: "Listing published",
+    body: `${data.title} is now live on Kitliva.`,
+    relatedListingId: data.id
+  });
+
+  return {
+    success: true,
+    listing: {
+      id: data.id,
+      title: data.title,
+      description: data.description,
+      categoryName: data.categories?.name ?? input.categoryName,
+      condition,
+      conditionLabel: formatConditionLabel(condition),
+      priceAmount: data.price_amount,
+      priceCurrency: data.price_currency,
+      locationCity: data.location_city,
+      locationCountry: data.location_country,
+      status: data.status,
+      publishedAt: data.published_at,
+      coverImageUrl
+    }
+  };
 }
