@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
+import { StyleSheet, View } from "react-native";
 
 import { colors } from "@/constants/colors";
 import { typography } from "@/theme/typography";
@@ -18,6 +19,14 @@ function TabIcon({ color, focused, focusedIcon, outlineIcon, size = 24 }: TabIco
   return <Ionicons name={focused ? focusedIcon : outlineIcon} size={size} color={color} />;
 }
 
+function SellTabIcon() {
+  return (
+    <View style={styles.sellCircle}>
+      <Ionicons name="add" size={25} color={colors.buttonPrimaryText} />
+    </View>
+  );
+}
+
 export default function TabsLayout() {
   return (
     <Tabs
@@ -27,20 +36,33 @@ export default function TabsLayout() {
         tabBarInactiveTintColor: colors.mutedStrong,
         tabBarLabelStyle: {
           fontSize: typography.tabLabel,
-          fontWeight: "500"
+          fontWeight: "500",
+          marginTop: 2
+        },
+        tabBarItemStyle: {
+          paddingTop: 8
         },
         tabBarStyle: {
           position: "absolute",
           left: 0,
           right: 0,
           bottom: 0,
-          height: 78,
-          paddingTop: 7,
-          paddingBottom: 20,
+          height: 88,
+          paddingTop: 9,
+          paddingBottom: 24,
           backgroundColor: colors.background,
-          borderTopWidth: 0,
-          elevation: 0,
-          shadowOpacity: 0
+          borderTopLeftRadius: 18,
+          borderTopRightRadius: 18,
+          borderTopWidth: 1,
+          borderLeftWidth: 1,
+          borderRightWidth: 1,
+          borderColor: "rgba(229, 222, 212, 0.92)",
+          elevation: 10,
+          shadowColor: "#101614",
+          shadowOffset: { width: 0, height: -5 },
+          shadowOpacity: 0.07,
+          shadowRadius: 16,
+          overflow: "hidden"
         }
       }}
     >
@@ -62,7 +84,12 @@ export default function TabsLayout() {
         name="sell"
         options={{
           title: "Sell",
-          tabBarIcon: ({ color }) => <Ionicons name="add-circle-outline" size={27} color={color} />
+          tabBarIcon: () => <SellTabIcon />,
+          tabBarLabelStyle: {
+            fontSize: typography.tabLabel,
+            fontWeight: "500",
+            marginTop: 4
+          }
         }}
       />
       <Tabs.Screen
@@ -82,3 +109,19 @@ export default function TabsLayout() {
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  sellCircle: {
+    width: 42,
+    height: 42,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 21,
+    backgroundColor: colors.accent,
+    shadowColor: colors.accent,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.22,
+    shadowRadius: 9,
+    elevation: 6
+  }
+});
