@@ -125,7 +125,7 @@ export default function ConversationScreen() {
   return (
     <Screen noPadding>
       <View style={styles.screen}>
-        <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
+        <View style={styles.header}>
           <Pressable style={styles.backButton} onPress={() => router.back()}><Ionicons name="arrow-back" size={24} color={colors.text} /></Pressable>
           <View style={styles.avatar}><Text style={styles.avatarText}>{conversation?.otherInitial ?? "K"}</Text></View>
           <View style={styles.headerTextWrap}>
@@ -190,11 +190,7 @@ export default function ConversationScreen() {
             <View style={styles.emptyChat}>
               <Text style={styles.emptyTitle}>Start the conversation</Text>
               <Text style={styles.emptyText}>Ask about condition, pickup or what is included.</Text>
-              {[
-                "Is this still available?",
-                "Can you ship it?",
-                "What condition is it in?"
-              ].map((text) => (
+              {["Is this still available?", "Can you ship it?", "What condition is it in?"].map((text) => (
                 <Pressable key={text} style={styles.suggestionChip} onPress={() => setDraft(text)}><Text style={styles.suggestionText}>{text}</Text></Pressable>
               ))}
             </View>
@@ -244,7 +240,7 @@ export default function ConversationScreen() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background },
-  header: { minHeight: 64, flexDirection: "row", alignItems: "center", paddingHorizontal: 20, backgroundColor: colors.background },
+  header: { minHeight: 58, flexDirection: "row", alignItems: "center", paddingHorizontal: 20, paddingTop: 4, backgroundColor: colors.background },
   backButton: { width: 36, height: 36, alignItems: "center", justifyContent: "center", marginRight: 10 },
   avatar: { width: 44, height: 44, alignItems: "center", justifyContent: "center", borderRadius: 22, backgroundColor: "#F7F2EB", overflow: "hidden" },
   avatarText: { color: colors.primary, fontSize: 16, fontWeight: "700" },
@@ -254,7 +250,7 @@ const styles = StyleSheet.create({
   onlineDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "#7A8A3A", marginRight: 6 },
   headerSub: { color: colors.muted, fontSize: 12, fontWeight: "400" },
   headerIconButton: { width: 36, height: 36, alignItems: "center", justifyContent: "center" },
-  listingCard: { height: 114, marginTop: 14, marginHorizontal: 20, flexDirection: "row", alignItems: "center", borderRadius: 16, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, padding: 14 },
+  listingCard: { height: 114, marginTop: 8, marginHorizontal: 20, flexDirection: "row", alignItems: "center", borderRadius: 16, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, padding: 14 },
   listingImage: { width: 112, height: 86, borderRadius: 12, backgroundColor: "#F7F2EB" },
   listingPlaceholder: { width: 112, height: 86, alignItems: "center", justifyContent: "center", borderRadius: 12, backgroundColor: "#F7F2EB" },
   listingTextWrap: { flex: 1, marginLeft: 14 },
@@ -263,10 +259,10 @@ const styles = StyleSheet.create({
   listingPill: { height: 26, alignSelf: "flex-start", flexDirection: "row", alignItems: "center", borderRadius: 13, backgroundColor: "#F7F2EB", paddingHorizontal: 10, marginTop: 9 },
   pillDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: "#A77C3A", marginRight: 6 },
   pillText: { color: "#5F655F", fontSize: 11.5, fontWeight: "500" },
-  safetyCard: { height: 52, marginTop: 14, marginHorizontal: 20, flexDirection: "row", alignItems: "center", borderRadius: 14, borderWidth: 1, borderColor: colors.border, backgroundColor: "#F7F2EB", paddingHorizontal: 14 },
+  safetyCard: { height: 52, marginTop: 10, marginHorizontal: 20, flexDirection: "row", alignItems: "center", borderRadius: 14, borderWidth: 1, borderColor: colors.border, backgroundColor: "#F7F2EB", paddingHorizontal: 14 },
   safetyText: { flex: 1, marginLeft: 10, color: "#5F655F", fontSize: 13, fontWeight: "500" },
   messages: { flex: 1 },
-  messagesContent: { paddingHorizontal: 20, paddingTop: 26, paddingBottom: 112 },
+  messagesContent: { paddingHorizontal: 20, paddingTop: 22, paddingBottom: 112 },
   dateSeparator: { alignSelf: "center", marginBottom: 18, color: colors.muted, fontSize: 12.5, fontWeight: "400" },
   offerCard: { width: "100%", alignSelf: "center", borderRadius: 16, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, padding: 14, marginVertical: 12 },
   offerTopRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
