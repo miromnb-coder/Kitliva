@@ -15,6 +15,7 @@ type KitlivaBottomSheetProps = {
   showHandle?: boolean;
   showHeader?: boolean;
   showCloseButton?: boolean;
+  backdropOpacity?: number;
   primaryLabel?: string;
   secondaryLabel?: string;
   onPrimaryPress?: () => void;
@@ -33,6 +34,7 @@ export function KitlivaBottomSheet({
   showHandle = true,
   showHeader = true,
   showCloseButton = true,
+  backdropOpacity = 0.24,
   primaryLabel,
   secondaryLabel,
   onPrimaryPress,
@@ -52,9 +54,9 @@ export function KitlivaBottomSheet({
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
-      <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} opacity={0.08} pressBehavior="close" />
+      <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} opacity={backdropOpacity} pressBehavior="close" />
     ),
-    []
+    [backdropOpacity]
   );
 
   const hasFooter = Boolean(primaryLabel || secondaryLabel);
