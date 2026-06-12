@@ -8,10 +8,11 @@ type SellTextFieldProps = {
   placeholder?: string;
   multiline?: boolean;
   keyboardType?: "default" | "number-pad" | "decimal-pad";
+  maxLength?: number;
   onChangeText: (value: string) => void;
 };
 
-export function SellTextField({ label, value, placeholder, multiline = false, keyboardType = "default", onChangeText }: SellTextFieldProps) {
+export function SellTextField({ label, value, placeholder, multiline = false, keyboardType = "default", maxLength, onChangeText }: SellTextFieldProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
@@ -19,9 +20,10 @@ export function SellTextField({ label, value, placeholder, multiline = false, ke
         style={[styles.input, multiline && styles.multilineInput]}
         value={value}
         placeholder={placeholder}
-        placeholderTextColor={colors.muted}
+        placeholderTextColor={colors.inputPlaceholder}
         multiline={multiline}
         keyboardType={keyboardType}
+        maxLength={maxLength}
         onChangeText={onChangeText}
         textAlignVertical={multiline ? "top" : "center"}
       />
@@ -40,8 +42,8 @@ const styles = StyleSheet.create({
     fontWeight: "800"
   },
   input: {
-    minHeight: 42,
-    borderRadius: 11,
+    minHeight: 48,
+    borderRadius: 13,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
@@ -52,10 +54,9 @@ const styles = StyleSheet.create({
     fontWeight: "700"
   },
   multilineInput: {
-    minHeight: 88,
-    borderRadius: 13,
+    minHeight: 116,
     padding: 12,
-    color: "#4F6060",
+    color: colors.mutedStrong,
     fontSize: 13,
     fontWeight: "500",
     lineHeight: 18
