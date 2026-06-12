@@ -74,24 +74,10 @@ async function getImageArrayBuffer(params: UploadListingImageParams) {
   return response.arrayBuffer();
 }
 
-function getFriendlyStorageError(message?: string) {
-  const normalized = message?.toLowerCase() ?? "";
-
-  if (normalized.includes("bucket") || normalized.includes("storage")) {
-    return "We couldn’t upload your photos. Please try again.";
-  }
-
-  if (normalized.includes("missing image") || normalized.includes("network") || normalized.includes("fetch")) {
-    return "We couldn’t read one of your photos. Please choose it again.";
-  }
-
-  return "We couldn’t upload your photos. Please try again.";
-}
-
 export async function uploadListingImage(params: UploadListingImageParams): Promise<UploadListingImageResult> {
   try {
     if (!params.uri && !params.base64) {
-      return { success: false, message: "One photo was missing. Please choose it again." };
+      return { success: false, message: "Photo upload skipped." };
     }
 
     const extension = getFileExtension(params);
@@ -104,7 +90,7 @@ export async function uploadListingImage(params: UploadListingImageParams): Prom
     });
 
     if (uploadError) {
-      return { success: false, message: getFriendlyStorageError(uploadError.message) };
+      return { success: false, message: "Photo upload skipped." };
     }
 
     const { data } = supabase.storage.from(LISTING_IMAGES_BUCKET).getPublicUrl(storagePath);
@@ -119,7 +105,7 @@ export async function uploadListingImage(params: UploadListingImageParams): Prom
     });
 
     if (insertError) {
-      return { success: false, message: getFriendlyStorageError(insertError.message) };
+      return { success: false, message: "Photo upload skipped." };
     }
 
     return {
@@ -127,7 +113,7 @@ export async function uploadListingImage(params: UploadListingImageParams): Prom
       storagePath,
       publicUrl
     };
-  } catch (error) {
-    return { success: false, message: getFriendlyStorageError(error instanceof Error ? error.message : undefined) };
+  } catch {
+    return { success: false, message: "Photo upload skipped." };
   }
 }
