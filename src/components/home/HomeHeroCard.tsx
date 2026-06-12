@@ -12,7 +12,7 @@ export function HomeHeroCard() {
     <View style={styles.card}>
       <Image source={heroImage} style={styles.image} contentFit="cover" contentPosition="72% center" transition={180} />
       <LinearGradient
-        colors={["rgba(250,248,243,0.78)", "rgba(250,248,243,0.2)", "rgba(250,248,243,0)"]}
+        colors={["rgba(247,245,239,0.78)", "rgba(247,245,239,0.2)", "rgba(247,245,239,0)"]}
         locations={[0, 0.46, 1]}
         start={{ x: 0, y: 0.5 }}
         end={{ x: 1, y: 0.5 }}
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: "#F4EFE7",
+    backgroundColor: colors.highlight,
     marginTop: 14
   },
   image: {
@@ -62,17 +62,17 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     letterSpacing: -0.18,
     lineHeight: 20,
-    textShadowColor: "rgba(250, 248, 243, 0.7)",
+    textShadowColor: "rgba(247, 245, 239, 0.7)",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 8
   },
   subtitle: {
     marginTop: 8,
-    color: "#4F5752",
+    color: colors.mutedStrong,
     fontSize: 10.5,
     fontWeight: "400",
     lineHeight: 14,
-    textShadowColor: "rgba(250, 248, 243, 0.7)",
+    textShadowColor: "rgba(247, 245, 239, 0.7)",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 8
   }
