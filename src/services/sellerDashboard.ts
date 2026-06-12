@@ -50,7 +50,8 @@ export async function getSellerDashboard(userId: string): Promise<SellerDashboar
       .limit(10)
   ]);
 
-  const pendingOffers = ((offersResult.data ?? []) as OfferRow[]).map((offer) => ({
+  const offerRows = (offersResult.data ?? []) as unknown as OfferRow[];
+  const pendingOffers = offerRows.map((offer) => ({
     id: offer.id,
     listingId: offer.listing_id,
     conversationId: offer.conversation_id,
