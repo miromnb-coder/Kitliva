@@ -1,4 +1,5 @@
 import { getCategoryByName } from "@/services/categories";
+import { createNotification } from "@/services/notifications";
 import { uploadListingImage } from "@/services/storage";
 import { supabase } from "@/lib/supabase";
 import { CreateListingInput, CreateListingResult, Listing, ListingCategory, ListingCondition, ListingStatus } from "@/types/listing";
@@ -253,6 +254,8 @@ async function createListing(input: CreateListingInput, photos: SellPhoto[]): Pr
     const publishedAt = new Date().toISOString();
     const { data, error } = await supabase.from("listings").update({ status: "active", published_at: publishedAt }).eq("id", draft.id).eq("seller_id", input.sellerId).select("id, title, description, price_amount, price_currency, condition, location_city, location_country, status, published_at").single();
     if (error || !data) return { success: false, message: getFriendlyListingError(error?.message) };
+
+    await createNotification({ userId: input.sellerId, type: "listing_published", title: "Listing published", body: `${data.title} is now live on Kitliva.`, relatedListingId: data.id });
 
     return { success: true, listing: { id: data.id, title: data.title, description: data.description, categoryName: category.name, condition: data.condition, conditionLabel: input.conditionLabel, priceAmount: data.price_amount, priceCurrency: data.price_currency, locationCity: data.location_city, locationCountry: data.location_country, status: data.status, publishedAt: data.published_at, coverImageUrl: uploadedImages[0]?.publicUrl ?? null } };
   } catch (error) {
