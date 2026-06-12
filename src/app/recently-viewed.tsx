@@ -1,8 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { useFocusEffect } from "expo-router";
 
 import { ProductGrid } from "@/components/home/ProductGrid";
 import { EmptyStateCard } from "@/components/ui/EmptyStateCard";
@@ -69,7 +68,7 @@ export default function RecentlyViewedScreen() {
 
         <View style={styles.countRow}>
           <Text style={styles.countText}>{listings.length} items</Text>
-          <View style={styles.sortPill}><Ionicons name="time-outline" size={14} color="#7B623C" /><Text style={styles.sortText}>Latest first</Text></View>
+          <View style={styles.sortPill}><Ionicons name="time-outline" size={14} color={colors.link} /><Text style={styles.sortText}>Latest first</Text></View>
         </View>
 
         {loading ? (
@@ -90,11 +89,11 @@ const styles = StyleSheet.create({
   headerRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   backButton: { width: 46, height: 46, alignItems: "center", justifyContent: "center", borderRadius: 23, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
   clearButton: { height: 38, justifyContent: "center", borderRadius: 19, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, paddingHorizontal: 14 },
-  clearText: { color: "#7B623C", fontSize: 12.5, fontWeight: "700" },
+  clearText: { color: colors.link, fontSize: 12.5, fontWeight: "700" },
   title: { marginTop: 24, color: colors.text, fontSize: 34, fontWeight: "600", letterSpacing: -0.8, lineHeight: 40 },
-  subtitle: { marginTop: 6, color: "#4F5752", fontSize: 14.5, lineHeight: 21 },
+  subtitle: { marginTop: 6, color: colors.mutedStrong, fontSize: 14.5, lineHeight: 21 },
   countRow: { height: 36, flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 20, marginBottom: 16 },
   countText: { color: colors.muted, fontSize: 13, fontWeight: "600" },
   sortPill: { height: 32, flexDirection: "row", alignItems: "center", borderRadius: 16, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, paddingHorizontal: 11, gap: 5 },
-  sortText: { color: "#7B623C", fontSize: 12, fontWeight: "700" }
+  sortText: { color: colors.link, fontSize: 12, fontWeight: "700" }
 });
