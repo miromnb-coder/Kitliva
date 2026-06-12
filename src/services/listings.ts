@@ -249,12 +249,6 @@ async function createListing(input: CreateListingInput, photos: SellPhoto[]): Pr
 
   if (photos.length > 0) {
     const uploadResults = await Promise.all(photos.map((photo, index) => uploadListingImage({ listingId: data.id, uri: photo.uri, fileName: photo.fileName, mimeType: photo.mimeType, base64: photo.base64, sortOrder: index, isCover: index === 0 })));
-    const failedUpload = uploadResults.find((result) => !result.success);
-
-    if (failedUpload && !failedUpload.success) {
-      return { success: false, message: failedUpload.message };
-    }
-
     coverImageUrl = uploadResults[0]?.success ? uploadResults[0].publicUrl : null;
   }
 
