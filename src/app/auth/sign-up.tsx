@@ -81,45 +81,45 @@ const styles = StyleSheet.create({
   topRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 6
+    marginTop: 0
   },
   logo: {
     marginLeft: 18,
     color: colors.text,
     fontFamily: serifFont,
-    fontSize: 24,
+    fontSize: 23,
     fontWeight: "500"
   },
   headerBlock: {
-    marginTop: 24
+    marginTop: 14
   },
   title: {
     color: colors.text,
-    fontSize: 42,
+    fontSize: 38,
     fontWeight: "700",
-    letterSpacing: -1.1,
-    lineHeight: 46
+    letterSpacing: -1,
+    lineHeight: 41
   },
   subtitle: {
-    marginTop: 9,
+    marginTop: 6,
     color: "#4F5752",
-    fontSize: 15.5,
+    fontSize: 14,
     fontWeight: "400",
-    lineHeight: 22
+    lineHeight: 19
   },
   formCard: {
     borderRadius: 18,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
-    padding: 20,
-    marginTop: 22
+    padding: 16,
+    marginTop: 14
   },
   helperText: {
     color: "#5F655F",
-    fontSize: 12.5,
+    fontSize: 11.5,
     fontWeight: "400",
-    marginTop: -6
+    marginTop: -4
   },
   errorText: {
     borderRadius: 12,
@@ -127,12 +127,12 @@ const styles = StyleSheet.create({
     borderColor: "#E0B9A6",
     backgroundColor: "#FFF7F2",
     color: "#8A4B2A",
-    fontSize: 12.5,
+    fontSize: 12,
     fontWeight: "700",
-    lineHeight: 17,
+    lineHeight: 16,
     paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginTop: 12
+    paddingVertical: 8,
+    marginTop: 10
   },
   successText: {
     borderRadius: 12,
@@ -140,23 +140,23 @@ const styles = StyleSheet.create({
     borderColor: "#C6E7DC",
     backgroundColor: colors.mint,
     color: colors.primary,
-    fontSize: 12.5,
+    fontSize: 12,
     fontWeight: "700",
-    lineHeight: 17,
+    lineHeight: 16,
     paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginTop: 12
+    paddingVertical: 8,
+    marginTop: 10
   },
   primaryWrap: {
-    marginTop: 22
+    marginTop: 14
   },
   bottomLink: {
     alignItems: "center",
-    marginTop: 24
+    marginTop: 16
   },
   bottomText: {
     color: colors.muted,
-    fontSize: 14.5,
+    fontSize: 14,
     fontWeight: "400"
   },
   linkText: {
