@@ -4,6 +4,7 @@ import { HomeCategoryCards } from "@/components/home/HomeCategoryCards";
 import { HomeCuratedHeader } from "@/components/home/HomeCuratedHeader";
 import { HomeHeader } from "@/components/home/HomeHeader";
 import { HomeHeroCard } from "@/components/home/HomeHeroCard";
+import { HomeHowItWorksCard } from "@/components/home/HomeHowItWorksCard";
 import { HomeListingFeed } from "@/components/home/HomeListingFeed";
 import { HomeSearchBar } from "@/components/home/HomeSearchBar";
 import { HomeTrustRow } from "@/components/home/HomeTrustRow";
@@ -25,6 +26,7 @@ export default function HomeScreen() {
         </View>
         <HomeTrustRow />
         <HomeHeroCard />
+        <HomeHowItWorksCard />
         <HomeCategoryCards />
         <HomeCuratedHeader />
         <HomeListingFeed />
