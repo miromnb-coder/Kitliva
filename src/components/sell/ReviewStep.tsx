@@ -22,6 +22,11 @@ function optionalValue(value: string) {
   return value.trim() || "Not added";
 }
 
+function getPublishErrorTitle(message?: string | null) {
+  if (message?.toLowerCase().includes("connection")) return "Photos could not upload";
+  return "Listing needs details";
+}
+
 export function ReviewStep({ form, photos, publishError }: ReviewStepProps) {
   const [coverFailed, setCoverFailed] = useState(false);
   const coverUri = photos[0]?.uri;
@@ -53,7 +58,7 @@ export function ReviewStep({ form, photos, publishError }: ReviewStepProps) {
             <Ionicons name="alert-circle-outline" size={18} color={colors.dangerText} />
           </View>
           <View style={styles.errorContent}>
-            <Text style={styles.errorTitle}>Listing needs details</Text>
+            <Text style={styles.errorTitle}>{getPublishErrorTitle(publishError)}</Text>
             <Text style={styles.errorText}>{publishError}</Text>
           </View>
         </View>
