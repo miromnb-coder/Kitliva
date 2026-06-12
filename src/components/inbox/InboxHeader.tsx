@@ -1,41 +1,48 @@
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
 
+const serifFont = Platform.select({ ios: "Georgia", android: "serif", default: undefined });
+
 export function InboxHeader() {
+  function handleAddPress() {
+    Alert.alert("Start from a listing", "Open a listing and tap Message seller to start a conversation.");
+  }
+
   return (
-    <View style={styles.header}>
-      <Text style={styles.title}>Messages</Text>
-      <View style={styles.addButton}>
-        <Ionicons name="add" size={25} color={colors.text} />
-      </View>
+    <View style={styles.container}>
+      <Text style={styles.logo}>Kitliva</Text>
+      <Pressable style={styles.addButton} onPress={handleAddPress}>
+        <Ionicons name="add" size={22} color="#A77C3A" />
+      </Pressable>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    height: 48,
+  container: {
+    height: 34,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 16
+    justifyContent: "space-between"
   },
-  title: {
+  logo: {
     color: colors.text,
-    fontSize: 29,
-    fontWeight: "800",
-    letterSpacing: -0.45,
-    lineHeight: 34
+    fontFamily: serifFont,
+    fontSize: 22,
+    fontWeight: "500",
+    letterSpacing: -0.2,
+    lineHeight: 28
   },
   addButton: {
     width: 38,
     height: 38,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 19,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: colors.muted
+    borderColor: colors.border,
+    backgroundColor: colors.surface
   }
 });
