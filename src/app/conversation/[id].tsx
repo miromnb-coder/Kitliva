@@ -413,7 +413,7 @@ function ChatAttachmentSheet({
   onSend: () => void;
 }) {
   return (
-    <KitlivaBottomSheet visible={visible} title="" snapPoints={["42%"]} showHeader={false} onClose={onClose}>
+    <KitlivaBottomSheet visible={visible} title="" snapPoints={["42%"]} showHeader={false} backdropOpacity={0.08} onClose={onClose}>
       <View style={styles.attachmentGrid}>
         {attachmentActions.map((action) => (
           <Pressable key={action.id} style={styles.attachmentTile} onPress={() => onActionPress(action.id)}>
