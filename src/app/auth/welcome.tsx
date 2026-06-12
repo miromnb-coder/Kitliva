@@ -50,33 +50,33 @@ const styles = StyleSheet.create({
   brand: {
     color: colors.text,
     fontFamily: serifFont,
-    fontSize: 36,
+    fontSize: 34,
     fontWeight: "500",
-    lineHeight: 42
+    lineHeight: 38
   },
   subtitle: {
-    marginTop: 10,
+    marginTop: 6,
     maxWidth: 230,
     color: colors.text,
-    fontSize: 15,
+    fontSize: 13.5,
     fontWeight: "400",
-    lineHeight: 21
+    lineHeight: 18
   },
   actions: {
-    marginTop: 20
+    marginTop: 14
   },
   buttonGap: {
-    height: 12
+    height: 9
   },
   continueWrap: {
-    marginTop: 18
+    marginTop: 12
   },
   terms: {
-    marginTop: 20,
+    marginTop: 12,
     color: "#5F655F",
-    fontSize: 11.5,
+    fontSize: 11,
     fontWeight: "400",
-    lineHeight: 16,
+    lineHeight: 15,
     textAlign: "center"
   },
   termsLink: {
