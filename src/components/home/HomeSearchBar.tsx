@@ -1,13 +1,26 @@
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 
 import { colors } from "@/constants/colors";
 
-export function HomeSearchBar() {
+type HomeSearchBarProps = {
+  value: string;
+  onChangeText: (value: string) => void;
+};
+
+export function HomeSearchBar({ value, onChangeText }: HomeSearchBarProps) {
   return (
     <View style={styles.container}>
       <Ionicons name="search-outline" size={17} color="#8C908A" />
-      <Text style={styles.placeholder}>Search by hobby, brand or item</Text>
+      <TextInput
+        style={styles.input}
+        value={value}
+        onChangeText={onChangeText}
+        placeholder="Search by hobby, brand or item"
+        placeholderTextColor="#8C908A"
+        returnKeyType="search"
+        clearButtonMode="while-editing"
+      />
     </View>
   );
 }
@@ -24,9 +37,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     paddingHorizontal: 14
   },
-  placeholder: {
-    color: "#8C908A",
+  input: {
+    flex: 1,
+    height: "100%",
+    color: colors.text,
     fontSize: 12.2,
-    fontWeight: "400"
+    fontWeight: "400",
+    paddingVertical: 0
   }
 });
