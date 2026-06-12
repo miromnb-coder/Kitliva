@@ -84,7 +84,7 @@ export default function SellScreen() {
     async function loadDraft() {
       const draft = await getSellDraft();
 
-      if (isMounted && draft && canShowRestoreDraft(form, selectedPhotos)) {
+      if (isMounted && draft) {
         setAvailableDraft(draft);
       }
     }
