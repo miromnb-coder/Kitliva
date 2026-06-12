@@ -77,15 +77,15 @@ export default function ProfileScreen() {
   const ratingLabel = profile?.rating_count ? profile.rating_average.toFixed(1) : "New";
 
   const sellingRows: AccountRowItem[] = [
+    { label: "Seller dashboard", icon: "analytics-outline", onPress: () => router.push("/seller-dashboard") },
     { label: "Drafts", icon: "document-text-outline", badge: 0, onPress: () => showComingLater("Drafts") },
-    { label: "Price insights", icon: "analytics-outline", onPress: () => showComingLater("Price insights") },
-    { label: "Shipping preferences", icon: "cube-outline", onPress: () => showComingLater("Shipping preferences") }
+    { label: "Price insights", icon: "trending-up-outline", onPress: () => showComingLater("Price insights") }
   ];
 
   const buyingRows: AccountRowItem[] = [
-    { label: "Saved items", icon: "heart-outline", badge: stats.savedItems, onPress: () => showComingLater("Saved items") },
-    { label: "Offers", icon: "pricetag-outline", badge: stats.offers, onPress: () => router.push("/inbox") },
-    { label: "Purchase history", icon: "bag-handle-outline", onPress: () => showComingLater("Purchase history") }
+    { label: "Saved items", icon: "heart-outline", badge: stats.savedItems, onPress: () => router.push("/saved") },
+    { label: "Recently viewed", icon: "time-outline", onPress: () => router.push("/recently-viewed") },
+    { label: "Offers", icon: "pricetag-outline", badge: stats.offers, onPress: () => router.push("/inbox") }
   ];
 
   return (
@@ -97,7 +97,7 @@ export default function ProfileScreen() {
 
         <View style={styles.shortcutRow}>
           <ShortcutCard icon="pricetag-outline" title="My listings" subtitle="Manage active listings" onPress={() => router.push("/my-listings")} />
-          <ShortcutCard icon="briefcase-outline" title="Offers" subtitle="Review your offers" onPress={() => router.push("/inbox")} />
+          <ShortcutCard icon="briefcase-outline" title="Dashboard" subtitle="Offers and deals" onPress={() => router.push("/seller-dashboard")} />
         </View>
 
         <AccountSection title="Selling dashboard" rows={sellingRows} />
@@ -106,8 +106,8 @@ export default function ProfileScreen() {
         <Text style={styles.sectionTitle}>Support & account</Text>
         <View style={styles.gridRow}>
           <GridAction icon="person-circle-outline" label="Edit profile" onPress={() => router.push("/profile/edit")} />
-          <GridAction icon="notifications-outline" label="Notifications" onPress={() => showComingLater("Notifications")} />
-          <GridAction icon="help-circle-outline" label="Help center" onPress={() => showComingLater("Help center")} />
+          <GridAction icon="notifications-outline" label="Notifications" onPress={() => router.push("/notifications")} />
+          <GridAction icon="shield-checkmark-outline" label="Safety" onPress={() => router.push("/safety")} />
           <GridAction icon="settings-outline" label="Settings" onPress={() => router.push("/profile/edit")} />
         </View>
 
