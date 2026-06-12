@@ -9,18 +9,18 @@ export function AuthBackButton() {
 
   return (
     <Pressable style={styles.button} onPress={() => router.back()}>
-      <Ionicons name="arrow-back" size={21} color={colors.text} />
+      <Ionicons name="arrow-back" size={22} color={colors.text} />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    width: 38,
-    height: 38,
+    width: 46,
+    height: 46,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 19,
+    borderRadius: 23,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface
