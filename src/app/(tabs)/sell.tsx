@@ -2,7 +2,6 @@ import { useCallback, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
 
-import { AIListingAssistantCard } from "@/components/sell/AIListingAssistantCard";
 import { DeliveryStep } from "@/components/sell/DeliveryStep";
 import { DetailsStep } from "@/components/sell/DetailsStep";
 import { PhotosStep } from "@/components/sell/PhotosStep";
@@ -52,12 +51,6 @@ export default function SellScreen() {
     setPublishError(null);
     setFlowError(null);
     setForm((currentForm) => ({ ...currentForm, [key]: value }));
-  }
-
-  function applyAIChanges(patch: Partial<SellFormDraft>) {
-    setPublishError(null);
-    setFlowError(null);
-    setForm((currentForm) => ({ ...currentForm, ...patch }));
   }
 
   function getPhotosError() {
@@ -182,28 +175,9 @@ export default function SellScreen() {
   }
 
   function renderStepContent() {
-    if (currentStep === "success") {
-      return <PublishSuccessStep listing={publishedListing} onCreateAnother={createAnotherListing} onViewListing={viewPublishedListing} />;
-    }
-
-    if (currentStep === "details") {
-      return (
-        <>
-          <AIListingAssistantCard mode="details" form={form} onApply={applyAIChanges} />
-          <DetailsStep form={form} error={flowError} onChange={updateForm} />
-        </>
-      );
-    }
-
-    if (currentStep === "pricing") {
-      return (
-        <>
-          <AIListingAssistantCard mode="pricing" form={form} onApply={applyAIChanges} />
-          <PricingStep form={form} error={flowError} onChange={updateForm} />
-        </>
-      );
-    }
-
+    if (currentStep === "success") return <PublishSuccessStep listing={publishedListing} onCreateAnother={createAnotherListing} onViewListing={viewPublishedListing} />;
+    if (currentStep === "details") return <DetailsStep form={form} error={flowError} onChange={updateForm} />;
+    if (currentStep === "pricing") return <PricingStep form={form} error={flowError} onChange={updateForm} />;
     if (currentStep === "delivery") return <DeliveryStep form={form} error={flowError} onChange={updateForm} />;
     if (currentStep === "review") return <ReviewStep form={form} photos={selectedPhotos} publishError={publishError} />;
 
