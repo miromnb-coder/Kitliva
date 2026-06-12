@@ -1,4 +1,6 @@
 import { getOrCreateConversation } from "@/services/conversations";
+import { getOrCreateDealFromOffer } from "@/services/deals";
+import { createNotification } from "@/services/notifications";
 import { supabase } from "@/lib/supabase";
 
 export type OfferStatus = "pending" | "accepted" | "declined";
@@ -69,6 +71,16 @@ export async function createOffer(params: {
     .update({ last_message_text: lastMessageText, last_message_at: new Date().toISOString(), updated_at: new Date().toISOString() })
     .eq("id", conversation.conversationId);
 
+  await createNotification({
+    userId: params.sellerId,
+    type: "offer_created",
+    title: "New offer",
+    body: `You received an offer of €${amount}.`,
+    relatedListingId: params.listingId,
+    relatedConversationId: conversation.conversationId,
+    relatedOfferId: data.id as string
+  });
+
   return { success: true, ownListing: false, conversationId: conversation.conversationId, offerId: data.id as string };
 }
 
@@ -103,7 +115,7 @@ export async function updateOfferStatus(params: { offerId: string; sellerId: str
     .update({ status: params.status, updated_at: new Date().toISOString() })
     .eq("id", params.offerId)
     .eq("seller_id", params.sellerId)
-    .select("conversation_id, amount")
+    .select("id, listing_id, conversation_id, buyer_id, seller_id, amount, currency")
     .single();
 
   if (error || !data) {
@@ -116,5 +128,30 @@ export async function updateOfferStatus(params: { offerId: string; sellerId: str
     .update({ last_message_text: `${statusText} €${data.amount}`, last_message_at: new Date().toISOString(), updated_at: new Date().toISOString() })
     .eq("id", data.conversation_id);
 
-  return { success: true };
+  let dealId: string | null = null;
+  if (params.status === "accepted") {
+    const dealResult = await getOrCreateDealFromOffer({
+      offerId: data.id as string,
+      listingId: data.listing_id as string,
+      conversationId: data.conversation_id as string,
+      buyerId: data.buyer_id as string,
+      sellerId: data.seller_id as string,
+      amount: data.amount as number,
+      currency: data.currency as string
+    });
+    if (dealResult.success && "deal" in dealResult) dealId = dealResult.deal.id;
+  }
+
+  await createNotification({
+    userId: data.buyer_id as string,
+    type: params.status === "accepted" ? "offer_accepted" : "offer_declined",
+    title: params.status === "accepted" ? "Offer accepted" : "Offer declined",
+    body: params.status === "accepted" ? `Your €${data.amount} offer was accepted.` : `Your €${data.amount} offer was declined.`,
+    relatedListingId: data.listing_id as string,
+    relatedConversationId: data.conversation_id as string,
+    relatedOfferId: data.id as string,
+    relatedDealId: dealId
+  });
+
+  return { success: true, dealId };
 }
