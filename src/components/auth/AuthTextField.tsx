@@ -37,16 +37,16 @@ export function AuthTextField({ label, placeholder, secure = false, value, onCha
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 24
+    marginBottom: 18
   },
   label: {
-    marginBottom: 10,
+    marginBottom: 8,
     color: colors.text,
-    fontSize: 14.5,
+    fontSize: 14,
     fontWeight: "600"
   },
   inputWrap: {
-    height: 58,
+    height: 52,
     flexDirection: "row",
     alignItems: "center",
     borderRadius: 10,
