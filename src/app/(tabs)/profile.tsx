@@ -112,7 +112,7 @@ export default function ProfileScreen() {
         </View>
 
         <Pressable style={styles.signOutRow} onPress={handleSignOut}>
-          <Ionicons name="log-out-outline" size={22} color="#A77C3A" />
+          <Ionicons name="log-out-outline" size={22} color={colors.accent} />
           <Text style={styles.signOutText}>Sign out</Text>
           <Ionicons name="chevron-forward" size={17} color={colors.muted} />
         </Pressable>
@@ -254,12 +254,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 13,
-    backgroundColor: "#F7F2EB",
+    backgroundColor: colors.softGold,
     paddingHorizontal: 9,
     marginRight: 10
   },
   badgeText: {
-    color: "#7B623C",
+    color: colors.accent,
     fontSize: 12,
     fontWeight: "600"
   },
