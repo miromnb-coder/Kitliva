@@ -1,5 +1,4 @@
-import { Ionicons } from "@expo/vector-icons";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 
 import { PhotoUploadPreview } from "@/components/sell/PhotoUploadPreview";
 import { colors } from "@/constants/colors";
@@ -14,43 +13,27 @@ type PhotosStepProps = {
   onRemovePhoto: (photoId: string) => void;
 };
 
-const conditions = ["New", "Like new", "Good", "Fair", "Poor"];
-
 export function PhotosStep({ photos, form, error, onChange, onAddPhotos, onRemovePhoto }: PhotosStepProps) {
   return (
     <>
       <PhotoUploadPreview photos={photos} error={error} onAddPhotos={onAddPhotos} onRemovePhoto={onRemovePhoto} />
-
       {form && onChange ? (
-        <>
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Title</Text>
-            <View style={styles.inputRow}>
-              <TextInput style={styles.titleInput} value={form.title} onChangeText={(value) => onChange("title", value)} placeholder="Example: MSR Hubba NX 2-Person Tent" placeholderTextColor={colors.inputPlaceholder} maxLength={70} />
-              <Ionicons name="create-outline" size={18} color={colors.muted} />
+        <View style={styles.card}>
+          <Text style={styles.label}>Title</Text>
+          <TextInput style={styles.input} value={form.title} onChangeText={(value) => onChange("title", value)} placeholder="Item title" placeholderTextColor={colors.inputPlaceholder} maxLength={70} />
+          <Text style={styles.label}>Price</Text>
+          <TextInput style={styles.input} value={form.priceLabel} onChangeText={(value) => onChange("priceLabel", value)} placeholder="€220" placeholderTextColor={colors.inputPlaceholder} keyboardType="decimal-pad" />
+          <View style={styles.row}>
+            <View style={styles.item}>
+              <Text style={styles.label}>City</Text>
+              <TextInput style={styles.input} value={form.locationCity} onChangeText={(value) => onChange("locationCity", value)} placeholder="City" placeholderTextColor={colors.inputPlaceholder} />
+            </View>
+            <View style={styles.item}>
+              <Text style={styles.label}>Country</Text>
+              <TextInput style={styles.input} value={form.locationCountry} onChangeText={(value) => onChange("locationCountry", value)} placeholder="Country" placeholderTextColor={colors.inputPlaceholder} />
             </View>
           </View>
-
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Condition</Text>
-            <Text style={styles.helperText}>Choose the option that best matches your item.</Text>
-            <View style={styles.conditionChips}>
-              {conditions.map((condition) => {
-                const selected = form.conditionLabel === condition;
-                return (
-                  <Pressable key={condition} style={[styles.conditionChip, selected && styles.selectedChip]} onPress={() => onChange("conditionLabel", condition)}>
-                    <Text style={[styles.conditionText, selected && styles.selectedText]}>{condition}</Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-          </View>
-
-          <View style={styles.priceInputCard}>
-            <Text style={styles.priceLabel}>Set your price</Text>
-            <TextInput style={styles.priceInput} value={form.priceLabel} onChangeText={(value) => onChange("priceLabel", value)} placeholder="€220" placeholderTextColor={colors.inputPlaceholder} keyboardType="decimal-pad" />
-          </View>
-        </>
+        </View>
       ) : null}
     </>
   );
@@ -58,16 +41,8 @@ export function PhotosStep({ photos, form, error, onChange, onAddPhotos, onRemov
 
 const styles = StyleSheet.create({
   card: { marginTop: 14, borderRadius: 16, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, padding: 14 },
-  cardTitle: { color: colors.text, fontSize: 14, fontWeight: "700", lineHeight: 18 },
-  inputRow: { height: 48, marginTop: 12, flexDirection: "row", alignItems: "center", borderRadius: 13, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, paddingHorizontal: 13 },
-  titleInput: { flex: 1, color: colors.text, fontSize: 14, fontWeight: "600", paddingVertical: 0 },
-  helperText: { marginTop: 5, color: colors.mutedStrong, fontSize: 12.5, fontWeight: "500", lineHeight: 17 },
-  conditionChips: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 12 },
-  conditionChip: { minHeight: 34, justifyContent: "center", borderRadius: 17, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, paddingHorizontal: 12 },
-  selectedChip: { borderColor: colors.buttonPrimary, backgroundColor: colors.buttonPrimary },
-  conditionText: { color: colors.text, fontSize: 12, fontWeight: "700" },
-  selectedText: { color: colors.buttonPrimaryText },
-  priceInputCard: { height: 58, marginTop: 14, flexDirection: "row", alignItems: "center", justifyContent: "space-between", borderRadius: 16, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, paddingHorizontal: 14 },
-  priceLabel: { color: colors.text, fontSize: 14, fontWeight: "700" },
-  priceInput: { width: 166, height: 42, borderRadius: 13, borderWidth: 1, borderColor: colors.border, color: colors.text, fontSize: 14, fontWeight: "600", paddingHorizontal: 14, paddingVertical: 0 }
+  label: { marginTop: 10, marginBottom: 7, color: colors.text, fontSize: 14, fontWeight: "700" },
+  input: { minHeight: 48, borderRadius: 13, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, color: colors.text, fontSize: 14, fontWeight: "600", paddingHorizontal: 13 },
+  row: { flexDirection: "row", gap: 9 },
+  item: { flex: 1 }
 });
