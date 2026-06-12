@@ -8,15 +8,16 @@ type PhotosStepProps = {
   photos: SellPhoto[];
   form?: SellFormDraft;
   error?: string | null;
+  isDraftRestored?: boolean;
   onChange?: <Key extends keyof SellFormDraft>(key: Key, value: SellFormDraft[Key]) => void;
   onAddPhotos: (photos: SellPhoto[]) => void;
   onRemovePhoto: (photoId: string) => void;
 };
 
-export function PhotosStep({ photos, form, error, onChange, onAddPhotos, onRemovePhoto }: PhotosStepProps) {
+export function PhotosStep({ photos, form, error, isDraftRestored = false, onChange, onAddPhotos, onRemovePhoto }: PhotosStepProps) {
   return (
     <>
-      <PhotoUploadPreview photos={photos} error={error} onAddPhotos={onAddPhotos} onRemovePhoto={onRemovePhoto} />
+      <PhotoUploadPreview photos={photos} error={error} isDraftRestored={isDraftRestored} onAddPhotos={onAddPhotos} onRemovePhoto={onRemovePhoto} />
       {form && onChange ? (
         <View style={styles.card}>
           <Text style={styles.label}>Title</Text>
