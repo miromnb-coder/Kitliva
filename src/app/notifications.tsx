@@ -3,6 +3,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
+import { EmptyStateCard } from "@/components/ui/EmptyStateCard";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
 import { useAuth } from "@/hooks/useAuth";
@@ -16,7 +17,7 @@ const filters: { label: string; value: NotificationFilter }[] = [
   { label: "Safety", value: "safety" }
 ];
 
-function getIcon(type: AppNotification["type"]) {
+function getIcon(type: AppNotification["type"]): keyof typeof Ionicons.glyphMap {
   if (type === "message") return "chatbubble-outline";
   if (type === "offer_created") return "pricetag-outline";
   if (type === "offer_accepted") return "checkmark-circle-outline";
@@ -87,7 +88,13 @@ export default function NotificationsScreen() {
             return <Pressable key={filter.value} style={[styles.filterChip, selected && styles.selectedChip]} onPress={() => setActiveFilter(filter.value)}><Text style={[styles.filterText, selected && styles.selectedText]}>{filter.label}</Text></Pressable>;
           })}
         </ScrollView>
-        {pageLoading ? <StateCard title="Loading notifications..." /> : hasError ? <StateCard title="Could not load notifications" body="Please try again in a moment." /> : items.length === 0 ? <StateCard title="No notifications yet" body="Important updates about your listings, offers and messages will appear here." icon="notifications-outline" /> : (
+        {pageLoading ? (
+          <EmptyStateCard icon="notifications-outline" title="Loading notifications..." body="Important updates will appear here in a moment." />
+        ) : hasError ? (
+          <EmptyStateCard icon="refresh-outline" title="Could not load notifications" body="Please try again in a moment." primaryLabel="Retry" onPrimaryPress={loadItems} />
+        ) : items.length === 0 ? (
+          <EmptyStateCard icon="notifications-outline" title="No notifications yet" body="Important updates about listings, offers and messages will appear here." primaryLabel="Go to messages" onPrimaryPress={() => router.push("/inbox")} />
+        ) : (
           <View style={styles.list}>{items.map((item) => <NotificationRow key={item.id} item={item} onPress={() => openItem(item)} />)}</View>
         )}
       </ScrollView>
@@ -97,10 +104,6 @@ export default function NotificationsScreen() {
 
 function NotificationRow({ item, onPress }: { item: AppNotification; onPress: () => void }) {
   return <Pressable style={styles.notificationCard} onPress={onPress}><View style={styles.iconCircle}><Ionicons name={getIcon(item.type)} size={20} color={colors.primary} /></View><View style={styles.notificationTextWrap}><View style={styles.notificationTopRow}><Text style={styles.notificationTitle} numberOfLines={1}>{item.title}</Text><Text style={styles.timeText}>{formatTime(item.createdAt)}</Text></View><Text style={styles.notificationBody} numberOfLines={2}>{item.body}</Text></View>{!item.isRead ? <View style={styles.unreadDot} /> : null}</Pressable>;
-}
-
-function StateCard({ title, body, icon }: { title: string; body?: string; icon?: keyof typeof Ionicons.glyphMap }) {
-  return <View style={styles.stateCard}>{icon ? <View style={styles.stateIcon}><Ionicons name={icon} size={24} color="#A77C3A" /></View> : null}<Text style={styles.stateTitle}>{title}</Text>{body ? <Text style={styles.stateBody}>{body}</Text> : null}</View>;
 }
 
 const styles = StyleSheet.create({
@@ -122,9 +125,5 @@ const styles = StyleSheet.create({
   notificationTitle: { flex: 1, color: colors.text, fontSize: 14.5, fontWeight: "700" },
   notificationBody: { marginTop: 4, color: colors.muted, fontSize: 12.5, lineHeight: 17 },
   timeText: { color: colors.muted, fontSize: 11.5, fontWeight: "500" },
-  unreadDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "#A77C3A", marginLeft: 10 },
-  stateCard: { minHeight: 210, alignItems: "center", justifyContent: "center", borderRadius: 18, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, padding: 20 },
-  stateIcon: { width: 50, height: 50, alignItems: "center", justifyContent: "center", borderRadius: 25, backgroundColor: "#F7F2EB", marginBottom: 12 },
-  stateTitle: { color: colors.text, fontSize: 17, fontWeight: "700" },
-  stateBody: { marginTop: 6, color: colors.muted, fontSize: 13, textAlign: "center", lineHeight: 18 }
+  unreadDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: "#A77C3A", marginLeft: 10 }
 });
