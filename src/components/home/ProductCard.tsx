@@ -31,7 +31,7 @@ export function ProductCard({ listing, onFavoritePress }: ProductCardProps) {
     <Pressable style={styles.card} onPress={() => router.push(`/listing/${listing.id}`)}>
       <View style={styles.imageWrap}>
         {shouldShowImage ? (
-          <Image source={{ uri: listing.imageUrl ?? undefined }} style={styles.image} contentFit="contain" transition={180} onError={() => setImageFailed(true)} />
+          <Image source={{ uri: listing.imageUrl as string }} style={styles.image} contentFit="contain" transition={180} onError={() => setImageFailed(true)} />
         ) : (
           <View style={styles.placeholder}>
             <Ionicons name="image-outline" size={18} color={colors.primary} />
