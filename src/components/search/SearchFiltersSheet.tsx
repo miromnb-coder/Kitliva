@@ -125,8 +125,8 @@ export function SearchFiltersSheet({ visible, activeSheet, filters, onChange, on
             ))}
           </View>
           <View style={styles.inputRow}>
-            <View style={styles.inputBox}><Text style={styles.currency}>€</Text><TextInput style={styles.input} value={filters.minPrice} onChangeText={(value) => update("minPrice", value)} placeholder="Min" placeholderTextColor={colors.muted} keyboardType="number-pad" /></View>
-            <View style={styles.inputBox}><Text style={styles.currency}>€</Text><TextInput style={styles.input} value={filters.maxPrice} onChangeText={(value) => update("maxPrice", value)} placeholder="Max" placeholderTextColor={colors.muted} keyboardType="number-pad" /></View>
+            <View style={styles.inputBox}><Text style={styles.currency}>€</Text><TextInput style={styles.input} value={filters.minPrice} onChangeText={(value) => update("minPrice", value)} placeholder="Min" placeholderTextColor={colors.inputPlaceholder} keyboardType="number-pad" /></View>
+            <View style={styles.inputBox}><Text style={styles.currency}>€</Text><TextInput style={styles.input} value={filters.maxPrice} onChangeText={(value) => update("maxPrice", value)} placeholder="Max" placeholderTextColor={colors.inputPlaceholder} keyboardType="number-pad" /></View>
           </View>
         </View>
       ) : null}
@@ -139,7 +139,7 @@ export function SearchFiltersSheet({ visible, activeSheet, filters, onChange, on
 
       {activeSheet === "location" ? (
         <View>
-          <View style={styles.cityInput}><Ionicons name="location-outline" size={17} color="#A77C3A" /><TextInput style={styles.cityTextInput} value={filters.city} onChangeText={(value) => update("city", value)} placeholder="Search city or area" placeholderTextColor={colors.muted} /></View>
+          <View style={styles.cityInput}><Ionicons name="location-outline" size={17} color={colors.accent} /><TextInput style={styles.cityTextInput} value={filters.city} onChangeText={(value) => update("city", value)} placeholder="Search city or area" placeholderTextColor={colors.inputPlaceholder} /></View>
           <Text style={styles.helperText}>City search is active now. Radius search can be added later.</Text>
           <View style={styles.chipRow}>
             <SheetChip label="Anywhere" selected={!filters.city.trim()} onPress={() => update("city", "")} />
@@ -151,7 +151,7 @@ export function SearchFiltersSheet({ visible, activeSheet, filters, onChange, on
       {activeSheet === "shipping" ? (
         <View>
           {deliveryOptions.map((option) => <SheetOptionRow key={option.value} icon={option.icon} title={option.label} subtitle={option.subtitle} selected={filters.deliveryOption === option.value} onPress={() => update("deliveryOption", option.value)} />)}
-          <View style={styles.infoCard}><Ionicons name="information-circle-outline" size={18} color="#A77C3A" /><Text style={styles.infoText}>Delivery filtering is prepared for upcoming listing delivery data.</Text></View>
+          <View style={styles.infoCard}><Ionicons name="information-circle-outline" size={18} color={colors.accent} /><Text style={styles.infoText}>Delivery filtering is prepared for upcoming listing delivery data.</Text></View>
         </View>
       ) : null}
 
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: "#D8D1C7",
+    borderColor: colors.border,
     backgroundColor: colors.surface,
     paddingHorizontal: 14
   },
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: "#D8D1C7",
+    borderColor: colors.border,
     backgroundColor: colors.surface,
     paddingHorizontal: 14,
     marginBottom: 8
@@ -234,14 +234,14 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: "#F7F2EB",
+    backgroundColor: colors.softGold,
     paddingHorizontal: 13,
     marginTop: 2
   },
   infoText: {
     flex: 1,
     marginLeft: 9,
-    color: "#5F655F",
+    color: colors.mutedStrong,
     fontSize: 12,
     lineHeight: 16,
     fontWeight: "500"
