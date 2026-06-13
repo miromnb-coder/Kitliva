@@ -10,6 +10,7 @@ import { KitlivaBottomSheet } from "@/components/sheets/KitlivaBottomSheet";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
 import { useAuth } from "@/hooks/useAuth";
+import { useI18n } from "@/i18n";
 import { ConversationMessage, ConversationSummary, getConversation, getMessages, sendMessage } from "@/services/conversations";
 import { Deal, getDealForConversation } from "@/services/deals";
 import { createOffer, getConversationOffers, Offer, updateOfferStatus } from "@/services/offers";
@@ -17,22 +18,23 @@ import { Listing } from "@/types/listing";
 
 type IconName = keyof typeof Ionicons.glyphMap;
 type AttachmentActionId = "take_photo" | "choose_photo" | "share_listing" | "send_location" | "make_offer" | "order_details";
+type Translate = (key: string, params?: Record<string, string | number | null | undefined>) => string;
 
-const attachmentActions: { id: AttachmentActionId; label: string; icon: IconName }[] = [
-  { id: "take_photo", label: "Take photo", icon: "camera-outline" },
-  { id: "choose_photo", label: "Choose photo", icon: "image-outline" },
-  { id: "share_listing", label: "Share listing", icon: "share-outline" },
-  { id: "send_location", label: "Send location", icon: "location-outline" },
-  { id: "make_offer", label: "Make offer", icon: "pricetag-outline" },
-  { id: "order_details", label: "Order details", icon: "receipt-outline" }
+const attachmentActions: { id: AttachmentActionId; labelKey: string; icon: IconName }[] = [
+  { id: "take_photo", labelKey: "chat.takePhoto", icon: "camera-outline" },
+  { id: "choose_photo", labelKey: "chat.choosePhoto", icon: "image-outline" },
+  { id: "share_listing", labelKey: "chat.shareListing", icon: "share-outline" },
+  { id: "send_location", labelKey: "chat.sendLocation", icon: "location-outline" },
+  { id: "make_offer", labelKey: "chat.makeOffer", icon: "pricetag-outline" },
+  { id: "order_details", labelKey: "chat.orderDetails", icon: "receipt-outline" }
 ];
 
-function getDateSeparator(messages: ConversationMessage[]) {
+function getDateSeparator(messages: ConversationMessage[], language: string) {
   const firstMessage = messages[0];
   if (!firstMessage) return null;
   const date = new Date(firstMessage.createdAt);
   if (Number.isNaN(date.getTime())) return null;
-  return date.toLocaleDateString("en-US", { weekday: "long", day: "numeric", month: "long" });
+  return date.toLocaleDateString(language === "fi" ? "fi-FI" : "en-US", { weekday: "long", day: "numeric", month: "long" });
 }
 
 function getTimeLabel(value: string) {
@@ -41,16 +43,22 @@ function getTimeLabel(value: string) {
   return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
-function getOfferTitle(offer: Offer, isSeller: boolean) {
-  if (offer.status === "accepted") return "Offer accepted";
-  if (offer.status === "declined") return "Offer declined";
-  return isSeller ? "New offer" : "Offer sent";
+function getOfferTitle(offer: Offer, isSeller: boolean, t: Translate) {
+  if (offer.status === "accepted") return t("chat.offerAccepted");
+  if (offer.status === "declined") return t("chat.offerDeclined");
+  return isSeller ? t("chat.newOffer") : t("chat.offerSent");
 }
 
-function getOfferStatusLabel(offer: Offer) {
-  if (offer.status === "pending") return "pending";
-  if (offer.status === "accepted") return "accepted";
-  return "declined";
+function getOfferStatusLabel(offer: Offer, t: Translate) {
+  if (offer.status === "pending") return t("chat.pending");
+  if (offer.status === "accepted") return t("chat.accepted");
+  return t("chat.declined");
+}
+
+function getOfferPillLabel(offer: Offer, t: Translate) {
+  if (offer.status === "pending") return t("chat.offerPending");
+  if (offer.status === "accepted") return t("chat.offerAccepted");
+  return t("chat.offerDeclined");
 }
 
 function getConversationDisplayId(conversationId?: string) {
@@ -65,6 +73,7 @@ export default function ConversationScreen() {
   const scrollRef = useRef<ScrollView | null>(null);
   const { id } = useLocalSearchParams<{ id: string }>();
   const { isLoading, user } = useAuth();
+  const { language, t } = useI18n();
   const [conversation, setConversation] = useState<ConversationSummary | null>(null);
   const [messages, setMessages] = useState<ConversationMessage[]>([]);
   const [offers, setOffers] = useState<Offer[]>([]);
@@ -108,8 +117,8 @@ export default function ConversationScreen() {
       }
 
       setError(null);
-      loadConversation().catch(() => setError("Could not load conversation."));
-    }, [isLoading, loadConversation, router, user])
+      loadConversation().catch(() => setError(t("chat.loadError")));
+    }, [isLoading, loadConversation, router, t, user])
   );
 
   async function handleSend() {
@@ -121,14 +130,14 @@ export default function ConversationScreen() {
     setMessages((current) => [...current, { id: `local-${Date.now()}`, senderId: user.id, body, createdAt: new Date().toISOString() }]);
     const result = await sendMessage(id, user.id, body);
     setSending(false);
-    if (!result.success) setError(result.message ?? "Could not send message. Try again.");
+    if (!result.success) setError(result.message ?? t("chat.sendError"));
     else loadConversation();
   }
 
   async function handleOfferStatus(offerId: string, status: "accepted" | "declined") {
     if (!user) return;
     const result = await updateOfferStatus({ offerId, sellerId: user.id, status });
-    if (!result.success) setError(result.message ?? "Could not update offer.");
+    if (!result.success) setError(result.message ?? t("chat.offerUpdateError"));
     else loadConversation();
   }
 
@@ -138,11 +147,11 @@ export default function ConversationScreen() {
   }
 
   function handleCallPress() {
-    Alert.alert("Calling", "Calling is not available yet.");
+    Alert.alert(t("chat.callingTitle"), t("chat.callingBody"));
   }
 
   function handleSafetyPress() {
-    Alert.alert("Safe messaging", "Keep conversations and agreements on Kitliva.");
+    Alert.alert(t("chat.safetyTitle"), t("chat.safetyBody"));
   }
 
   function openOfferSheet() {
@@ -150,7 +159,7 @@ export default function ConversationScreen() {
 
     setIsAttachmentSheetOpen(false);
     if (conversation.sellerId === user.id) {
-      setError("You cannot make an offer on your own listing.");
+      setError(t("chat.ownOfferError"));
       return;
     }
 
@@ -162,7 +171,7 @@ export default function ConversationScreen() {
     if (!conversation || !user || isSendingOffer) return;
 
     if (!offerAmount.trim()) {
-      setOfferError("Please enter an offer amount.");
+      setOfferError(t("listing.offerAmountRequired"));
       return;
     }
 
@@ -172,7 +181,7 @@ export default function ConversationScreen() {
     setIsSendingOffer(false);
 
     if (!result.success) {
-      setOfferError(result.message ?? "Could not send offer. Try again.");
+      setOfferError(result.message ?? t("listing.offerSendError"));
       return;
     }
 
@@ -199,28 +208,29 @@ export default function ConversationScreen() {
 
     if (actionId === "share_listing") {
       setIsAttachmentSheetOpen(false);
-      await Share.share({ message: `Check this Kitliva listing: ${conversation.listingTitle}` });
+      await Share.share({ message: t("chat.shareMessage", { title: conversation.listingTitle }) });
       return;
     }
 
     setIsAttachmentSheetOpen(false);
     const comingSoonMap: Record<AttachmentActionId, string> = {
-      take_photo: "Camera sharing is coming later.",
-      choose_photo: "Photo sharing is coming later.",
-      share_listing: "Listing sharing is coming later.",
-      send_location: "Location sharing is coming later.",
-      make_offer: "Offers are coming later.",
-      order_details: "Order details are coming later."
+      take_photo: t("chat.cameraLater"),
+      choose_photo: t("chat.photoLater"),
+      share_listing: t("chat.listingLater"),
+      send_location: t("chat.locationLater"),
+      make_offer: t("chat.offersLater"),
+      order_details: t("chat.orderLater")
     };
-    Alert.alert("Coming soon", comingSoonMap[actionId]);
+    Alert.alert(t("chat.comingSoon"), comingSoonMap[actionId]);
   }
 
-  const dateSeparator = getDateSeparator(messages);
+  const dateSeparator = getDateSeparator(messages, language);
   const latestOffer = offers[offers.length - 1] ?? null;
   const acceptedOffer = offers.find((offer) => offer.status === "accepted");
   const hasActiveOrderCard = Boolean(deal || acceptedOffer);
   const displayOrderId = getConversationDisplayId(conversation?.id);
-  const statusLabel = hasActiveOrderCard ? "In transit" : latestOffer ? `Offer ${getOfferStatusLabel(latestOffer)}` : "Active chat";
+  const statusLabel = hasActiveOrderCard ? t("chat.inTransit") : latestOffer ? getOfferPillLabel(latestOffer, t) : t("chat.activeChat");
+  const suggestionTexts = [t("chat.suggestionAvailable"), t("chat.suggestionShip"), t("chat.suggestionCondition")];
 
   const offerListing = useMemo<Listing | null>(() => {
     if (!conversation) return null;
@@ -228,7 +238,7 @@ export default function ConversationScreen() {
       id: conversation.listingId,
       sellerId: conversation.sellerId,
       title: conversation.listingTitle,
-      subtitle: "Kitliva conversation",
+      subtitle: t("chat.conversationSubtitle"),
       category: "outdoor",
       categoryName: "Outdoor",
       price: conversation.listingPrice,
@@ -237,10 +247,10 @@ export default function ConversationScreen() {
       imageUrls: conversation.listingImageUrl ? [conversation.listingImageUrl] : [],
       imageCount: conversation.listingImageUrl ? 1 : 0,
       condition: "good",
-      conditionLabel: "Good condition",
+      conditionLabel: t("chat.goodCondition"),
       sellerName: conversation.otherName,
       sellerInitial: conversation.otherInitial,
-      sellerLocation: "Location not set",
+      sellerLocation: t("chat.locationNotSet"),
       sellerDistanceKm: 0,
       sellerRating: 0,
       sellerReviewCount: 0,
@@ -250,19 +260,19 @@ export default function ConversationScreen() {
       details: [],
       deliveryOptions: []
     };
-  }, [conversation]);
+  }, [conversation, t]);
 
   if (isLoading || !user) return <Screen noPadding><View style={styles.screen} /></Screen>;
 
   return (
     <Screen noPadding>
       <View style={styles.screen}>
-        <View style={[styles.header, { paddingTop: Math.max(insets.top + 10, 16) }]}>
+        <View style={[styles.header, { paddingTop: Math.max(insets.top + 10, 16) }]}> 
           <Pressable style={styles.backButton} onPress={() => router.back()}><Ionicons name="arrow-back" size={26} color={colors.text} /></Pressable>
           <View style={styles.avatar}><Text style={styles.avatarText}>{conversation?.otherInitial ?? "K"}</Text></View>
           <View style={styles.headerTextWrap}>
-            <Text style={styles.headerTitle} numberOfLines={1}>{conversation?.otherName ?? "Conversation"}</Text>
-            <View style={styles.statusRow}><View style={styles.onlineDot} /><Text style={styles.headerSub} numberOfLines={1}>Usually replies quickly</Text></View>
+            <Text style={styles.headerTitle} numberOfLines={1}>{conversation?.otherName ?? t("chat.conversationFallback")}</Text>
+            <View style={styles.statusRow}><View style={styles.onlineDot} /><Text style={styles.headerSub} numberOfLines={1}>{t("chat.repliesQuickly")}</Text></View>
           </View>
           <Pressable style={styles.headerIconButton} onPress={handleCallPress}><Ionicons name="call-outline" size={23} color={colors.text} /></Pressable>
           <Pressable style={styles.headerIconButton} onPress={handleSafetyPress}><Ionicons name="information-circle-outline" size={23} color={colors.text} /></Pressable>
@@ -282,18 +292,11 @@ export default function ConversationScreen() {
 
         <Pressable style={styles.safetyCard} onPress={handleSafetyPress}>
           <Ionicons name="shield-checkmark-outline" size={18} color={colors.primary} />
-          <Text style={styles.safetyText}>Secure payments protected by Kitliva</Text>
+          <Text style={styles.safetyText}>{t("chat.securePayments")}</Text>
           <Ionicons name="chevron-forward" size={18} color={colors.muted} />
         </Pressable>
 
-        <ScrollView
-          ref={scrollRef}
-          style={styles.messages}
-          contentContainerStyle={styles.messagesContent}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-          onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}
-        >
+        <ScrollView ref={scrollRef} style={styles.messages} contentContainerStyle={styles.messagesContent} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled" onContentSizeChange={() => scrollRef.current?.scrollToEnd({ animated: true })}>
           {dateSeparator ? <Text style={styles.dateSeparator}>{dateSeparator}</Text> : null}
 
           {offers.map((offer) => {
@@ -302,29 +305,22 @@ export default function ConversationScreen() {
             return (
               <View key={offer.id} style={styles.offerCard}>
                 <View style={styles.offerTopRow}>
-                  <Text style={styles.offerTitle}>{getOfferTitle(offer, isSeller)}</Text>
-                  <View style={styles.offerBadge}><Text style={styles.offerBadgeText}>{offer.status}</Text></View>
+                  <Text style={styles.offerTitle}>{getOfferTitle(offer, isSeller, t)}</Text>
+                  <View style={styles.offerBadge}><Text style={styles.offerBadgeText}>{getOfferStatusLabel(offer, t)}</Text></View>
                 </View>
                 <Text style={styles.offerAmount}>€{offer.amount}</Text>
                 {offer.message ? <Text style={styles.offerMessage}>{offer.message}</Text> : null}
-                <Text style={styles.offerSub}>{pending ? (isSeller ? "Accept or decline this offer." : "Waiting for seller response") : offer.status === "accepted" ? "Continue arranging pickup or delivery in chat." : "This offer was declined."}</Text>
-                {isSeller && pending ? (
-                  <View style={styles.offerActions}>
-                    <Pressable style={styles.acceptButton} onPress={() => handleOfferStatus(offer.id, "accepted")}><Text style={styles.acceptText}>Accept</Text></Pressable>
-                    <Pressable style={styles.declineButton} onPress={() => handleOfferStatus(offer.id, "declined")}><Text style={styles.declineText}>Decline</Text></Pressable>
-                  </View>
-                ) : null}
+                <Text style={styles.offerSub}>{pending ? (isSeller ? t("chat.acceptOrDecline") : t("chat.waitingSeller")) : offer.status === "accepted" ? t("chat.continuePickup") : t("chat.offerWasDeclined")}</Text>
+                {isSeller && pending ? <View style={styles.offerActions}><Pressable style={styles.acceptButton} onPress={() => handleOfferStatus(offer.id, "accepted")}><Text style={styles.acceptText}>{t("chat.accept")}</Text></Pressable><Pressable style={styles.declineButton} onPress={() => handleOfferStatus(offer.id, "declined")}><Text style={styles.declineText}>{t("chat.decline")}</Text></Pressable></View> : null}
               </View>
             );
           })}
 
           {messages.length === 0 && offers.length === 0 ? (
             <View style={styles.emptyChat}>
-              <Text style={styles.emptyTitle}>Start the conversation</Text>
-              <Text style={styles.emptyText}>Ask about condition, pickup or what is included.</Text>
-              {["Is this still available?", "Can you ship it?", "What condition is it in?"].map((text) => (
-                <Pressable key={text} style={styles.suggestionChip} onPress={() => setDraft(text)}><Text style={styles.suggestionText}>{text}</Text></Pressable>
-              ))}
+              <Text style={styles.emptyTitle}>{t("chat.startTitle")}</Text>
+              <Text style={styles.emptyText}>{t("chat.startBody")}</Text>
+              {suggestionTexts.map((text) => <Pressable key={text} style={styles.suggestionChip} onPress={() => setDraft(text)}><Text style={styles.suggestionText}>{text}</Text></Pressable>)}
             </View>
           ) : (
             messages.map((message, index) => {
@@ -334,13 +330,8 @@ export default function ConversationScreen() {
                 <View key={message.id} style={[styles.messageBlock, mine && styles.myMessageBlock]}>
                   {!mine ? <View style={styles.messageAvatar}><Text style={styles.messageAvatarText}>{conversation?.otherInitial ?? "S"}</Text></View> : null}
                   <View style={styles.messageContentWrap}>
-                    <View style={[styles.bubble, mine ? styles.myBubble : styles.theirBubble]}>
-                      <Text style={styles.bubbleText}>{message.body}</Text>
-                    </View>
-                    <View style={[styles.timeRow, mine && styles.myTimeRow]}>
-                      <Text style={styles.messageTime}>{getTimeLabel(message.createdAt)}</Text>
-                      {mine ? <Ionicons name="checkmark-done" size={13} color={colors.muted} style={styles.checkIcon} /> : null}
-                    </View>
+                    <View style={[styles.bubble, mine ? styles.myBubble : styles.theirBubble]}><Text style={styles.bubbleText}>{message.body}</Text></View>
+                    <View style={[styles.timeRow, mine && styles.myTimeRow]}><Text style={styles.messageTime}>{getTimeLabel(message.createdAt)}</Text>{mine ? <Ionicons name="checkmark-done" size={13} color={colors.muted} style={styles.checkIcon} /> : null}</View>
                     {isLastTheirMessage ? <View style={styles.reactionPill}><Text style={styles.reactionText}>👍</Text></View> : null}
                   </View>
                 </View>
@@ -348,85 +339,36 @@ export default function ConversationScreen() {
             })
           )}
 
-          {hasActiveOrderCard ? (
-            <Pressable style={styles.systemCard} onPress={() => deal ? router.push(`/deal/${deal.id}`) : conversation && router.push(`/listing/${conversation.listingId}`)}>
-              <View style={styles.systemIcon}><Ionicons name="cube-outline" size={20} color={colors.buttonPrimaryText} /></View>
-              <View style={styles.systemTextWrap}>
-                <Text style={styles.systemTitle}>Order is in transit</Text>
-                <Text style={styles.systemSub}>Est. delivery: 18 May</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={18} color={colors.muted} />
-            </Pressable>
-          ) : null}
+          {hasActiveOrderCard ? <Pressable style={styles.systemCard} onPress={() => deal ? router.push(`/deal/${deal.id}`) : conversation && router.push(`/listing/${conversation.listingId}`)}><View style={styles.systemIcon}><Ionicons name="cube-outline" size={20} color={colors.buttonPrimaryText} /></View><View style={styles.systemTextWrap}><Text style={styles.systemTitle}>{t("chat.orderTransit")}</Text><Text style={styles.systemSub}>{t("chat.deliveryEstimate")}</Text></View><Ionicons name="chevron-forward" size={18} color={colors.muted} /></Pressable> : null}
         </ScrollView>
 
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
         <View style={[styles.composer, { paddingBottom: keyboardOffset > 0 ? 8 : Math.max(insets.bottom + 8, 16) }]}> 
           <Pressable style={styles.plusButton} onPress={toggleAttachmentSheet}><Ionicons name={isAttachmentSheetOpen ? "close" : "add"} size={25} color={isAttachmentSheetOpen ? colors.text : colors.accent} /></Pressable>
-          <TextInput style={styles.input} value={draft} onChangeText={setDraft} placeholder="Write a message" placeholderTextColor={colors.inputPlaceholder} multiline />
+          <TextInput style={styles.input} value={draft} onChangeText={setDraft} placeholder={t("chat.writeMessage")} placeholderTextColor={colors.inputPlaceholder} multiline />
           <Pressable style={[styles.sendButton, (!draft.trim() || sending) && styles.disabledSend]} onPress={handleSend} disabled={!draft.trim() || sending}><Ionicons name="paper-plane" size={21} color={colors.buttonPrimaryText} /></Pressable>
         </View>
         {keyboardOffset > 0 ? <View style={{ height: keyboardOffset }} /> : null}
 
-        <ChatAttachmentSheet
-          visible={isAttachmentSheetOpen}
-          draft={draft}
-          sending={sending}
-          onClose={() => setIsAttachmentSheetOpen(false)}
-          onActionPress={handleAttachmentAction}
-          onChangeDraft={setDraft}
-          onSend={handleSend}
-        />
+        <ChatAttachmentSheet visible={isAttachmentSheetOpen} draft={draft} sending={sending} onClose={() => setIsAttachmentSheetOpen(false)} onActionPress={handleAttachmentAction} onChangeDraft={setDraft} onSend={handleSend} />
 
-        {offerListing ? (
-          <OfferSheet
-            visible={isOfferOpen}
-            listing={offerListing}
-            amount={offerAmount}
-            message={offerMessage}
-            error={offerError}
-            isSending={isSendingOffer}
-            onChangeAmount={setOfferAmount}
-            onChangeMessage={setOfferMessage}
-            onSend={sendOfferFromConversation}
-            onClose={() => setIsOfferOpen(false)}
-          />
-        ) : null}
+        {offerListing ? <OfferSheet visible={isOfferOpen} listing={offerListing} amount={offerAmount} message={offerMessage} error={offerError} isSending={isSendingOffer} onChangeAmount={setOfferAmount} onChangeMessage={setOfferMessage} onSend={sendOfferFromConversation} onClose={() => setIsOfferOpen(false)} /> : null}
       </View>
     </Screen>
   );
 }
 
-function ChatAttachmentSheet({
-  visible,
-  draft,
-  sending,
-  onClose,
-  onActionPress,
-  onChangeDraft,
-  onSend
-}: {
-  visible: boolean;
-  draft: string;
-  sending: boolean;
-  onClose: () => void;
-  onActionPress: (actionId: AttachmentActionId) => void;
-  onChangeDraft: (value: string) => void;
-  onSend: () => void;
-}) {
+function ChatAttachmentSheet({ visible, draft, sending, onClose, onActionPress, onChangeDraft, onSend }: { visible: boolean; draft: string; sending: boolean; onClose: () => void; onActionPress: (actionId: AttachmentActionId) => void; onChangeDraft: (value: string) => void; onSend: () => void }) {
+  const { t } = useI18n();
+
   return (
     <KitlivaBottomSheet visible={visible} title="" snapPoints={["42%"]} showHeader={false} backdropOpacity={0.08} onClose={onClose}>
       <View style={styles.attachmentGrid}>
-        {attachmentActions.map((action) => (
-          <Pressable key={action.id} style={styles.attachmentTile} onPress={() => onActionPress(action.id)}>
-            <Ionicons name={action.icon} size={30} color="#6F633F" />
-            <Text style={styles.attachmentLabel}>{action.label}</Text>
-          </Pressable>
-        ))}
+        {attachmentActions.map((action) => <Pressable key={action.id} style={styles.attachmentTile} onPress={() => onActionPress(action.id)}><Ionicons name={action.icon} size={30} color="#6F633F" /><Text style={styles.attachmentLabel}>{t(action.labelKey)}</Text></Pressable>)}
       </View>
       <View style={styles.sheetComposer}>
         <Pressable style={styles.sheetCloseButton} onPress={onClose}><Ionicons name="close" size={25} color={colors.text} /></Pressable>
-        <TextInput style={styles.sheetInput} value={draft} onChangeText={onChangeDraft} placeholder="Write a message" placeholderTextColor={colors.inputPlaceholder} multiline />
+        <TextInput style={styles.sheetInput} value={draft} onChangeText={onChangeDraft} placeholder={t("chat.writeMessage")} placeholderTextColor={colors.inputPlaceholder} multiline />
         <Pressable style={[styles.sheetSendButton, (!draft.trim() || sending) && styles.disabledSend]} onPress={onSend} disabled={!draft.trim() || sending}><Ionicons name="paper-plane" size={21} color={colors.buttonPrimaryText} /></Pressable>
       </View>
     </KitlivaBottomSheet>
@@ -445,23 +387,7 @@ const styles = StyleSheet.create({
   onlineDot: { width: 7, height: 7, borderRadius: 3.5, backgroundColor: "#7A873E", marginRight: 6 },
   headerSub: { color: colors.muted, fontSize: 12, fontWeight: "400" },
   headerIconButton: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
-  listingCard: {
-    height: 112,
-    marginTop: 14,
-    marginHorizontal: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    padding: 14,
-    shadowColor: colors.text,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.035,
-    shadowRadius: 10,
-    elevation: 2
-  },
+  listingCard: { height: 112, marginTop: 14, marginHorizontal: 20, flexDirection: "row", alignItems: "center", borderRadius: 18, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, padding: 14, shadowColor: colors.text, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.035, shadowRadius: 10, elevation: 2 },
   listingImage: { width: 92, height: 78, borderRadius: 13, backgroundColor: colors.softGold },
   listingPlaceholder: { width: 92, height: 78, alignItems: "center", justifyContent: "center", borderRadius: 13, backgroundColor: colors.softGold },
   listingTextWrap: { flex: 1, marginLeft: 14 },
