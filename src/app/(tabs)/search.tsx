@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
@@ -11,12 +11,12 @@ import { PopularSearchChips } from "@/components/search/PopularSearchChips";
 import { SearchFilterSheetType, SearchFiltersSheet } from "@/components/search/SearchFiltersSheet";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
+import { useI18n } from "@/i18n";
 import { getAISearchResult } from "@/services/aiSearch";
 import { defaultSearchFilters, SearchFilters } from "@/types/search";
 
-const aiExampleChips = ["Weekend hiking setup", "Beginner camera for travel", "Winter gear under €150", "Affordable cycling gear"];
-
 export default function SearchScreen() {
+  const { t } = useI18n();
   const [query, setQuery] = useState("");
   const [resultsQuery, setResultsQuery] = useState("");
   const [filters, setFilters] = useState<SearchFilters>(defaultSearchFilters);
@@ -26,6 +26,13 @@ export default function SearchScreen() {
   const [isAISearchLoading, setIsAISearchLoading] = useState(false);
   const [aiSearchSummary, setAISearchSummary] = useState<string | null>(null);
   const [aiSearchError, setAISearchError] = useState<string | null>(null);
+
+  const aiExampleChips = useMemo(() => [
+    t("explore.aiExamples.hiking"),
+    t("explore.aiExamples.camera"),
+    t("explore.aiExamples.winter"),
+    t("explore.aiExamples.cycling")
+  ], [t]);
 
   const handleCountChange = useCallback((count: number) => {
     setResultCount(count);
@@ -84,7 +91,7 @@ export default function SearchScreen() {
     }
 
     if (!trimmedQuery) {
-      setAISearchError("Write what you are looking for first.");
+      setAISearchError(t("explore.aiEmptyError"));
       return;
     }
 
@@ -102,11 +109,11 @@ export default function SearchScreen() {
         maxPrice: result.maxPrice ? String(result.maxPrice) : "",
         sort: result.sort
       }));
-      setAISearchSummary(result.chips.length ? `AI search applied: ${result.chips.join(" · ")}` : result.explanation);
-      if (result.mock) setAISearchError("AI used a lightweight fallback. Showing interpreted results.");
+      setAISearchSummary(result.chips.length ? `${t("explore.aiAppliedPrefix")}: ${result.chips.join(" · ")}` : result.explanation);
+      if (result.mock) setAISearchError(t("explore.aiFallback"));
     } catch {
       setResultsQuery(trimmedQuery);
-      setAISearchError("AI search is unavailable. Showing regular results.");
+      setAISearchError(t("explore.aiUnavailable"));
     } finally {
       setIsAISearchLoading(false);
     }
@@ -128,14 +135,14 @@ export default function SearchScreen() {
         <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           <ExploreHeader />
           <Text style={styles.title} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.9} maxFontSizeMultiplier={1}>
-            Explore gear
+            {t("explore.title")}
           </Text>
           <View style={styles.searchWrap}>
             <ExploreSearchBar value={query} onChangeText={updateQuery} onSubmit={submitSearch} isAIEnabled={isAISearchEnabled} isAILoading={isAISearchLoading} onToggleAI={enableAISearch} onCloseAI={closeAISearch} />
             {isAISearchEnabled ? (
               <View style={styles.aiHelperRow}>
                 <Ionicons name="information-circle-outline" size={14} color={colors.primary} />
-                <Text style={styles.aiHelperText}>{isAISearchLoading ? "Understanding your search..." : aiSearchError ?? "AI will turn this into smarter search filters."}</Text>
+                <Text style={styles.aiHelperText}>{isAISearchLoading ? t("explore.aiLoading") : aiSearchError ?? t("explore.aiHelper")}</Text>
               </View>
             ) : null}
             {isAISearchEnabled && !query.trim() ? (
