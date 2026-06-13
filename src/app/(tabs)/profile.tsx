@@ -9,6 +9,7 @@ import { ProfileSummaryCard } from "@/components/profile/ProfileSummaryCard";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
 import { useAuth } from "@/hooks/useAuth";
+import { useI18n } from "@/i18n";
 import { getProfileStats, ProfileStats } from "@/services/profileStats";
 
 type IconName = keyof typeof Ionicons.glyphMap;
@@ -22,15 +23,16 @@ type AccountRowItem = {
 
 const emptyStats: ProfileStats = { activeListings: 0, savedItems: 0, soldListings: 0, offers: 0 };
 
-function showComingLater(label: string) {
-  Alert.alert(label, `${label} is coming later.`);
-}
-
 export default function ProfileScreen() {
   const router = useRouter();
+  const { t } = useI18n();
   const { isLoading, profile, user, signOut } = useAuth();
   const [stats, setStats] = useState<ProfileStats>(emptyStats);
   const [isStatsLoading, setIsStatsLoading] = useState(true);
+
+  function showComingLater(label: string) {
+    Alert.alert(label, t("common.comingLaterBody", { label }));
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -74,46 +76,46 @@ export default function ProfileScreen() {
     return <Screen noPadding><View style={styles.screen} /></Screen>;
   }
 
-  const ratingLabel = profile?.rating_count ? profile.rating_average.toFixed(1) : "New";
+  const ratingLabel = profile?.rating_count ? profile.rating_average.toFixed(1) : t("profile.newRating");
 
   const sellingRows: AccountRowItem[] = [
-    { label: "Seller dashboard", icon: "analytics-outline", onPress: () => router.push("/seller-dashboard") },
-    { label: "Drafts", icon: "document-text-outline", badge: 0, onPress: () => showComingLater("Drafts") },
-    { label: "Price insights", icon: "trending-up-outline", onPress: () => showComingLater("Price insights") }
+    { label: t("profile.sellerDashboard"), icon: "analytics-outline", onPress: () => router.push("/seller-dashboard") },
+    { label: t("profile.drafts"), icon: "document-text-outline", badge: 0, onPress: () => showComingLater(t("profile.drafts")) },
+    { label: t("profile.priceInsights"), icon: "trending-up-outline", onPress: () => showComingLater(t("profile.priceInsights")) }
   ];
 
   const buyingRows: AccountRowItem[] = [
-    { label: "Saved items", icon: "heart-outline", badge: stats.savedItems, onPress: () => router.push("/saved") },
-    { label: "Recently viewed", icon: "time-outline", onPress: () => router.push("/recently-viewed") },
-    { label: "Offers", icon: "pricetag-outline", badge: stats.offers, onPress: () => router.push("/inbox") }
+    { label: t("profile.savedItems"), icon: "heart-outline", badge: stats.savedItems, onPress: () => router.push("/saved") },
+    { label: t("profile.recentlyViewed"), icon: "time-outline", onPress: () => router.push("/recently-viewed") },
+    { label: t("profile.offers"), icon: "pricetag-outline", badge: stats.offers, onPress: () => router.push("/inbox") }
   ];
 
   return (
     <Screen noPadding>
       <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <ProfileHeader onSettingsPress={() => router.push("/profile/edit")} />
+        <ProfileHeader onSettingsPress={() => router.push("/settings")} />
         <ProfileSummaryCard stats={stats} ratingLabel={ratingLabel} isLoading={isStatsLoading} />
         <ProfileStatsCard stats={stats} ratingLabel={ratingLabel} isLoading={isStatsLoading} />
 
         <View style={styles.shortcutRow}>
-          <ShortcutCard icon="pricetag-outline" title="My listings" subtitle="Manage active listings" onPress={() => router.push("/my-listings")} />
-          <ShortcutCard icon="briefcase-outline" title="Dashboard" subtitle="Offers and deals" onPress={() => router.push("/seller-dashboard")} />
+          <ShortcutCard icon="pricetag-outline" title={t("profile.myListings")} subtitle={t("profile.manageActiveListings")} onPress={() => router.push("/my-listings")} />
+          <ShortcutCard icon="briefcase-outline" title={t("profile.dashboard")} subtitle={t("profile.offersAndDeals")} onPress={() => router.push("/seller-dashboard")} />
         </View>
 
-        <AccountSection title="Selling dashboard" rows={sellingRows} />
-        <AccountSection title="Buying" rows={buyingRows} />
+        <AccountSection title={t("profile.sellingDashboard")} rows={sellingRows} />
+        <AccountSection title={t("profile.buying")} rows={buyingRows} />
 
-        <Text style={styles.sectionTitle}>Support & account</Text>
+        <Text style={styles.sectionTitle}>{t("profile.supportAccount")}</Text>
         <View style={styles.gridRow}>
-          <GridAction icon="person-circle-outline" label="Edit profile" onPress={() => router.push("/profile/edit")} />
-          <GridAction icon="notifications-outline" label="Notifications" onPress={() => router.push("/notifications")} />
-          <GridAction icon="shield-checkmark-outline" label="Safety" onPress={() => router.push("/safety")} />
-          <GridAction icon="settings-outline" label="Settings" onPress={() => router.push("/profile/edit")} />
+          <GridAction icon="person-circle-outline" label={t("profile.editProfile")} onPress={() => router.push("/profile/edit")} />
+          <GridAction icon="notifications-outline" label={t("profile.notifications")} onPress={() => router.push("/notifications")} />
+          <GridAction icon="shield-checkmark-outline" label={t("profile.safety")} onPress={() => router.push("/safety")} />
+          <GridAction icon="settings-outline" label={t("profile.settings")} onPress={() => router.push("/settings")} />
         </View>
 
         <Pressable style={styles.signOutRow} onPress={handleSignOut}>
           <Ionicons name="log-out-outline" size={22} color={colors.accent} />
-          <Text style={styles.signOutText}>Sign out</Text>
+          <Text style={styles.signOutText}>{t("profile.signOut")}</Text>
           <Ionicons name="chevron-forward" size={17} color={colors.muted} />
         </Pressable>
       </ScrollView>
