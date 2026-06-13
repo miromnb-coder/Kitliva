@@ -8,6 +8,7 @@ import * as SystemUI from "expo-system-ui";
 
 import { colors } from "@/constants/colors";
 import { AuthProvider } from "@/context/AuthContext";
+import { I18nProvider } from "@/i18n";
 
 export default function RootLayout() {
   useEffect(() => {
@@ -18,10 +19,12 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <BottomSheetModalProvider>
-          <AuthProvider>
-            <StatusBar style="dark" />
-            <Stack screenOptions={{ headerShown: false }} />
-          </AuthProvider>
+          <I18nProvider>
+            <AuthProvider>
+              <StatusBar style="dark" />
+              <Stack screenOptions={{ headerShown: false }} />
+            </AuthProvider>
+          </I18nProvider>
         </BottomSheetModalProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
