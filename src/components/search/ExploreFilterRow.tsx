@@ -1,9 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { colors } from "@/constants/colors";
-import { SearchFilters } from "@/types/search";
 import { SearchFilterSheetType } from "@/components/search/SearchFiltersSheet";
+import { colors } from "@/constants/colors";
+import { useI18n } from "@/i18n";
+import { SearchFilters } from "@/types/search";
 
 type ExploreFilterRowProps = {
   filters: SearchFilters;
@@ -11,39 +12,43 @@ type ExploreFilterRowProps = {
   onClearFilter: (filter: SearchFilterSheetType) => void;
 };
 
-function getPriceLabel(filters: SearchFilters) {
-  if (filters.minPrice && filters.maxPrice) return `€${filters.minPrice}–€${filters.maxPrice}`;
-  if (filters.minPrice) return `From €${filters.minPrice}`;
-  if (filters.maxPrice) return `Under €${filters.maxPrice}`;
-  return "Price";
-}
-
-function getConditionLabel(filters: SearchFilters) {
-  if (filters.condition === "any") return "Condition";
-  if (filters.condition === "like_new") return "Like new";
-  return filters.condition.charAt(0).toUpperCase() + filters.condition.slice(1);
-}
-
-function getShippingLabel(filters: SearchFilters) {
-  if (filters.deliveryOption === "pickup") return "Pickup";
-  if (filters.deliveryOption === "shipping") return "Shipping";
-  return "Shipping";
+function conditionKey(condition: SearchFilters["condition"]) {
+  return `condition.${condition}`;
 }
 
 export function ExploreFilterRow({ filters, onOpenFilter, onClearFilter }: ExploreFilterRowProps) {
+  const { t } = useI18n();
+
+  function getPriceLabel() {
+    if (filters.minPrice && filters.maxPrice) return t("explore.filters.range", { min: filters.minPrice, max: filters.maxPrice });
+    if (filters.minPrice) return t("explore.filters.from", { price: filters.minPrice });
+    if (filters.maxPrice) return t("explore.filters.under", { price: filters.maxPrice });
+    return t("explore.filters.price");
+  }
+
+  function getConditionLabel() {
+    if (filters.condition === "any") return t("explore.filters.condition");
+    return t(conditionKey(filters.condition));
+  }
+
+  function getShippingLabel() {
+    if (filters.deliveryOption === "pickup") return t("explore.filters.pickup");
+    return t("explore.filters.shipping");
+  }
+
   const items: { type: SearchFilterSheetType; label: string; active: boolean; icon?: keyof typeof Ionicons.glyphMap }[] = [
-    { type: "category", label: filters.categoryName === "All" ? "Category" : filters.categoryName, active: filters.categoryName !== "All" },
-    { type: "price", label: getPriceLabel(filters), active: Boolean(filters.minPrice || filters.maxPrice) },
-    { type: "condition", label: getConditionLabel(filters), active: filters.condition !== "any" },
-    { type: "location", label: filters.city.trim() ? filters.city.trim() : "Location", active: Boolean(filters.city.trim()) },
-    { type: "shipping", label: getShippingLabel(filters), active: filters.deliveryOption !== "any", icon: "cube-outline" }
+    { type: "category", label: filters.categoryName === "All" ? t("explore.filters.category") : filters.categoryName, active: filters.categoryName !== "All" },
+    { type: "price", label: getPriceLabel(), active: Boolean(filters.minPrice || filters.maxPrice) },
+    { type: "condition", label: getConditionLabel(), active: filters.condition !== "any" },
+    { type: "location", label: filters.city.trim() ? filters.city.trim() : t("explore.filters.location"), active: Boolean(filters.city.trim()) },
+    { type: "shipping", label: getShippingLabel(), active: filters.deliveryOption !== "any", icon: "cube-outline" }
   ];
 
   return (
     <View style={styles.wrap}>
       {items.map((item) => (
         <Pressable key={item.type} style={[styles.chip, item.active && styles.activeChip]} onPress={() => onOpenFilter(item.type)}>
-          {item.icon ? <Ionicons name={item.icon} size={13} color={item.active ? "#A77C3A" : colors.muted} style={styles.leadingIcon} /> : null}
+          {item.icon ? <Ionicons name={item.icon} size={13} color={item.active ? colors.accent : colors.muted} style={styles.leadingIcon} /> : null}
           <Text style={[styles.label, item.active && styles.activeLabel]} numberOfLines={1}>{item.label}</Text>
           {item.active ? (
             <Pressable hitSlop={10} onPress={() => onClearFilter(item.type)}>
@@ -78,7 +83,7 @@ const styles = StyleSheet.create({
   },
   activeChip: {
     borderColor: "#D4B987",
-    backgroundColor: "#F7F2EB"
+    backgroundColor: colors.softGold
   },
   leadingIcon: {
     marginRight: 5
