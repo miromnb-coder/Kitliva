@@ -1,15 +1,16 @@
 import { StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
+import { useI18n } from "@/i18n";
 
 export type SellStep = "photos" | "details" | "pricing" | "delivery" | "review";
 
-const steps: { key: SellStep; label: string }[] = [
-  { key: "photos", label: "Photos" },
-  { key: "details", label: "Details" },
-  { key: "pricing", label: "Price" },
-  { key: "delivery", label: "Delivery" },
-  { key: "review", label: "Review" }
+const steps: { key: SellStep; labelKey: string }[] = [
+  { key: "photos", labelKey: "sell.steps.photos" },
+  { key: "details", labelKey: "sell.steps.details" },
+  { key: "pricing", labelKey: "sell.steps.pricing" },
+  { key: "delivery", labelKey: "sell.steps.delivery" },
+  { key: "review", labelKey: "sell.steps.review" }
 ];
 
 function getStepIndex(step: SellStep) {
@@ -17,14 +18,15 @@ function getStepIndex(step: SellStep) {
 }
 
 export function SellStepIndicator({ currentStep }: { currentStep: SellStep }) {
+  const { t } = useI18n();
   const currentIndex = getStepIndex(currentStep);
-  const currentLabel = steps[currentIndex]?.label ?? "Photos";
+  const currentLabelKey = steps[currentIndex]?.labelKey ?? "sell.steps.photos";
   const progressWidth = `${((currentIndex + 1) / steps.length) * 100}%` as `${number}%`;
 
   return (
     <View style={styles.container}>
-      <Text style={styles.stepCount}>Step {currentIndex + 1} of {steps.length}</Text>
-      <Text style={styles.activeTitle}>{currentLabel}</Text>
+      <Text style={styles.stepCount}>{t("sell.steps.count", { current: currentIndex + 1, total: steps.length })}</Text>
+      <Text style={styles.activeTitle}>{t(currentLabelKey)}</Text>
       <View style={styles.progressTrack}>
         <View style={[styles.progressFill, { width: progressWidth }]} />
       </View>
