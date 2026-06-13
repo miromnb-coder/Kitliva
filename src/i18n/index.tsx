@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getLocales } from "expo-localization";
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
-import { NativeModules, Platform } from "react-native";
 
 import en from "@/i18n/locales/en.json";
 import fi from "@/i18n/locales/fi.json";
@@ -24,17 +24,13 @@ type I18nContextValue = {
 const I18nContext = createContext<I18nContextValue | null>(null);
 
 function getDeviceLocale() {
-  const settings = NativeModules.SettingsManager?.settings;
-  const iosLocale = settings?.AppleLocale || settings?.AppleLanguages?.[0];
-  const androidLocale = NativeModules.I18nManager?.localeIdentifier;
-  const intlLocale = Intl.DateTimeFormat().resolvedOptions().locale;
-
-  return Platform.OS === "ios" ? iosLocale ?? intlLocale : androidLocale ?? intlLocale;
+  const locale = getLocales()[0];
+  return locale?.languageTag ?? locale?.languageCode ?? "en";
 }
 
 function getSupportedLanguage(locale?: string | null): AppLanguage {
-  const normalized = locale?.toLowerCase() ?? "";
-  if (normalized.startsWith("fi")) return "fi";
+  const normalized = locale?.toLowerCase().replace("_", "-") ?? "";
+  if (normalized === "fi" || normalized.startsWith("fi-")) return "fi";
   return "en";
 }
 
