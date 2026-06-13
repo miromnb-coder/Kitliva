@@ -12,6 +12,7 @@ import { OfferSheet } from "@/components/listing/OfferSheet";
 import { SellerRow } from "@/components/listing/SellerRow";
 import { colors } from "@/constants/colors";
 import { useAuth } from "@/hooks/useAuth";
+import { useI18n } from "@/i18n";
 import { getOrCreateConversation } from "@/services/conversations";
 import { getFavoriteListingIds, setListingFavorite } from "@/services/favorites";
 import { getListingById } from "@/services/listings";
@@ -21,6 +22,7 @@ import { Listing } from "@/types/listing";
 
 export default function ListingDetailScreen() {
   const router = useRouter();
+  const { t } = useI18n();
   const { user } = useAuth();
   const { id } = useLocalSearchParams<{ id: string }>();
   const [listing, setListing] = useState<Listing | null>(null);
@@ -47,9 +49,7 @@ export default function ListingDetailScreen() {
       setActionMessage(null);
       const favoriteIds = user ? await getFavoriteListingIds(user.id) : [];
       const nextListing = await getListingById(id, favoriteIds);
-
       if (nextListing) addRecentlyViewedListing(nextListing.id).catch(() => undefined);
-
       if (isMounted) {
         setListing(nextListing);
         setIsLoading(false);
@@ -73,75 +73,61 @@ export default function ListingDetailScreen() {
       router.push("/auth/welcome");
       return false;
     }
-
     return true;
   }
 
   async function toggleFavorite() {
     if (!listing || !requireAuth() || !user || isFavoriteLoading) return;
-
     const nextFavoriteState = !listing.isFavorite;
     setListing({ ...listing, isFavorite: nextFavoriteState });
     setIsFavoriteLoading(true);
     const result = await setListingFavorite({ userId: user.id, listingId: listing.id, shouldFavorite: nextFavoriteState });
     setIsFavoriteLoading(false);
-
     if (!result.success) setListing({ ...listing, isFavorite: listing.isFavorite });
   }
 
   async function messageSeller() {
     if (!listing || !requireAuth() || !user) return;
-
     if (!listing.sellerId) {
-      setActionMessage("Could not open chat for this listing.");
+      setActionMessage(t("listing.chatOpenError"));
       return;
     }
-
     const result = await getOrCreateConversation({ listingId: listing.id, buyerId: user.id, sellerId: listing.sellerId });
-
     if (result.ownListing) {
-      setActionMessage("This is your listing. Manage it from My listings.");
+      setActionMessage(t("listing.ownListingShort"));
       return;
     }
-
     if (!result.success || !result.conversationId) {
-      setActionMessage("Could not open chat. Try again.");
+      setActionMessage(t("listing.chatError"));
       return;
     }
-
     router.push(`/conversation/${result.conversationId}`);
   }
 
   function openOfferSheet() {
     if (!listing || !requireAuth() || !user) return;
-
     if (listing.sellerId === user.id) {
-      setActionMessage("This is your listing. You can manage offers from your inbox when buyers contact you.");
+      setActionMessage(t("listing.ownListingOffer"));
       return;
     }
-
     setOfferError(null);
     setIsOfferOpen(true);
   }
 
   async function sendOffer() {
     if (!listing || !user || isSendingOffer) return;
-
     if (!offerAmount.trim()) {
-      setOfferError("Please enter an offer amount.");
+      setOfferError(t("listing.offerAmountRequired"));
       return;
     }
-
     setIsSendingOffer(true);
     setOfferError(null);
     const result = await createOffer({ listingId: listing.id, buyerId: user.id, sellerId: listing.sellerId ?? "", amountLabel: offerAmount, message: offerMessage });
     setIsSendingOffer(false);
-
     if (!result.success) {
-      setOfferError(result.message ?? "Could not send offer. Try again.");
+      setOfferError(result.message ?? t("listing.offerSendError"));
       return;
     }
-
     setIsOfferOpen(false);
     setOfferAmount("");
     setOfferMessage("");
@@ -152,7 +138,7 @@ export default function ListingDetailScreen() {
     return (
       <View style={styles.loadingScreen}>
         <ActivityIndicator color={colors.accent} />
-        <Text style={styles.loadingText}>Loading listing...</Text>
+        <Text style={styles.loadingText}>{t("listing.loading")}</Text>
       </View>
     );
   }
@@ -160,10 +146,10 @@ export default function ListingDetailScreen() {
   if (!listing) {
     return (
       <View style={styles.notFoundScreen}>
-        <Text style={styles.notFoundTitle}>Listing not found</Text>
-        <Text style={styles.notFoundSubtitle}>This item may have been sold, removed or archived.</Text>
+        <Text style={styles.notFoundTitle}>{t("listing.notFoundTitle")}</Text>
+        <Text style={styles.notFoundSubtitle}>{t("listing.notFoundBody")}</Text>
         <Pressable style={styles.notFoundButton} onPress={() => router.back()}>
-          <Text style={styles.notFoundButtonText}>Go back</Text>
+          <Text style={styles.notFoundButtonText}>{t("common.goBack")}</Text>
         </Pressable>
       </View>
     );
@@ -184,18 +170,7 @@ export default function ListingDetailScreen() {
           <View style={styles.bottomSpacer} />
         </View>
       </ScrollView>
-      <OfferSheet
-        visible={isOfferOpen}
-        listing={listing}
-        amount={offerAmount}
-        message={offerMessage}
-        error={offerError}
-        isSending={isSendingOffer}
-        onChangeAmount={setOfferAmount}
-        onChangeMessage={setOfferMessage}
-        onSend={sendOffer}
-        onClose={() => setIsOfferOpen(false)}
-      />
+      <OfferSheet visible={isOfferOpen} listing={listing} amount={offerAmount} message={offerMessage} error={offerError} isSending={isSendingOffer} onChangeAmount={setOfferAmount} onChangeMessage={setOfferMessage} onSend={sendOffer} onClose={() => setIsOfferOpen(false)} />
     </View>
   );
 }
