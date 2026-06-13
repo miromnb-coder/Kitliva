@@ -1,0 +1,113 @@
+{
+  "common": {
+    "continue": "Jatka",
+    "back": "Takaisin",
+    "cancel": "Peruuta",
+    "close": "Sulje",
+    "clear": "Tyhjennä",
+    "reset": "Nollaa",
+    "apply": "Käytä",
+    "save": "Tallenna",
+    "search": "Hae",
+    "loading": "Ladataan...",
+    "tryAgain": "Yritä uudelleen",
+    "notFound": "Ei löytynyt",
+    "comingLaterBody": "{label} tulee myöhemmin."
+  },
+  "language": {
+    "title": "Kieli",
+    "subtitle": "Valitse Kitlivassa käytettävä kieli.",
+    "system": "Puhelimen kieli",
+    "english": "English",
+    "finnish": "Suomi",
+    "current": "Käytössä",
+    "saved": "Kieli päivitetty",
+    "description": "Jos puhelimen kieltä ei vielä tueta, käytetään englantia."
+  },
+  "settings": {
+    "title": "Asetukset",
+    "subtitle": "Hallitse Kitlivan asetuksia.",
+    "languageTitle": "Sovelluksen kieli",
+    "languageSubtitle": "Nyt englanti tai suomi, lisää myöhemmin.",
+    "accountTitle": "Tilin asetukset",
+    "accountSubtitle": "Lisää tilin asetuksia tulee myöhemmin."
+  },
+  "condition": {
+    "any": "Kaikki",
+    "new": "Uusi",
+    "like_new": "Kuin uusi",
+    "good": "Hyvä",
+    "fair": "Kohtalainen",
+    "poor": "Heikko"
+  },
+  "explore": {
+    "title": "Selaa varusteita",
+    "searchPlaceholder": "Hae varusteita, brändejä tai harrastuksia...",
+    "aiSearchPlaceholder": "Kerro Kitlivalle mitä etsit...",
+    "aiHelper": "AI muuttaa hakusi älykkäämmiksi suodattimiksi.",
+    "aiLoading": "Tulkitaan hakuasi...",
+    "aiEmptyError": "Kirjoita ensin mitä etsit.",
+    "aiUnavailable": "AI-haku ei ole saatavilla. Näytetään tavalliset tulokset.",
+    "aiFallback": "AI käytti kevyttä varatulkintaa. Näytetään tulkitut tulokset.",
+    "aiAppliedPrefix": "AI-haku käytössä",
+    "aiInterpreted": "AI tulkitsi",
+    "aiFallbackExplanation": "AI-haku lisäsi kevyet suodattimet.",
+    "aiFallbackTextOnly": "AI käytti hakutekstiäsi älykkäämpänä hakuna.",
+    "aiExamples": {
+      "hiking": "Viikonlopun retkivarusteet",
+      "camera": "Aloittelijan matkakamera",
+      "winter": "Talvivarusteet alle 150€",
+      "cycling": "Edulliset pyöräilyvarusteet"
+    },
+    "filters": {
+      "category": "Kategoria",
+      "price": "Hinta",
+      "condition": "Kunto",
+      "location": "Sijainti",
+      "shipping": "Toimitus",
+      "pickup": "Nouto",
+      "under": "Alle {price}€",
+      "from": "Alkaen {price}€",
+      "range": "{min}–{max}€",
+      "all": "Kaikki"
+    },
+    "popular": {
+      "title": "Suositut haut",
+      "cameraKit": "Kamerasetti",
+      "skis": "Sukset",
+      "tent": "Teltta",
+      "guitar": "Kitara",
+      "kidsGear": "Lasten varusteet"
+    },
+    "results": {
+      "title": "Kaikki varusteet",
+      "count": "{count} tulosta",
+      "sort": "Järjestys: {label}",
+      "recommended": "Suositellut",
+      "newest": "Uusimmat",
+      "priceLow": "Hinta matala",
+      "priceHigh": "Hinta korkea"
+    }
+  },
+  "profile": {
+    "settings": "Asetukset",
+    "signOut": "Kirjaudu ulos",
+    "supportAccount": "Tuki ja tili",
+    "editProfile": "Muokkaa profiilia",
+    "notifications": "Ilmoitukset",
+    "safety": "Turvallisuus",
+    "myListings": "Omat ilmoitukset",
+    "manageActiveListings": "Hallitse aktiivisia ilmoituksia",
+    "dashboard": "Hallinta",
+    "offersAndDeals": "Tarjoukset ja kaupat",
+    "sellingDashboard": "Myynnin hallinta",
+    "sellerDashboard": "Myyjän hallinta",
+    "drafts": "Luonnokset",
+    "priceInsights": "Hintavinkit",
+    "buying": "Ostaminen",
+    "savedItems": "Tallennetut",
+    "recentlyViewed": "Viimeksi katsotut",
+    "offers": "Tarjoukset",
+    "newRating": "Uusi"
+  }
+}
