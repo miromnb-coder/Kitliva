@@ -10,9 +10,11 @@ import { AuthSocialButton } from "@/components/auth/AuthSocialButton";
 import { AuthTextField } from "@/components/auth/AuthTextField";
 import { colors } from "@/constants/colors";
 import { useAuth } from "@/hooks/useAuth";
+import { useI18n } from "@/i18n";
 
 export default function SignInScreen() {
   const router = useRouter();
+  const { t } = useI18n();
   const { isSigningIn, signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +25,7 @@ export default function SignInScreen() {
     const result = await signIn(email, password);
 
     if (!result.success) {
-      setError(result.message ?? "Something went wrong. Please try again.");
+      setError(result.message ?? t("common.genericError"));
       return;
     }
 
@@ -33,24 +35,23 @@ export default function SignInScreen() {
   return (
     <AuthScreen>
       <AuthBackButton />
-
       <View style={styles.headerBlock}>
-        <Text style={styles.title}>Welcome back</Text>
-        <Text style={styles.subtitle}>Sign in to manage listings, messages{`\n`}and saved gear.</Text>
+        <Text style={styles.title}>{t("auth.welcomeBack")}</Text>
+        <Text style={styles.subtitle}>{t("auth.signInSubtitle")}</Text>
       </View>
 
       <View style={styles.formCard}>
-        <AuthTextField label="Email address" placeholder="Enter your email" value={email} onChangeText={setEmail} keyboardType="email-address" autoComplete="email" textContentType="emailAddress" returnKeyType="next" />
-        <AuthTextField label="Password" placeholder="Enter your password" value={password} onChangeText={setPassword} secure autoComplete="password" textContentType="password" returnKeyType="done" />
-        <Pressable onPress={() => Alert.alert("Forgot password", "Password reset is coming later.")}>
-          <Text style={styles.forgotText}>Forgot password?</Text>
+        <AuthTextField label={t("auth.email")} placeholder={t("auth.emailPlaceholder")} value={email} onChangeText={setEmail} keyboardType="email-address" autoComplete="email" textContentType="emailAddress" returnKeyType="next" />
+        <AuthTextField label={t("auth.password")} placeholder={t("auth.passwordPlaceholder")} value={password} onChangeText={setPassword} secure autoComplete="password" textContentType="password" returnKeyType="done" />
+        <Pressable onPress={() => Alert.alert(t("auth.forgotPasswordTitle"), t("auth.forgotPasswordBody"))}>
+          <Text style={styles.forgotText}>{t("auth.forgotPassword")}</Text>
         </Pressable>
       </View>
 
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
       <View style={styles.primaryWrap}>
-        <AuthButton label="Sign in" loadingLabel="Signing in..." loading={isSigningIn} onPress={handleSignIn} />
+        <AuthButton label={t("auth.signIn")} loadingLabel={t("auth.signingIn")} loading={isSigningIn} onPress={handleSignIn} />
       </View>
 
       <AuthDivider />
@@ -58,72 +59,21 @@ export default function SignInScreen() {
       <AuthSocialButton provider="google" />
 
       <Pressable style={styles.bottomLink} onPress={() => router.push("/auth/sign-up")}>
-        <Text style={styles.bottomText}>New to Kitliva? <Text style={styles.linkText}>Create account</Text></Text>
+        <Text style={styles.bottomText}>{t("auth.newToKitliva")} <Text style={styles.linkText}>{t("auth.createAccount")}</Text></Text>
       </Pressable>
     </AuthScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  headerBlock: {
-    marginTop: 34
-  },
-  title: {
-    color: colors.text,
-    fontSize: 42,
-    fontWeight: "700",
-    letterSpacing: -1.1,
-    lineHeight: 47
-  },
-  subtitle: {
-    marginTop: 10,
-    color: colors.mutedStrong,
-    fontSize: 15.5,
-    fontWeight: "400",
-    lineHeight: 22
-  },
-  formCard: {
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    padding: 20,
-    marginTop: 28
-  },
-  forgotText: {
-    alignSelf: "flex-end",
-    color: colors.link,
-    fontSize: 13.5,
-    fontWeight: "500",
-    marginTop: -4
-  },
-  errorText: {
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: colors.dangerBorder,
-    backgroundColor: colors.dangerSurface,
-    color: colors.dangerText,
-    fontSize: 12.5,
-    fontWeight: "700",
-    lineHeight: 17,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginTop: 12
-  },
-  primaryWrap: {
-    marginTop: 28
-  },
-  bottomLink: {
-    alignItems: "center",
-    marginTop: 24
-  },
-  bottomText: {
-    color: colors.muted,
-    fontSize: 14.5,
-    fontWeight: "400"
-  },
-  linkText: {
-    color: colors.link,
-    fontWeight: "600"
-  }
+  headerBlock: { marginTop: 34 },
+  title: { color: colors.text, fontSize: 42, fontWeight: "700", letterSpacing: -1.1, lineHeight: 47 },
+  subtitle: { marginTop: 10, color: colors.mutedStrong, fontSize: 15.5, fontWeight: "400", lineHeight: 22 },
+  formCard: { borderRadius: 18, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface, padding: 20, marginTop: 28 },
+  forgotText: { alignSelf: "flex-end", color: colors.link, fontSize: 13.5, fontWeight: "500", marginTop: -4 },
+  errorText: { borderRadius: 12, borderWidth: 1, borderColor: colors.dangerBorder, backgroundColor: colors.dangerSurface, color: colors.dangerText, fontSize: 12.5, fontWeight: "700", lineHeight: 17, paddingHorizontal: 12, paddingVertical: 10, marginTop: 12 },
+  primaryWrap: { marginTop: 28 },
+  bottomLink: { alignItems: "center", marginTop: 24 },
+  bottomText: { color: colors.muted, fontSize: 14.5, fontWeight: "400" },
+  linkText: { color: colors.link, fontWeight: "600" }
 });
