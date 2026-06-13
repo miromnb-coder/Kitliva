@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 import { SellTextField } from "@/components/sell/SellTextField";
 import { colors } from "@/constants/colors";
+import { useI18n } from "@/i18n";
 import { SellFormDraft } from "@/types/sell";
 
 type PricingStepProps = {
@@ -12,18 +13,20 @@ type PricingStepProps = {
 };
 
 export function PricingStep({ form, error, onChange }: PricingStepProps) {
+  const { t } = useI18n();
+
   return (
     <>
       <View style={styles.headerBlock}>
-        <Text style={styles.screenTitle}>Set your price</Text>
-        <Text style={styles.screenSubtitle}>Choose a fair price based on condition and similar listings.</Text>
+        <Text style={styles.screenTitle}>{t("sell.pricing.title")}</Text>
+        <Text style={styles.screenSubtitle}>{t("sell.pricing.subtitle")}</Text>
       </View>
 
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
       <View style={styles.priceCard}>
-        <SellTextField label="Price" value={form.priceLabel} placeholder="€220" keyboardType="decimal-pad" onChangeText={(value) => onChange("priceLabel", value)} />
-        <Text style={styles.helperText}>You can adjust this later.</Text>
+        <SellTextField label={t("sell.pricing.price")} value={form.priceLabel} placeholder="€220" keyboardType="decimal-pad" onChangeText={(value) => onChange("priceLabel", value)} />
+        <Text style={styles.helperText}>{t("sell.pricing.helper")}</Text>
       </View>
 
       <View style={styles.tipCard}>
@@ -31,8 +34,8 @@ export function PricingStep({ form, error, onChange }: PricingStepProps) {
           <Ionicons name="pricetag-outline" size={16} color={colors.primary} />
         </View>
         <View style={styles.tipContent}>
-          <Text style={styles.tipTitle}>Pricing tip</Text>
-          <Text style={styles.tipText}>A clear price helps buyers make faster decisions. You can adjust it later.</Text>
+          <Text style={styles.tipTitle}>{t("sell.pricing.tipTitle")}</Text>
+          <Text style={styles.tipText}>{t("sell.pricing.tipBody")}</Text>
         </View>
       </View>
     </>
