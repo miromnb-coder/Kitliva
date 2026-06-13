@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { ActivityIndicator, Pressable, StyleSheet, TextInput, View } from "react-native";
 
 import { colors } from "@/constants/colors";
+import { useI18n } from "@/i18n";
 
 type ExploreSearchBarProps = {
   value: string;
@@ -14,8 +15,9 @@ type ExploreSearchBarProps = {
 };
 
 export function ExploreSearchBar({ value, onChangeText, onSubmit, isAIEnabled = false, isAILoading = false, onToggleAI, onCloseAI }: ExploreSearchBarProps) {
+  const { t } = useI18n();
   const iconName = isAIEnabled ? "sparkles-outline" : "search-outline";
-  const placeholder = isAIEnabled ? "Tell Kitliva what you need..." : "Search gear, brands or activities...";
+  const placeholder = isAIEnabled ? t("explore.aiSearchPlaceholder") : t("explore.searchPlaceholder");
 
   return (
     <View style={[styles.container, isAIEnabled && styles.aiContainer]}>
