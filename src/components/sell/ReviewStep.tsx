@@ -4,6 +4,7 @@ import { Image } from "expo-image";
 import { StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
+import { useI18n } from "@/i18n";
 import { SellFormDraft, SellPhoto } from "@/types/sell";
 
 type ReviewStepProps = {
@@ -12,44 +13,46 @@ type ReviewStepProps = {
   publishError?: string | null;
 };
 
-function formatPrice(priceLabel: string) {
+function formatPrice(priceLabel: string, notAdded: string) {
   const trimmed = priceLabel.trim();
-  if (!trimmed) return "Not added";
+  if (!trimmed) return notAdded;
   return trimmed.startsWith("€") ? trimmed : `€${trimmed}`;
 }
 
-function optionalValue(value: string) {
-  return value.trim() || "Not added";
+function optionalValue(value: string, notAdded: string) {
+  return value.trim() || notAdded;
 }
 
-function getPublishErrorTitle(message?: string | null) {
-  if (message?.toLowerCase().includes("connection")) return "Photos could not upload";
-  return "Listing needs details";
+function isConnectionError(message?: string | null) {
+  return Boolean(message?.toLowerCase().includes("connection"));
 }
 
 export function ReviewStep({ form, photos, publishError }: ReviewStepProps) {
+  const { t } = useI18n();
   const [coverFailed, setCoverFailed] = useState(false);
   const coverUri = photos[0]?.uri;
   const photoCount = photos.length;
-  const delivery = [form.allowPickup ? "Pickup" : null, form.allowShipping ? "Shipping" : null].filter(Boolean).join(" + ") || "Not added";
+  const notAdded = t("sell.review.notAdded");
+  const photoWord = photoCount === 1 ? t("sell.review.photoSingular") : t("sell.review.photoPlural");
+  const delivery = [form.allowPickup ? t("sell.review.pickup") : null, form.allowShipping ? t("sell.review.shipping") : null].filter(Boolean).join(" + ") || notAdded;
   const location = [form.locationCity, form.locationCountry].filter(Boolean).join(", ");
   const details = [
-    { label: "Category", value: form.categoryName, optional: false },
-    { label: "Condition", value: form.conditionLabel, optional: false },
-    { label: "Brand", value: optionalValue(form.brand), optional: !form.brand.trim() },
-    { label: "Model", value: optionalValue(form.model), optional: !form.model.trim() },
-    { label: "Price", value: formatPrice(form.priceLabel), optional: false },
-    { label: "Location", value: location || "Not added", optional: !location },
-    { label: "Delivery", value: delivery, optional: delivery === "Not added" },
-    { label: "Photos", value: `${photoCount} ${photoCount === 1 ? "photo" : "photos"}`, optional: false }
+    { label: t("sell.details.category"), value: form.categoryName, optional: false },
+    { label: t("sell.details.condition"), value: form.conditionLabel, optional: false },
+    { label: t("sell.details.brand"), value: optionalValue(form.brand, notAdded), optional: !form.brand.trim() },
+    { label: t("sell.details.model"), value: optionalValue(form.model, notAdded), optional: !form.model.trim() },
+    { label: t("sell.pricing.price"), value: formatPrice(form.priceLabel, notAdded), optional: false },
+    { label: t("explore.filters.location"), value: location || notAdded, optional: !location },
+    { label: t("sell.review.delivery"), value: delivery, optional: delivery === notAdded },
+    { label: t("sell.review.photos"), value: `${photoCount} ${photoWord}`, optional: false }
   ];
   const showCover = Boolean(coverUri && !coverFailed);
 
   return (
     <>
       <View style={styles.headerBlock}>
-        <Text style={styles.screenTitle}>Review your listing</Text>
-        <Text style={styles.screenSubtitle}>Check the details before publishing.</Text>
+        <Text style={styles.screenTitle}>{t("sell.review.title")}</Text>
+        <Text style={styles.screenSubtitle}>{t("sell.review.subtitle")}</Text>
       </View>
 
       {publishError ? (
@@ -58,7 +61,7 @@ export function ReviewStep({ form, photos, publishError }: ReviewStepProps) {
             <Ionicons name="alert-circle-outline" size={18} color={colors.dangerText} />
           </View>
           <View style={styles.errorContent}>
-            <Text style={styles.errorTitle}>{getPublishErrorTitle(publishError)}</Text>
+            <Text style={styles.errorTitle}>{isConnectionError(publishError) ? t("sell.review.photosUploadTitle") : t("sell.review.needsDetailsTitle")}</Text>
             <Text style={styles.errorText}>{publishError}</Text>
           </View>
         </View>
@@ -75,14 +78,14 @@ export function ReviewStep({ form, photos, publishError }: ReviewStepProps) {
 
         <View style={styles.previewContent}>
           <Text style={styles.previewTitle} numberOfLines={2}>
-            {form.title || "Untitled listing"}
+            {form.title || t("sell.review.untitled")}
           </Text>
-          <Text style={styles.previewMeta}>{form.categoryName || "Category"} • {form.conditionLabel || "Condition"}</Text>
-          <Text style={styles.previewPrice}>{formatPrice(form.priceLabel)}</Text>
-          <Text style={styles.previewLocation} numberOfLines={1}>{location || "Location not added"}</Text>
+          <Text style={styles.previewMeta}>{form.categoryName || t("sell.review.categoryFallback")} • {form.conditionLabel || t("sell.review.conditionFallback")}</Text>
+          <Text style={styles.previewPrice}>{formatPrice(form.priceLabel, notAdded)}</Text>
+          <Text style={styles.previewLocation} numberOfLines={1}>{location || t("sell.review.locationNotAdded")}</Text>
           <View style={styles.photoBadge}>
             <Ionicons name="image-outline" size={13} color={colors.primary} style={styles.photoIcon} />
-            <Text style={styles.photoBadgeText}>{photoCount} {photoCount === 1 ? "photo" : "photos"}</Text>
+            <Text style={styles.photoBadgeText}>{photoCount} {photoWord}</Text>
           </View>
         </View>
       </View>
@@ -104,8 +107,8 @@ export function ReviewStep({ form, photos, publishError }: ReviewStepProps) {
           <Ionicons name="shield-checkmark-outline" size={17} color={colors.primary} />
         </View>
         <View style={styles.safetyContent}>
-          <Text style={styles.safetyTitle}>Sell safely</Text>
-          <Text style={styles.safetyText}>Keep conversations in Kitliva and agree pickup or shipping details clearly with the buyer.</Text>
+          <Text style={styles.safetyTitle}>{t("sell.review.safeTitle")}</Text>
+          <Text style={styles.safetyText}>{t("sell.review.safeBody")}</Text>
         </View>
       </View>
     </>
