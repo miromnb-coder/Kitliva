@@ -2,13 +2,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
+import { useI18n } from "@/i18n";
 
 const popularSearches = [
-  { label: "Camera kit", query: "camera", icon: "camera-outline" as const },
-  { label: "Skis", query: "skis", icon: "snow-outline" as const },
-  { label: "Tent", query: "tent", icon: "triangle-outline" as const },
-  { label: "Guitar", query: "guitar", icon: "musical-notes-outline" as const },
-  { label: "Kids gear", query: "kids", icon: "happy-outline" as const }
+  { labelKey: "explore.popular.cameraKit", query: "camera", icon: "camera-outline" as const },
+  { labelKey: "explore.popular.skis", query: "skis", icon: "snow-outline" as const },
+  { labelKey: "explore.popular.tent", query: "tent", icon: "triangle-outline" as const },
+  { labelKey: "explore.popular.guitar", query: "guitar", icon: "musical-notes-outline" as const },
+  { labelKey: "explore.popular.kidsGear", query: "kids", icon: "happy-outline" as const }
 ];
 
 type PopularSearchChipsProps = {
@@ -16,14 +17,16 @@ type PopularSearchChipsProps = {
 };
 
 export function PopularSearchChips({ onSelectSearch }: PopularSearchChipsProps) {
+  const { t } = useI18n();
+
   return (
     <View style={styles.section}>
-      <Text style={styles.title}>Popular searches</Text>
+      <Text style={styles.title}>{t("explore.popular.title")}</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.content}>
         {popularSearches.map((search) => (
-          <Pressable key={search.label} style={styles.chip} onPress={() => onSelectSearch(search.query)}>
+          <Pressable key={search.labelKey} style={styles.chip} onPress={() => onSelectSearch(search.query)}>
             <Ionicons name={search.icon} size={14} color={colors.text} style={styles.icon} />
-            <Text style={styles.label}>{search.label}</Text>
+            <Text style={styles.label}>{t(search.labelKey)}</Text>
           </Pressable>
         ))}
       </ScrollView>
