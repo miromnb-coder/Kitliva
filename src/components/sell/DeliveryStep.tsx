@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { SellOptionCard } from "@/components/sell/SellOptionCard";
 import { SellTextField } from "@/components/sell/SellTextField";
 import { colors } from "@/constants/colors";
+import { useI18n } from "@/i18n";
 import { SellFormDraft } from "@/types/sell";
 
 type DeliveryStepProps = {
@@ -12,32 +13,34 @@ type DeliveryStepProps = {
 };
 
 export function DeliveryStep({ form, error, onChange }: DeliveryStepProps) {
+  const { t } = useI18n();
+
   return (
     <>
       <View style={styles.headerBlock}>
-        <Text style={styles.screenTitle}>Delivery and location</Text>
-        <Text style={styles.screenSubtitle}>Tell buyers where the item is and how they can get it.</Text>
+        <Text style={styles.screenTitle}>{t("sell.delivery.title")}</Text>
+        <Text style={styles.screenSubtitle}>{t("sell.delivery.subtitle")}</Text>
       </View>
 
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
       <View style={styles.locationRow}>
         <View style={styles.locationItem}>
-          <SellTextField label="City" value={form.locationCity} placeholder="City" onChangeText={(value) => onChange("locationCity", value)} />
+          <SellTextField label={t("sell.delivery.city")} value={form.locationCity} placeholder={t("sell.delivery.city")} onChangeText={(value) => onChange("locationCity", value)} />
         </View>
         <View style={styles.locationItem}>
-          <SellTextField label="Country" value={form.locationCountry} placeholder="Country" onChangeText={(value) => onChange("locationCountry", value)} />
+          <SellTextField label={t("sell.delivery.country")} value={form.locationCountry} placeholder={t("sell.delivery.country")} onChangeText={(value) => onChange("locationCountry", value)} />
         </View>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.label}>Delivery options</Text>
+        <Text style={styles.label}>{t("sell.delivery.deliveryOptions")}</Text>
         <View style={styles.deliveryRow}>
           <View style={styles.deliveryItem}>
-            <SellOptionCard title="Local pickup" subtitle="Buyer collects it" icon="location-outline" selected={form.allowPickup} onPress={() => onChange("allowPickup", !form.allowPickup)} />
+            <SellOptionCard title={t("sell.delivery.pickupTitle")} subtitle={t("sell.delivery.pickupSubtitle")} icon="location-outline" selected={form.allowPickup} onPress={() => onChange("allowPickup", !form.allowPickup)} />
           </View>
           <View style={styles.deliveryItem}>
-            <SellOptionCard title="Shipping" subtitle="Arrange with buyer" icon="cube-outline" selected={form.allowShipping} onPress={() => onChange("allowShipping", !form.allowShipping)} />
+            <SellOptionCard title={t("sell.delivery.shippingTitle")} subtitle={t("sell.delivery.shippingSubtitle")} icon="cube-outline" selected={form.allowShipping} onPress={() => onChange("allowShipping", !form.allowShipping)} />
           </View>
         </View>
       </View>
