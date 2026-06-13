@@ -6,6 +6,7 @@ import { ProductGrid } from "@/components/home/ProductGrid";
 import { ProductGridSkeleton } from "@/components/marketplace/ProductGridSkeleton";
 import { EmptyStateCard } from "@/components/ui/EmptyStateCard";
 import { useAuth } from "@/hooks/useAuth";
+import { useI18n } from "@/i18n";
 import { getFavoriteListingIds, setListingFavorite } from "@/services/favorites";
 import { searchListings } from "@/services/listings";
 import { Listing } from "@/types/listing";
@@ -18,6 +19,7 @@ type HomeListingFeedProps = {
 
 export function HomeListingFeed({ query, filters }: HomeListingFeedProps) {
   const router = useRouter();
+  const { t } = useI18n();
   const { user } = useAuth();
   const [listings, setListings] = useState<Listing[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -78,23 +80,13 @@ export function HomeListingFeed({ query, filters }: HomeListingFeedProps) {
     }
   }
 
-  if (isLoading) {
-    return <ProductGridSkeleton />;
-  }
-
-  if (hasError) {
-    return <View style={styles.emptyWrap}><EmptyStateCard icon="refresh-outline" title="Could not load items" body="Please try again in a moment." /></View>;
-  }
-
-  if (listings.length === 0) {
-    return <View style={styles.emptyWrap}><EmptyStateCard icon="search-outline" title="No matching items" body="Try another search, category or sort option." /></View>;
-  }
+  if (isLoading) return <ProductGridSkeleton />;
+  if (hasError) return <View style={styles.emptyWrap}><EmptyStateCard icon="refresh-outline" title={t("home.loadErrorTitle")} body={t("home.loadErrorBody")} /></View>;
+  if (listings.length === 0) return <View style={styles.emptyWrap}><EmptyStateCard icon="search-outline" title={t("home.emptyTitle")} body={t("home.emptyBody")} /></View>;
 
   return <ProductGrid listings={listings} onFavoritePress={handleFavoritePress} />;
 }
 
 const styles = StyleSheet.create({
-  emptyWrap: {
-    marginTop: 6
-  }
+  emptyWrap: { marginTop: 6 }
 });
