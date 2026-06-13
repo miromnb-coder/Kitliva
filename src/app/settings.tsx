@@ -4,16 +4,17 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
-import { AppLanguage, useI18n } from "@/i18n";
+import { AppLanguagePreference, useI18n } from "@/i18n";
 
-const options: { value: AppLanguage; labelKey: string }[] = [
+const options: { value: AppLanguagePreference; labelKey: string }[] = [
+  { value: "system", labelKey: "language.system" },
   { value: "en", labelKey: "language.english" },
   { value: "fi", labelKey: "language.finnish" }
 ];
 
 export default function SettingsScreen() {
   const router = useRouter();
-  const { language, setLanguage, t } = useI18n();
+  const { languagePreference, setLanguagePreference, t } = useI18n();
 
   return (
     <Screen noPadding>
@@ -38,10 +39,10 @@ export default function SettingsScreen() {
 
           <View style={styles.optionCard}>
             {options.map((option, index) => {
-              const selected = language === option.value;
+              const selected = languagePreference === option.value;
               return (
                 <View key={option.value}>
-                  <Pressable style={styles.optionRow} onPress={() => setLanguage(option.value)}>
+                  <Pressable style={styles.optionRow} onPress={() => setLanguagePreference(option.value)}>
                     <Text style={styles.optionText}>{t(option.labelKey)}</Text>
                     {selected ? <Text style={styles.currentText}>{t("language.current")}</Text> : null}
                     <Ionicons name={selected ? "checkmark-circle" : "ellipse-outline"} size={21} color={selected ? colors.primary : colors.muted} />
