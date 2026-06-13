@@ -5,22 +5,8 @@ import { StyleSheet, Text, View } from "react-native";
 import { SellFlowActions } from "@/components/sell/SellFlowActions";
 import { colors } from "@/constants/colors";
 import { mockSellListing } from "@/data/mockSellListing";
+import { useI18n } from "@/i18n";
 import { PublishedListing } from "@/types/listing";
-
-const nextSteps = [
-  {
-    icon: "search-outline" as const,
-    text: "Buyers can now find your listing"
-  },
-  {
-    icon: "chatbubble-outline" as const,
-    text: "You’ll get messages in Inbox"
-  },
-  {
-    icon: "cube-outline" as const,
-    text: "Keep your gear ready for pickup or shipping"
-  }
-];
 
 type PublishSuccessStepProps = {
   listing: PublishedListing | null;
@@ -39,9 +25,15 @@ function formatPrice(listing: PublishedListing | null) {
 }
 
 export function PublishSuccessStep({ listing, onCreateAnother, onViewListing }: PublishSuccessStepProps) {
+  const { t } = useI18n();
   const title = listing?.title ?? mockSellListing.title;
   const category = listing?.categoryName ?? mockSellListing.category;
   const condition = listing?.conditionLabel ?? mockSellListing.condition;
+  const nextSteps = [
+    { icon: "search-outline" as const, text: t("sell.success.nextFind") },
+    { icon: "chatbubble-outline" as const, text: t("sell.success.nextInbox") },
+    { icon: "cube-outline" as const, text: t("sell.success.nextReady") }
+  ];
 
   return (
     <>
@@ -49,10 +41,8 @@ export function PublishSuccessStep({ listing, onCreateAnother, onViewListing }: 
         <View style={styles.successIconCircle}>
           <Ionicons name="checkmark" size={34} color={colors.primary} />
         </View>
-        <Text style={styles.successTitle}>Listing published</Text>
-        <Text style={styles.successSubtitle}>
-          Your gear is now live and ready to be discovered by nearby buyers.
-        </Text>
+        <Text style={styles.successTitle}>{t("sell.success.title")}</Text>
+        <Text style={styles.successSubtitle}>{t("sell.success.subtitle")}</Text>
       </View>
 
       <View style={styles.previewCard}>
@@ -64,16 +54,16 @@ export function PublishSuccessStep({ listing, onCreateAnother, onViewListing }: 
               {title}
             </Text>
             <View style={styles.liveBadge}>
-              <Text style={styles.liveBadgeText}>Live</Text>
+              <Text style={styles.liveBadgeText}>{t("sell.success.live")}</Text>
             </View>
           </View>
-          <Text style={styles.previewMeta}>{category} • {condition} condition</Text>
+          <Text style={styles.previewMeta}>{category} • {condition} {t("sell.success.condition")}</Text>
           <Text style={styles.previewPrice}>{formatPrice(listing)}</Text>
         </View>
       </View>
 
       <View style={styles.nextSection}>
-        <Text style={styles.nextTitle}>What happens next</Text>
+        <Text style={styles.nextTitle}>{t("sell.success.nextTitle")}</Text>
         <View style={styles.nextCard}>
           {nextSteps.map((item, index) => (
             <View key={item.text} style={[styles.nextRow, index === nextSteps.length - 1 && styles.lastNextRow]}>
@@ -87,9 +77,9 @@ export function PublishSuccessStep({ listing, onCreateAnother, onViewListing }: 
       </View>
 
       <SellFlowActions
-        primaryLabel="View listing"
+        primaryLabel={t("sell.success.viewListing")}
         onPrimaryPress={onViewListing ?? (() => undefined)}
-        secondaryLabel="Create another"
+        secondaryLabel={t("sell.success.createAnother")}
         onSecondaryPress={onCreateAnother}
       />
     </>
@@ -146,7 +136,7 @@ const styles = StyleSheet.create({
     width: 76,
     height: 76,
     borderRadius: 12,
-    backgroundColor: "#EDF2F0",
+    backgroundColor: colors.softGreen,
     marginRight: 12
   },
   previewContent: {
