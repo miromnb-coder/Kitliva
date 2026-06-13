@@ -24,11 +24,23 @@ function formatPrice(listing: PublishedListing | null) {
   return `${symbol}${listing.priceAmount}`;
 }
 
+function getConditionKey(conditionLabel: string) {
+  const normalized = conditionLabel.trim().toLowerCase();
+  if (normalized === "new") return "condition.new";
+  if (normalized === "like new") return "condition.like_new";
+  if (normalized === "good") return "condition.good";
+  if (normalized === "fair") return "condition.fair";
+  if (normalized === "poor") return "condition.poor";
+  return null;
+}
+
 export function PublishSuccessStep({ listing, onCreateAnother, onViewListing }: PublishSuccessStepProps) {
   const { t } = useI18n();
   const title = listing?.title ?? mockSellListing.title;
   const category = listing?.categoryName ?? mockSellListing.category;
-  const condition = listing?.conditionLabel ?? mockSellListing.condition;
+  const rawCondition = listing?.conditionLabel ?? mockSellListing.condition;
+  const conditionKey = getConditionKey(rawCondition);
+  const condition = conditionKey ? t(conditionKey) : rawCondition;
   const nextSteps = [
     { icon: "search-outline" as const, text: t("sell.success.nextFind") },
     { icon: "chatbubble-outline" as const, text: t("sell.success.nextInbox") },
