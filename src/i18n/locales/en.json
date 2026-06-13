@@ -1,0 +1,113 @@
+{
+  "common": {
+    "continue": "Continue",
+    "back": "Back",
+    "cancel": "Cancel",
+    "close": "Close",
+    "clear": "Clear",
+    "reset": "Reset",
+    "apply": "Apply",
+    "save": "Save",
+    "search": "Search",
+    "loading": "Loading...",
+    "tryAgain": "Try again",
+    "notFound": "Not found",
+    "comingLaterBody": "{label} is coming later."
+  },
+  "language": {
+    "title": "Language",
+    "subtitle": "Choose the language used in Kitliva.",
+    "system": "Phone language",
+    "english": "English",
+    "finnish": "Suomi",
+    "current": "Current",
+    "saved": "Language updated",
+    "description": "Unsupported phone languages use English as fallback."
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your Kitliva preferences.",
+    "languageTitle": "App language",
+    "languageSubtitle": "English or Finnish now, more later.",
+    "accountTitle": "Account settings",
+    "accountSubtitle": "More account controls are coming later."
+  },
+  "condition": {
+    "any": "Any",
+    "new": "New",
+    "like_new": "Like new",
+    "good": "Good",
+    "fair": "Fair",
+    "poor": "Poor"
+  },
+  "explore": {
+    "title": "Explore gear",
+    "searchPlaceholder": "Search gear, brands or activities...",
+    "aiSearchPlaceholder": "Tell Kitliva what you need...",
+    "aiHelper": "AI will turn this into smarter search filters.",
+    "aiLoading": "Understanding your search...",
+    "aiEmptyError": "Write what you are looking for first.",
+    "aiUnavailable": "AI search is unavailable. Showing regular results.",
+    "aiFallback": "AI used a lightweight fallback. Showing interpreted results.",
+    "aiAppliedPrefix": "AI search applied",
+    "aiInterpreted": "AI interpreted",
+    "aiFallbackExplanation": "AI search applied lightweight filters.",
+    "aiFallbackTextOnly": "AI search used your text as a smarter search query.",
+    "aiExamples": {
+      "hiking": "Weekend hiking setup",
+      "camera": "Beginner camera for travel",
+      "winter": "Winter gear under €150",
+      "cycling": "Affordable cycling gear"
+    },
+    "filters": {
+      "category": "Category",
+      "price": "Price",
+      "condition": "Condition",
+      "location": "Location",
+      "shipping": "Shipping",
+      "pickup": "Pickup",
+      "under": "Under €{price}",
+      "from": "From €{price}",
+      "range": "€{min}–€{max}",
+      "all": "All"
+    },
+    "popular": {
+      "title": "Popular searches",
+      "cameraKit": "Camera kit",
+      "skis": "Skis",
+      "tent": "Tent",
+      "guitar": "Guitar",
+      "kidsGear": "Kids gear"
+    },
+    "results": {
+      "title": "Browse all gear",
+      "count": "{count} results",
+      "sort": "Sort: {label}",
+      "recommended": "Recommended",
+      "newest": "Newest",
+      "priceLow": "Price low",
+      "priceHigh": "Price high"
+    }
+  },
+  "profile": {
+    "settings": "Settings",
+    "signOut": "Sign out",
+    "supportAccount": "Support & account",
+    "editProfile": "Edit profile",
+    "notifications": "Notifications",
+    "safety": "Safety",
+    "myListings": "My listings",
+    "manageActiveListings": "Manage active listings",
+    "dashboard": "Dashboard",
+    "offersAndDeals": "Offers and deals",
+    "sellingDashboard": "Selling dashboard",
+    "sellerDashboard": "Seller dashboard",
+    "drafts": "Drafts",
+    "priceInsights": "Price insights",
+    "buying": "Buying",
+    "savedItems": "Saved items",
+    "recentlyViewed": "Recently viewed",
+    "offers": "Offers",
+    "newRating": "New"
+  }
+}
