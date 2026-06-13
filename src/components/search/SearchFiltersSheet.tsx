@@ -1,47 +1,48 @@
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 
-import { homeCategories } from "@/constants/categories";
-import { colors } from "@/constants/colors";
-import { ListingCondition } from "@/types/listing";
-import { defaultSearchFilters, SearchDeliveryOption, SearchFilters, SearchSortOption } from "@/types/search";
 import { KitlivaBottomSheet } from "@/components/sheets/KitlivaBottomSheet";
 import { SheetActionCard } from "@/components/sheets/SheetActionCard";
 import { SheetChip } from "@/components/sheets/SheetChip";
 import { SheetOptionRow } from "@/components/sheets/SheetOptionRow";
+import { homeCategories } from "@/constants/categories";
+import { colors } from "@/constants/colors";
+import { useI18n } from "@/i18n";
+import { ListingCondition } from "@/types/listing";
+import { SearchDeliveryOption, SearchFilters, SearchSortOption } from "@/types/search";
 
 export type SearchFilterSheetType = "category" | "price" | "condition" | "location" | "shipping" | "sort";
 
-const conditions: { label: string; subtitle: string; value: ListingCondition | "any" }[] = [
-  { label: "Any condition", subtitle: "Show all used gear.", value: "any" },
-  { label: "New", subtitle: "Unused or still in original condition.", value: "new" },
-  { label: "Like new", subtitle: "Barely used and very clean.", value: "like_new" },
-  { label: "Good", subtitle: "Light normal use, ready to enjoy.", value: "good" },
-  { label: "Fair", subtitle: "Visible use, but still works well.", value: "fair" },
-  { label: "Poor", subtitle: "Needs care or repair.", value: "poor" }
+const conditionValues: { subtitleKey: string; value: ListingCondition | "any" }[] = [
+  { subtitleKey: "explore.sheet.anyConditionSubtitle", value: "any" },
+  { subtitleKey: "explore.sheet.newSubtitle", value: "new" },
+  { subtitleKey: "explore.sheet.likeNewSubtitle", value: "like_new" },
+  { subtitleKey: "explore.sheet.goodSubtitle", value: "good" },
+  { subtitleKey: "explore.sheet.fairSubtitle", value: "fair" },
+  { subtitleKey: "explore.sheet.poorSubtitle", value: "poor" }
 ];
 
 const pricePresets = [
-  { label: "Any price", minPrice: "", maxPrice: "" },
-  { label: "Under €50", minPrice: "", maxPrice: "50" },
-  { label: "€50–€150", minPrice: "50", maxPrice: "150" },
-  { label: "€150–€300", minPrice: "150", maxPrice: "300" },
-  { label: "€300+", minPrice: "300", maxPrice: "" }
+  { labelKey: "explore.sheet.anyPrice", minPrice: "", maxPrice: "" },
+  { labelKey: "explore.filters.under", labelParams: { price: 50 }, minPrice: "", maxPrice: "50" },
+  { labelKey: "explore.sheet.price50to150", minPrice: "50", maxPrice: "150" },
+  { labelKey: "explore.sheet.price150to300", minPrice: "150", maxPrice: "300" },
+  { labelKey: "explore.sheet.price300Plus", minPrice: "300", maxPrice: "" }
 ];
 
 const locationPresets = ["Helsinki", "Espoo", "Tampere", "Turku", "Oulu"];
 
-const deliveryOptions: { label: string; subtitle: string; value: SearchDeliveryOption; icon: keyof typeof Ionicons.glyphMap }[] = [
-  { label: "Any delivery", subtitle: "Show all pickup and shipping options.", value: "any", icon: "cube-outline" },
-  { label: "Local pickup", subtitle: "Find gear you can collect in person.", value: "pickup", icon: "location-outline" },
-  { label: "Shipping available", subtitle: "Browse gear that can be shipped.", value: "shipping", icon: "paper-plane-outline" }
+const deliveryOptions: { labelKey: string; subtitleKey: string; value: SearchDeliveryOption; icon: keyof typeof Ionicons.glyphMap }[] = [
+  { labelKey: "explore.sheet.anyDelivery", subtitleKey: "explore.sheet.anyDeliverySubtitle", value: "any", icon: "cube-outline" },
+  { labelKey: "explore.sheet.localPickup", subtitleKey: "explore.sheet.localPickupSubtitle", value: "pickup", icon: "location-outline" },
+  { labelKey: "explore.sheet.shippingAvailable", subtitleKey: "explore.sheet.shippingAvailableSubtitle", value: "shipping", icon: "paper-plane-outline" }
 ];
 
-const sortOptions: { label: string; subtitle: string; value: SearchSortOption; icon: keyof typeof Ionicons.glyphMap }[] = [
-  { label: "Recommended", subtitle: "Kitliva’s balanced default order.", value: "recommended", icon: "sparkles-outline" },
-  { label: "Newest", subtitle: "Recently published gear first.", value: "newest", icon: "time-outline" },
-  { label: "Price: low to high", subtitle: "Start with the lowest prices.", value: "price_low", icon: "arrow-down-outline" },
-  { label: "Price: high to low", subtitle: "Start with the highest prices.", value: "price_high", icon: "arrow-up-outline" }
+const sortOptions: { labelKey: string; subtitleKey: string; value: SearchSortOption; icon: keyof typeof Ionicons.glyphMap }[] = [
+  { labelKey: "explore.results.recommended", subtitleKey: "explore.sheet.recommendedSubtitle", value: "recommended", icon: "sparkles-outline" },
+  { labelKey: "explore.results.newest", subtitleKey: "explore.sheet.newestSubtitle", value: "newest", icon: "time-outline" },
+  { labelKey: "explore.results.priceLow", subtitleKey: "explore.sheet.priceLowSubtitle", value: "price_low", icon: "arrow-down-outline" },
+  { labelKey: "explore.results.priceHigh", subtitleKey: "explore.sheet.priceHighSubtitle", value: "price_high", icon: "arrow-up-outline" }
 ];
 
 type SearchFiltersSheetProps = {
@@ -53,24 +54,24 @@ type SearchFiltersSheetProps = {
   onClear: () => void;
 };
 
-function getSheetTitle(activeSheet: SearchFilterSheetType | null) {
-  if (activeSheet === "category") return "Category";
-  if (activeSheet === "price") return "Price range";
-  if (activeSheet === "condition") return "Condition";
-  if (activeSheet === "location") return "Location";
-  if (activeSheet === "shipping") return "Delivery";
-  if (activeSheet === "sort") return "Sort";
-  return "Filters";
+function getSheetTitleKey(activeSheet: SearchFilterSheetType | null) {
+  if (activeSheet === "category") return "explore.sheet.category";
+  if (activeSheet === "price") return "explore.sheet.price";
+  if (activeSheet === "condition") return "explore.sheet.condition";
+  if (activeSheet === "location") return "explore.sheet.location";
+  if (activeSheet === "shipping") return "explore.sheet.shipping";
+  if (activeSheet === "sort") return "explore.sheet.sort";
+  return "explore.sheet.filters";
 }
 
-function getSheetSubtitle(activeSheet: SearchFilterSheetType | null) {
-  if (activeSheet === "category") return "Choose the type of gear you want to browse.";
-  if (activeSheet === "price") return "Set a budget that fits you.";
-  if (activeSheet === "condition") return "Choose how used the item can be.";
-  if (activeSheet === "location") return "Find gear by city or area.";
-  if (activeSheet === "shipping") return "Choose how you want to receive gear.";
-  if (activeSheet === "sort") return "Choose how results are ordered.";
-  return "Refine the gear you see.";
+function getSheetSubtitleKey(activeSheet: SearchFilterSheetType | null) {
+  if (activeSheet === "category") return "explore.sheet.categorySubtitle";
+  if (activeSheet === "price") return "explore.sheet.priceSubtitle";
+  if (activeSheet === "condition") return "explore.sheet.conditionSubtitle";
+  if (activeSheet === "location") return "explore.sheet.locationSubtitle";
+  if (activeSheet === "shipping") return "explore.sheet.shippingSubtitle";
+  if (activeSheet === "sort") return "explore.sheet.sortSubtitle";
+  return "explore.sheet.filtersSubtitle";
 }
 
 function pricePresetSelected(filters: SearchFilters, preset: { minPrice: string; maxPrice: string }) {
@@ -78,6 +79,8 @@ function pricePresetSelected(filters: SearchFilters, preset: { minPrice: string;
 }
 
 export function SearchFiltersSheet({ visible, activeSheet, filters, onChange, onClose, onClear }: SearchFiltersSheetProps) {
+  const { t } = useI18n();
+
   function update<Key extends keyof SearchFilters>(key: Key, value: SearchFilters[Key]) {
     onChange({ ...filters, [key]: value });
   }
@@ -99,20 +102,20 @@ export function SearchFiltersSheet({ visible, activeSheet, filters, onChange, on
   return (
     <KitlivaBottomSheet
       visible={visible}
-      title={getSheetTitle(activeSheet)}
-      subtitle={getSheetSubtitle(activeSheet)}
+      title={t(getSheetTitleKey(activeSheet))}
+      subtitle={t(getSheetSubtitleKey(activeSheet))}
       snapPoints={activeSheet === "category" ? ["70%"] : activeSheet === "price" || activeSheet === "location" ? ["64%"] : ["58%"]}
-      secondaryLabel="Reset"
-      primaryLabel="Apply"
+      secondaryLabel={t("common.reset")}
+      primaryLabel={t("common.apply")}
       onSecondaryPress={resetActiveSheet}
       onPrimaryPress={applyAndClose}
       onClose={onClose}
     >
       {activeSheet === "category" ? (
         <View style={styles.categoryGrid}>
-          <SheetActionCard icon="apps-outline" title="All" subtitle="Browse every category." selected={filters.categoryName === "All"} onPress={() => update("categoryName", "All")} />
+          <SheetActionCard icon="apps-outline" title={t("explore.sheet.allCategories")} subtitle={t("explore.sheet.allCategoriesSubtitle")} selected={filters.categoryName === "All"} onPress={() => update("categoryName", "All")} />
           {homeCategories.map((category) => (
-            <SheetActionCard key={category.id} icon={category.icon} title={category.label} subtitle="Quality checked hobby gear." selected={filters.categoryName === category.label} onPress={() => update("categoryName", category.label)} />
+            <SheetActionCard key={category.id} icon={category.icon} title={category.label} subtitle={t("explore.sheet.categorySubtitleCard")} selected={filters.categoryName === category.label} onPress={() => update("categoryName", category.label)} />
           ))}
         </View>
       ) : null}
@@ -121,28 +124,28 @@ export function SearchFiltersSheet({ visible, activeSheet, filters, onChange, on
         <View>
           <View style={styles.chipRow}>
             {pricePresets.map((preset) => (
-              <SheetChip key={preset.label} label={preset.label} selected={pricePresetSelected(filters, preset)} onPress={() => onChange({ ...filters, minPrice: preset.minPrice, maxPrice: preset.maxPrice })} />
+              <SheetChip key={preset.labelKey} label={t(preset.labelKey, preset.labelParams)} selected={pricePresetSelected(filters, preset)} onPress={() => onChange({ ...filters, minPrice: preset.minPrice, maxPrice: preset.maxPrice })} />
             ))}
           </View>
           <View style={styles.inputRow}>
-            <View style={styles.inputBox}><Text style={styles.currency}>€</Text><TextInput style={styles.input} value={filters.minPrice} onChangeText={(value) => update("minPrice", value)} placeholder="Min" placeholderTextColor={colors.inputPlaceholder} keyboardType="number-pad" /></View>
-            <View style={styles.inputBox}><Text style={styles.currency}>€</Text><TextInput style={styles.input} value={filters.maxPrice} onChangeText={(value) => update("maxPrice", value)} placeholder="Max" placeholderTextColor={colors.inputPlaceholder} keyboardType="number-pad" /></View>
+            <View style={styles.inputBox}><Text style={styles.currency}>€</Text><TextInput style={styles.input} value={filters.minPrice} onChangeText={(value) => update("minPrice", value)} placeholder={t("explore.sheet.min")} placeholderTextColor={colors.inputPlaceholder} keyboardType="number-pad" /></View>
+            <View style={styles.inputBox}><Text style={styles.currency}>€</Text><TextInput style={styles.input} value={filters.maxPrice} onChangeText={(value) => update("maxPrice", value)} placeholder={t("explore.sheet.max")} placeholderTextColor={colors.inputPlaceholder} keyboardType="number-pad" /></View>
           </View>
         </View>
       ) : null}
 
       {activeSheet === "condition" ? (
         <View>
-          {conditions.map((condition) => <SheetOptionRow key={condition.value} title={condition.label} subtitle={condition.subtitle} selected={filters.condition === condition.value} onPress={() => update("condition", condition.value)} />)}
+          {conditionValues.map((condition) => <SheetOptionRow key={condition.value} title={t(`condition.${condition.value}`)} subtitle={t(condition.subtitleKey)} selected={filters.condition === condition.value} onPress={() => update("condition", condition.value)} />)}
         </View>
       ) : null}
 
       {activeSheet === "location" ? (
         <View>
-          <View style={styles.cityInput}><Ionicons name="location-outline" size={17} color={colors.accent} /><TextInput style={styles.cityTextInput} value={filters.city} onChangeText={(value) => update("city", value)} placeholder="Search city or area" placeholderTextColor={colors.inputPlaceholder} /></View>
-          <Text style={styles.helperText}>City search is active now. Radius search can be added later.</Text>
+          <View style={styles.cityInput}><Ionicons name="location-outline" size={17} color={colors.accent} /><TextInput style={styles.cityTextInput} value={filters.city} onChangeText={(value) => update("city", value)} placeholder={t("explore.sheet.cityPlaceholder")} placeholderTextColor={colors.inputPlaceholder} /></View>
+          <Text style={styles.helperText}>{t("explore.sheet.cityHelper")}</Text>
           <View style={styles.chipRow}>
-            <SheetChip label="Anywhere" selected={!filters.city.trim()} onPress={() => update("city", "")} />
+            <SheetChip label={t("explore.sheet.anywhere")} selected={!filters.city.trim()} onPress={() => update("city", "")} />
             {locationPresets.map((city) => <SheetChip key={city} label={city} selected={filters.city === city} onPress={() => update("city", city)} />)}
           </View>
         </View>
@@ -150,14 +153,14 @@ export function SearchFiltersSheet({ visible, activeSheet, filters, onChange, on
 
       {activeSheet === "shipping" ? (
         <View>
-          {deliveryOptions.map((option) => <SheetOptionRow key={option.value} icon={option.icon} title={option.label} subtitle={option.subtitle} selected={filters.deliveryOption === option.value} onPress={() => update("deliveryOption", option.value)} />)}
-          <View style={styles.infoCard}><Ionicons name="information-circle-outline" size={18} color={colors.accent} /><Text style={styles.infoText}>Delivery filtering is prepared for upcoming listing delivery data.</Text></View>
+          {deliveryOptions.map((option) => <SheetOptionRow key={option.value} icon={option.icon} title={t(option.labelKey)} subtitle={t(option.subtitleKey)} selected={filters.deliveryOption === option.value} onPress={() => update("deliveryOption", option.value)} />)}
+          <View style={styles.infoCard}><Ionicons name="information-circle-outline" size={18} color={colors.accent} /><Text style={styles.infoText}>{t("explore.sheet.shippingInfo")}</Text></View>
         </View>
       ) : null}
 
       {activeSheet === "sort" ? (
         <View>
-          {sortOptions.map((option) => <SheetOptionRow key={option.value} icon={option.icon} title={option.label} subtitle={option.subtitle} selected={filters.sort === option.value} onPress={() => update("sort", option.value)} />)}
+          {sortOptions.map((option) => <SheetOptionRow key={option.value} icon={option.icon} title={t(option.labelKey)} subtitle={t(option.subtitleKey)} selected={filters.sort === option.value} onPress={() => update("sort", option.value)} />)}
         </View>
       ) : null}
     </KitlivaBottomSheet>
