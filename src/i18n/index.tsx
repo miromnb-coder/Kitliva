@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getLocales } from "expo-localization";
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 
+import { extraTranslations } from "@/i18n/extraTranslations";
 import en from "@/i18n/locales/en.json";
 import fi from "@/i18n/locales/fi.json";
 
@@ -108,7 +109,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     setLanguage,
     setLanguagePreference,
     t: (key, params) => {
-      const translated = getNestedValue(translations[language], key) ?? getNestedValue(translations.en, key) ?? key;
+      const translated = getNestedValue(translations[language], key) ?? getNestedValue(extraTranslations[language], key) ?? getNestedValue(translations.en, key) ?? getNestedValue(extraTranslations.en, key) ?? key;
       return formatTranslation(translated, params);
     }
   }), [language, languagePreference]);
