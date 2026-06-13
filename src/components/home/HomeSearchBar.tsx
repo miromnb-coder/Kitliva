@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, TextInput, View } from "react-native";
 
 import { colors } from "@/constants/colors";
+import { useI18n } from "@/i18n";
 
 type HomeSearchBarProps = {
   value: string;
@@ -9,6 +10,8 @@ type HomeSearchBarProps = {
 };
 
 export function HomeSearchBar({ value, onChangeText }: HomeSearchBarProps) {
+  const { t } = useI18n();
+
   return (
     <View style={styles.container}>
       <Ionicons name="search-outline" size={17} color={colors.inputPlaceholder} />
@@ -16,7 +19,7 @@ export function HomeSearchBar({ value, onChangeText }: HomeSearchBarProps) {
         style={styles.input}
         value={value}
         onChangeText={onChangeText}
-        placeholder="Search by hobby, brand or item"
+        placeholder={t("home.searchPlaceholder")}
         placeholderTextColor={colors.inputPlaceholder}
         returnKeyType="search"
         clearButtonMode="while-editing"
