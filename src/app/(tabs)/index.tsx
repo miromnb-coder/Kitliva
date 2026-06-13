@@ -11,11 +11,13 @@ import { HomeTrustRow } from "@/components/home/HomeTrustRow";
 import { SearchFiltersSheet, SearchFilterSheetType } from "@/components/search/SearchFiltersSheet";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
+import { useI18n } from "@/i18n";
 import { defaultSearchFilters, SearchFilters } from "@/types/search";
 
 const serifFont = Platform.select({ ios: "Georgia", android: "serif", default: undefined });
 
 export default function HomeScreen() {
+  const { t } = useI18n();
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState<SearchFilters>(defaultSearchFilters);
   const [activeSheet, setActiveSheet] = useState<SearchFilterSheetType | null>(null);
@@ -35,7 +37,7 @@ export default function HomeScreen() {
         <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           <HomeHeader />
           <Text style={styles.headline} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.88} maxFontSizeMultiplier={1}>
-            Find premium used gear
+            {t("home.headline")}
           </Text>
           <View style={styles.searchWrap}>
             <HomeSearchBar value={query} onChangeText={setQuery} />
@@ -48,14 +50,7 @@ export default function HomeScreen() {
         </ScrollView>
 
         {activeSheet ? (
-          <SearchFiltersSheet
-            visible
-            activeSheet={activeSheet}
-            filters={filters}
-            onChange={setFilters}
-            onClose={() => setActiveSheet(null)}
-            onClear={clearHomeFilters}
-          />
+          <SearchFiltersSheet visible activeSheet={activeSheet} filters={filters} onChange={setFilters} onClose={() => setActiveSheet(null)} onClear={clearHomeFilters} />
         ) : null}
       </View>
     </Screen>
@@ -63,29 +58,9 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    backgroundColor: colors.background
-  },
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background
-  },
-  content: {
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 112
-  },
-  headline: {
-    marginTop: 16,
-    color: colors.text,
-    fontFamily: serifFont,
-    fontSize: 28,
-    fontWeight: "500",
-    letterSpacing: -0.45,
-    lineHeight: 34
-  },
-  searchWrap: {
-    marginTop: 14
-  }
+  wrapper: { flex: 1, backgroundColor: colors.background },
+  screen: { flex: 1, backgroundColor: colors.background },
+  content: { paddingHorizontal: 20, paddingTop: 10, paddingBottom: 112 },
+  headline: { marginTop: 16, color: colors.text, fontFamily: serifFont, fontSize: 28, fontWeight: "500", letterSpacing: -0.45, lineHeight: 34 },
+  searchWrap: { marginTop: 14 }
 });
