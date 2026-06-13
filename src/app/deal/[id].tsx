@@ -7,17 +7,19 @@ import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
 import { useAuth } from "@/hooks/useAuth";
+import { useI18n } from "@/i18n";
 import { Deal, getDealById, updateDealStatus } from "@/services/deals";
 import { formatPrice } from "@/utils/formatPrice";
 
-function getStatusLabel(status: Deal["status"]) {
-  if (status === "completed") return "Completed";
-  if (status === "cancelled") return "Cancelled";
-  return "Agreed";
+function getStatusLabel(status: Deal["status"], t: (key: string) => string) {
+  if (status === "completed") return t("deal.completed");
+  if (status === "cancelled") return t("deal.cancelled");
+  return t("deal.agreed");
 }
 
 export default function DealDetailScreen() {
   const router = useRouter();
+  const { t } = useI18n();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { isLoading, user } = useAuth();
   const [deal, setDeal] = useState<Deal | null>(null);
@@ -51,73 +53,62 @@ export default function DealDetailScreen() {
   async function changeStatus(status: "completed" | "cancelled") {
     if (!user || !deal) return;
     const result = await updateDealStatus({ dealId: deal.id, userId: user.id, status });
-    if (!result.success) setMessage(result.message ?? "Could not update deal.");
+    if (!result.success) setMessage(result.message ?? t("deal.updateError"));
     else {
       setDeal(result.deal);
-      setMessage(status === "completed" ? "Deal marked as completed." : "Deal cancelled.");
+      setMessage(status === "completed" ? t("deal.completedMessage") : t("deal.cancelledMessage"));
     }
   }
 
   if (isLoading || pageLoading) {
-    return (
-      <Screen noPadding>
-        <View style={styles.centerScreen}>
-          <ActivityIndicator color={colors.accent} />
-          <Text style={styles.loadingText}>Loading deal...</Text>
-        </View>
-      </Screen>
-    );
+    return <Screen noPadding><View style={styles.centerScreen}><ActivityIndicator color={colors.accent} /><Text style={styles.loadingText}>{t("deal.loading")}</Text></View></Screen>;
   }
 
   if (!deal) {
-    return <Screen noPadding><View style={styles.centerScreen}><Text style={styles.notFoundTitle}>Deal unavailable</Text><Text style={styles.notFoundText}>This deal may have been removed or you may not have access.</Text><Pressable style={styles.primaryButton} onPress={() => router.back()}><Text style={styles.primaryButtonText}>Go back</Text></Pressable></View></Screen>;
+    return <Screen noPadding><View style={styles.centerScreen}><Text style={styles.notFoundTitle}>{t("deal.unavailableTitle")}</Text><Text style={styles.notFoundText}>{t("deal.unavailableBody")}</Text><Pressable style={styles.primaryButton} onPress={() => router.back()}><Text style={styles.primaryButtonText}>{t("common.goBack")}</Text></Pressable></View></Screen>;
   }
 
   const isBuyer = user?.id === deal.buyerId;
+  const statusLabel = getStatusLabel(deal.status, t);
 
   return (
     <Screen noPadding>
       <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Pressable style={styles.roundButton} onPress={() => router.back()}><Ionicons name="arrow-back" size={22} color={colors.text} /></Pressable>
-        <Text style={styles.title}>Deal details</Text>
-        <Text style={styles.subtitle}>Coordinate pickup or delivery safely.</Text>
+        <Text style={styles.title}>{t("deal.title")}</Text>
+        <Text style={styles.subtitle}>{t("deal.subtitle")}</Text>
 
         <View style={styles.statusCard}>
-          <View style={styles.badge}><Text style={styles.badgeText}>{getStatusLabel(deal.status)}</Text></View>
-          <Text style={styles.statusTitle}>{deal.status === "agreed" ? "Deal agreed" : getStatusLabel(deal.status)}</Text>
-          <Text style={styles.statusBody}>You and the {isBuyer ? "seller" : "buyer"} agreed on the price. Keep details and handoff plans in Kitliva chat.</Text>
+          <View style={styles.badge}><Text style={styles.badgeText}>{statusLabel}</Text></View>
+          <Text style={styles.statusTitle}>{deal.status === "agreed" ? t("deal.dealAgreed") : statusLabel}</Text>
+          <Text style={styles.statusBody}>{isBuyer ? t("deal.statusBodyBuyer") : t("deal.statusBodySeller")}</Text>
         </View>
 
         <Pressable style={styles.listingCard} onPress={() => router.push(`/listing/${deal.listingId}`)}>
           <DealListingImage imageUrl={deal.listingImageUrl} />
-          <View style={styles.listingText}><Text style={styles.listingTitle} numberOfLines={2}>{deal.listingTitle}</Text><Text style={styles.listingMeta}>Agreed price</Text><Text style={styles.listingPrice}>{formatPrice(deal.agreedPriceAmount, deal.currency)}</Text></View>
+          <View style={styles.listingText}><Text style={styles.listingTitle} numberOfLines={2}>{deal.listingTitle}</Text><Text style={styles.listingMeta}>{t("deal.agreedPrice")}</Text><Text style={styles.listingPrice}>{formatPrice(deal.agreedPriceAmount, deal.currency)}</Text></View>
           <Ionicons name="chevron-forward" size={18} color={colors.muted} />
         </Pressable>
 
         <View style={styles.detailsCard}>
-          <DetailRow label="Agreed price" value={formatPrice(deal.agreedPriceAmount, deal.currency)} />
-          <DetailRow label="Status" value={getStatusLabel(deal.status)} />
-          <DetailRow label="Role" value={isBuyer ? "Buyer" : "Seller"} />
-          <DetailRow label="Created" value={new Date(deal.createdAt).toLocaleDateString()} />
+          <DetailRow label={t("deal.agreedPrice")} value={formatPrice(deal.agreedPriceAmount, deal.currency)} />
+          <DetailRow label={t("deal.status")} value={statusLabel} />
+          <DetailRow label={t("deal.role")} value={isBuyer ? t("deal.buyer") : t("deal.seller")} />
+          <DetailRow label={t("deal.created")} value={new Date(deal.createdAt).toLocaleDateString()} />
         </View>
 
         <View style={styles.nextCard}>
-          <Text style={styles.cardTitle}>Next steps</Text>
-          <Step text="Agree on pickup or delivery in chat." />
-          <Step text="Check the item before completing the deal." />
-          <Step text="Keep the conversation on Kitliva." />
+          <Text style={styles.cardTitle}>{t("deal.nextSteps")}</Text>
+          <Step text={t("deal.stepPickup")} />
+          <Step text={t("deal.stepCheck")} />
+          <Step text={t("deal.stepKeepChat")} />
         </View>
 
-        <View style={styles.safetyCard}>
-          <Ionicons name="shield-checkmark-outline" size={20} color={colors.primary} />
-          <Text style={styles.safetyText}>Meet in a safe public place when possible. No payment is handled by Kitliva yet.</Text>
-        </View>
-
+        <View style={styles.safetyCard}><Ionicons name="shield-checkmark-outline" size={20} color={colors.primary} /><Text style={styles.safetyText}>{t("deal.safety")}</Text></View>
         {message ? <View style={styles.messageCard}><Text style={styles.messageText}>{message}</Text></View> : null}
-
-        <Pressable style={styles.primaryAction} onPress={() => router.push(`/conversation/${deal.conversationId}`)}><Text style={styles.primaryActionText}>{isBuyer ? "Message seller" : "Message buyer"}</Text></Pressable>
-        {deal.status === "agreed" ? <Pressable style={styles.secondaryAction} onPress={() => changeStatus("completed")}><Text style={styles.secondaryActionText}>Mark as completed</Text></Pressable> : null}
-        {deal.status === "agreed" ? <Pressable style={styles.dangerAction} onPress={() => Alert.alert("Cancel deal", "Are you sure you want to cancel this deal?", [{ text: "Keep deal", style: "cancel" }, { text: "Cancel deal", style: "destructive", onPress: () => changeStatus("cancelled") }])}><Text style={styles.dangerActionText}>Cancel deal</Text></Pressable> : null}
+        <Pressable style={styles.primaryAction} onPress={() => router.push(`/conversation/${deal.conversationId}`)}><Text style={styles.primaryActionText}>{isBuyer ? t("deal.messageSeller") : t("deal.messageBuyer")}</Text></Pressable>
+        {deal.status === "agreed" ? <Pressable style={styles.secondaryAction} onPress={() => changeStatus("completed")}><Text style={styles.secondaryActionText}>{t("deal.markCompleted")}</Text></Pressable> : null}
+        {deal.status === "agreed" ? <Pressable style={styles.dangerAction} onPress={() => Alert.alert(t("deal.cancelTitle"), t("deal.cancelBody"), [{ text: t("deal.keepDeal"), style: "cancel" }, { text: t("deal.cancelDeal"), style: "destructive", onPress: () => changeStatus("cancelled") }])}><Text style={styles.dangerActionText}>{t("deal.cancelDeal")}</Text></Pressable> : null}
       </ScrollView>
     </Screen>
   );
@@ -126,13 +117,8 @@ export default function DealDetailScreen() {
 function DealListingImage({ imageUrl }: { imageUrl: string | null }) {
   const [imageFailed, setImageFailed] = useState(false);
   const shouldShowImage = Boolean(imageUrl && !imageFailed);
-
-  useEffect(() => {
-    setImageFailed(false);
-  }, [imageUrl]);
-
+  useEffect(() => { setImageFailed(false); }, [imageUrl]);
   if (shouldShowImage) return <Image source={{ uri: imageUrl ?? undefined }} style={styles.listingImage} contentFit="cover" onError={() => setImageFailed(true)} />;
-
   return <View style={styles.listingPlaceholder}><Ionicons name="image-outline" size={22} color={colors.primary} /></View>;
 }
 
