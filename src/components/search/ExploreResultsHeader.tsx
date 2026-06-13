@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
+import { useI18n } from "@/i18n";
 import { SearchSortOption } from "@/types/search";
 
 type ExploreResultsHeaderProps = {
@@ -10,24 +11,27 @@ type ExploreResultsHeaderProps = {
   onSortPress: () => void;
 };
 
-function getSortLabel(sort: SearchSortOption) {
-  if (sort === "newest") return "Newest";
-  if (sort === "price_low") return "Price low";
-  if (sort === "price_high") return "Price high";
-  return "Recommended";
+function getSortLabelKey(sort: SearchSortOption) {
+  if (sort === "newest") return "explore.results.newest";
+  if (sort === "price_low") return "explore.results.priceLow";
+  if (sort === "price_high") return "explore.results.priceHigh";
+  return "explore.results.recommended";
 }
 
 export function ExploreResultsHeader({ count, sort, onSortPress }: ExploreResultsHeaderProps) {
+  const { t } = useI18n();
+  const sortLabel = t(getSortLabelKey(sort));
+
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.title}>Browse all gear</Text>
-        <Text style={styles.count}>{count} results</Text>
+        <Text style={styles.title}>{t("explore.results.title")}</Text>
+        <Text style={styles.count}>{t("explore.results.count", { count })}</Text>
       </View>
 
       <Pressable style={styles.sortButton} onPress={onSortPress}>
-        <Ionicons name="swap-vertical-outline" size={13} color="#A77C3A" style={styles.sortIcon} />
-        <Text style={styles.sortText}>Sort: {getSortLabel(sort)}</Text>
+        <Ionicons name="swap-vertical-outline" size={13} color={colors.accent} style={styles.sortIcon} />
+        <Text style={styles.sortText}>{t("explore.results.sort", { label: sortLabel })}</Text>
         <Ionicons name="chevron-down" size={12} color={colors.muted} style={styles.chevron} />
       </Pressable>
     </View>
