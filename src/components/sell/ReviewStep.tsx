@@ -27,6 +27,16 @@ function isConnectionError(message?: string | null) {
   return Boolean(message?.toLowerCase().includes("connection"));
 }
 
+function getConditionKey(conditionLabel: string) {
+  const normalized = conditionLabel.trim().toLowerCase();
+  if (normalized === "new") return "condition.new";
+  if (normalized === "like new") return "condition.like_new";
+  if (normalized === "good") return "condition.good";
+  if (normalized === "fair") return "condition.fair";
+  if (normalized === "poor") return "condition.poor";
+  return null;
+}
+
 export function ReviewStep({ form, photos, publishError }: ReviewStepProps) {
   const { t } = useI18n();
   const [coverFailed, setCoverFailed] = useState(false);
@@ -34,11 +44,13 @@ export function ReviewStep({ form, photos, publishError }: ReviewStepProps) {
   const photoCount = photos.length;
   const notAdded = t("sell.review.notAdded");
   const photoWord = photoCount === 1 ? t("sell.review.photoSingular") : t("sell.review.photoPlural");
+  const conditionKey = getConditionKey(form.conditionLabel);
+  const conditionLabel = conditionKey ? t(conditionKey) : form.conditionLabel;
   const delivery = [form.allowPickup ? t("sell.review.pickup") : null, form.allowShipping ? t("sell.review.shipping") : null].filter(Boolean).join(" + ") || notAdded;
   const location = [form.locationCity, form.locationCountry].filter(Boolean).join(", ");
   const details = [
     { label: t("sell.details.category"), value: form.categoryName, optional: false },
-    { label: t("sell.details.condition"), value: form.conditionLabel, optional: false },
+    { label: t("sell.details.condition"), value: conditionLabel, optional: false },
     { label: t("sell.details.brand"), value: optionalValue(form.brand, notAdded), optional: !form.brand.trim() },
     { label: t("sell.details.model"), value: optionalValue(form.model, notAdded), optional: !form.model.trim() },
     { label: t("sell.pricing.price"), value: formatPrice(form.priceLabel, notAdded), optional: false },
@@ -80,7 +92,7 @@ export function ReviewStep({ form, photos, publishError }: ReviewStepProps) {
           <Text style={styles.previewTitle} numberOfLines={2}>
             {form.title || t("sell.review.untitled")}
           </Text>
-          <Text style={styles.previewMeta}>{form.categoryName || t("sell.review.categoryFallback")} • {form.conditionLabel || t("sell.review.conditionFallback")}</Text>
+          <Text style={styles.previewMeta}>{form.categoryName || t("sell.review.categoryFallback")} • {conditionLabel || t("sell.review.conditionFallback")}</Text>
           <Text style={styles.previewPrice}>{formatPrice(form.priceLabel, notAdded)}</Text>
           <Text style={styles.previewLocation} numberOfLines={1}>{location || t("sell.review.locationNotAdded")}</Text>
           <View style={styles.photoBadge}>
