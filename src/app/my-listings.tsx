@@ -8,19 +8,21 @@ import { EmptyStateCard } from "@/components/ui/EmptyStateCard";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
 import { useAuth } from "@/hooks/useAuth";
+import { useI18n } from "@/i18n";
 import { getMyListings, updateOwnListingStatus } from "@/services/myListings";
 import { Listing, ListingStatus } from "@/types/listing";
 import { formatPrice } from "@/utils/formatPrice";
 
-const statuses: { label: string; value: ListingStatus }[] = [
-  { label: "Active", value: "active" },
-  { label: "Drafts", value: "draft" },
-  { label: "Sold", value: "sold" },
-  { label: "Archived", value: "archived" }
+const statuses: { labelKey: string; value: ListingStatus }[] = [
+  { labelKey: "myListings.active", value: "active" },
+  { labelKey: "myListings.drafts", value: "draft" },
+  { labelKey: "myListings.sold", value: "sold" },
+  { labelKey: "myListings.archived", value: "archived" }
 ];
 
 export default function MyListingsScreen() {
   const router = useRouter();
+  const { t } = useI18n();
   const { isLoading, user } = useAuth();
   const [status, setStatus] = useState<ListingStatus>("active");
   const [listings, setListings] = useState<Listing[]>([]);
@@ -60,72 +62,34 @@ export default function MyListingsScreen() {
     loadListings();
   }
 
-  if (isLoading || !user) {
-    return <Screen noPadding><View style={styles.screen} /></Screen>;
-  }
+  if (isLoading || !user) return <Screen noPadding><View style={styles.screen} /></Screen>;
+
+  const statusLabel = t(statuses.find((item) => item.value === status)?.labelKey ?? "myListings.active");
 
   return (
     <Screen noPadding>
       <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
-          <Pressable style={styles.roundButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={22} color={colors.text} />
-          </Pressable>
-          <Pressable style={styles.createButton} onPress={() => router.push("/sell")}>
-            <Ionicons name="add" size={18} color={colors.buttonPrimaryText} />
-            <Text style={styles.createButtonText}>Sell</Text>
-          </Pressable>
+          <Pressable style={styles.roundButton} onPress={() => router.back()}><Ionicons name="arrow-back" size={22} color={colors.text} /></Pressable>
+          <Pressable style={styles.createButton} onPress={() => router.push("/sell")}><Ionicons name="add" size={18} color={colors.buttonPrimaryText} /><Text style={styles.createButtonText}>{t("myListings.sell")}</Text></Pressable>
         </View>
 
-        <Text style={styles.title}>My listings</Text>
-        <Text style={styles.subtitle}>Manage the gear you are selling on Kitliva.</Text>
+        <Text style={styles.title}>{t("myListings.title")}</Text>
+        <Text style={styles.subtitle}>{t("myListings.subtitle")}</Text>
 
         <View style={styles.chipRow}>
           {statuses.map((item) => {
             const selected = status === item.value;
-            return (
-              <Pressable key={item.value} style={[styles.statusChip, selected && styles.selectedStatusChip]} onPress={() => setStatus(item.value)}>
-                <Text style={[styles.statusText, selected && styles.selectedStatusText]}>{item.label}</Text>
-              </Pressable>
-            );
+            return <Pressable key={item.value} style={[styles.statusChip, selected && styles.selectedStatusChip]} onPress={() => setStatus(item.value)}><Text style={[styles.statusText, selected && styles.selectedStatusText]}>{t(item.labelKey)}</Text></Pressable>;
           })}
         </View>
 
         {loadingListings ? (
-          <EmptyStateCard icon="pricetag-outline" title="Loading listings..." body="Your selling activity will appear here in a moment." />
+          <EmptyStateCard icon="pricetag-outline" title={t("myListings.loadingTitle")} body={t("myListings.loadingBody")} />
         ) : listings.length === 0 ? (
-          <EmptyStateCard
-            icon="pricetag-outline"
-            title={status === "active" ? "No active listings" : `No ${status} listings`}
-            body={status === "active" ? "Sell unused hobby gear and give it a second life." : "Your items will appear here when they match this status."}
-            primaryLabel={status === "active" ? "Create listing" : undefined}
-            onPrimaryPress={status === "active" ? () => router.push("/sell") : undefined}
-            secondaryLabel={status === "active" ? "View seller tips" : undefined}
-            onSecondaryPress={status === "active" ? () => router.push("/seller-dashboard") : undefined}
-          />
+          <EmptyStateCard icon="pricetag-outline" title={status === "active" ? t("myListings.noActiveTitle") : t("myListings.noStatusTitle", { status: statusLabel })} body={status === "active" ? t("myListings.noActiveBody") : t("myListings.noStatusBody")} primaryLabel={status === "active" ? t("myListings.createListing") : undefined} onPrimaryPress={status === "active" ? () => router.push("/sell") : undefined} secondaryLabel={status === "active" ? t("myListings.sellerTips") : undefined} onSecondaryPress={status === "active" ? () => router.push("/seller-dashboard") : undefined} />
         ) : (
-          <View style={styles.list}>
-            {listings.map((listing) => (
-              <View key={listing.id} style={styles.card}>
-                <MyListingImage imageUrl={listing.imageUrl} />
-                <View style={styles.cardContent}>
-                  <View style={styles.cardTopRow}>
-                    <Text style={styles.cardTitle} numberOfLines={1}>{listing.title || "Untitled item"}</Text>
-                    <View style={styles.badge}><Text style={styles.badgeText}>{status}</Text></View>
-                  </View>
-                  <Text style={styles.price}>{formatPrice(listing.price, listing.currency)}</Text>
-                  <Text style={styles.meta} numberOfLines={1}>{listing.sellerLocation}</Text>
-                  <Text style={styles.meta}>{listing.viewCount ?? 0} views · {listing.favoriteCount ?? 0} saves</Text>
-                  <View style={styles.actions}>
-                    <Pressable style={styles.smallButton} onPress={() => router.push(`/listing/${listing.id}`)}><Text style={styles.smallButtonText}>View</Text></Pressable>
-                    <Pressable style={styles.smallButton} onPress={() => router.push(`/listing/edit/${listing.id}`)}><Text style={styles.smallButtonText}>Edit</Text></Pressable>
-                    {status === "active" ? <Pressable style={styles.smallButton} onPress={() => markSold(listing.id)}><Text style={styles.smallButtonText}>Mark sold</Text></Pressable> : null}
-                    {status !== "archived" ? <Pressable style={styles.smallButton} onPress={() => archiveListing(listing.id)}><Text style={styles.smallButtonText}>Archive</Text></Pressable> : null}
-                  </View>
-                </View>
-              </View>
-            ))}
-          </View>
+          <View style={styles.list}>{listings.map((listing) => <View key={listing.id} style={styles.card}><MyListingImage imageUrl={listing.imageUrl} /><View style={styles.cardContent}><View style={styles.cardTopRow}><Text style={styles.cardTitle} numberOfLines={1}>{listing.title || t("myListings.untitled")}</Text><View style={styles.badge}><Text style={styles.badgeText}>{statusLabel}</Text></View></View><Text style={styles.price}>{formatPrice(listing.price, listing.currency)}</Text><Text style={styles.meta} numberOfLines={1}>{listing.sellerLocation}</Text><Text style={styles.meta}>{t("myListings.viewsSaves", { views: listing.viewCount ?? 0, saves: listing.favoriteCount ?? 0 })}</Text><View style={styles.actions}><Pressable style={styles.smallButton} onPress={() => router.push(`/listing/${listing.id}`)}><Text style={styles.smallButtonText}>{t("myListings.view")}</Text></Pressable><Pressable style={styles.smallButton} onPress={() => router.push(`/listing/edit/${listing.id}`)}><Text style={styles.smallButtonText}>{t("myListings.edit")}</Text></Pressable>{status === "active" ? <Pressable style={styles.smallButton} onPress={() => markSold(listing.id)}><Text style={styles.smallButtonText}>{t("myListings.markSold")}</Text></Pressable> : null}{status !== "archived" ? <Pressable style={styles.smallButton} onPress={() => archiveListing(listing.id)}><Text style={styles.smallButtonText}>{t("myListings.archive")}</Text></Pressable> : null}</View></View></View>)}</View>
         )}
       </ScrollView>
     </Screen>
@@ -135,11 +99,7 @@ export default function MyListingsScreen() {
 function MyListingImage({ imageUrl }: { imageUrl: string | null }) {
   const [imageFailed, setImageFailed] = useState(false);
   const shouldShowImage = Boolean(imageUrl && !imageFailed);
-
-  useEffect(() => {
-    setImageFailed(false);
-  }, [imageUrl]);
-
+  useEffect(() => { setImageFailed(false); }, [imageUrl]);
   if (shouldShowImage) return <Image source={{ uri: imageUrl as string }} style={styles.image} contentFit="cover" onError={() => setImageFailed(true)} />;
   return <View style={styles.imagePlaceholder}><Ionicons name="image-outline" size={22} color={colors.primary} /></View>;
 }
@@ -166,7 +126,7 @@ const styles = StyleSheet.create({
   cardTopRow: { flexDirection: "row", alignItems: "center", gap: 8 },
   cardTitle: { flex: 1, color: colors.text, fontSize: 14.5, fontWeight: "700" },
   badge: { height: 24, justifyContent: "center", borderRadius: 12, backgroundColor: colors.softGold, paddingHorizontal: 9 },
-  badgeText: { color: colors.link, fontSize: 10.5, fontWeight: "700", textTransform: "capitalize" },
+  badgeText: { color: colors.link, fontSize: 10.5, fontWeight: "700" },
   price: { marginTop: 6, color: colors.text, fontSize: 17, fontWeight: "700" },
   meta: { marginTop: 2, color: colors.muted, fontSize: 12, fontWeight: "400" },
   actions: { flexDirection: "row", flexWrap: "wrap", gap: 7, marginTop: 10 },
