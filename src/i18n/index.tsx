@@ -6,6 +6,7 @@ import en from "@/i18n/locales/en.json";
 import fi from "@/i18n/locales/fi.json";
 
 export type AppLanguage = "en" | "fi";
+export type AppLanguagePreference = "system" | AppLanguage;
 
 const LANGUAGE_STORAGE_KEY = "kitliva.language";
 const translations = { en, fi } as const;
@@ -14,7 +15,9 @@ type TranslationParams = Record<string, string | number | null | undefined>;
 
 type I18nContextValue = {
   language: AppLanguage;
+  languagePreference: AppLanguagePreference;
   setLanguage: (language: AppLanguage) => Promise<void>;
+  setLanguagePreference: (preference: AppLanguagePreference) => Promise<void>;
   t: (key: string, params?: TranslationParams) => string;
 };
 
@@ -33,6 +36,10 @@ function getSupportedLanguage(locale?: string | null): AppLanguage {
   const normalized = locale?.toLowerCase() ?? "";
   if (normalized.startsWith("fi")) return "fi";
   return "en";
+}
+
+function getInitialLanguage() {
+  return getSupportedLanguage(getDeviceLocale());
 }
 
 function getNestedValue(source: unknown, key: string): string | undefined {
@@ -55,20 +62,33 @@ function formatTranslation(value: string, params?: TranslationParams) {
   }, value);
 }
 
+function isLanguagePreference(value: string | null): value is AppLanguagePreference {
+  return value === "system" || value === "en" || value === "fi";
+}
+
+function resolveLanguage(preference: AppLanguagePreference) {
+  return preference === "system" ? getInitialLanguage() : preference;
+}
+
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<AppLanguage>("en");
+  const [languagePreference, setLanguagePreferenceState] = useState<AppLanguagePreference>("system");
+  const [language, setLanguageState] = useState<AppLanguage>(getInitialLanguage);
 
   useEffect(() => {
     let isMounted = true;
 
-    async function loadLanguage() {
-      const savedLanguage = await AsyncStorage.getItem(LANGUAGE_STORAGE_KEY);
-      const nextLanguage = savedLanguage === "en" || savedLanguage === "fi" ? savedLanguage : getSupportedLanguage(getDeviceLocale());
-      if (isMounted) setLanguageState(nextLanguage);
+    async function loadLanguagePreference() {
+      const savedPreference = await AsyncStorage.getItem(LANGUAGE_STORAGE_KEY);
+      const nextPreference = isLanguagePreference(savedPreference) ? savedPreference : "system";
+      if (!isMounted) return;
+      setLanguagePreferenceState(nextPreference);
+      setLanguageState(resolveLanguage(nextPreference));
     }
 
-    loadLanguage().catch(() => {
-      if (isMounted) setLanguageState(getSupportedLanguage(getDeviceLocale()));
+    loadLanguagePreference().catch(() => {
+      if (!isMounted) return;
+      setLanguagePreferenceState("system");
+      setLanguageState(getInitialLanguage());
     });
 
     return () => {
@@ -76,19 +96,26 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  async function setLanguagePreference(nextPreference: AppLanguagePreference) {
+    setLanguagePreferenceState(nextPreference);
+    setLanguageState(resolveLanguage(nextPreference));
+    await AsyncStorage.setItem(LANGUAGE_STORAGE_KEY, nextPreference);
+  }
+
   async function setLanguage(nextLanguage: AppLanguage) {
-    setLanguageState(nextLanguage);
-    await AsyncStorage.setItem(LANGUAGE_STORAGE_KEY, nextLanguage);
+    await setLanguagePreference(nextLanguage);
   }
 
   const value = useMemo<I18nContextValue>(() => ({
     language,
+    languagePreference,
     setLanguage,
+    setLanguagePreference,
     t: (key, params) => {
       const translated = getNestedValue(translations[language], key) ?? getNestedValue(translations.en, key) ?? key;
       return formatTranslation(translated, params);
     }
-  }), [language]);
+  }), [language, languagePreference]);
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
