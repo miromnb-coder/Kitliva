@@ -2,6 +2,7 @@ import { StyleSheet, Text, TextInput, View } from "react-native";
 
 import { PhotoUploadPreview } from "@/components/sell/PhotoUploadPreview";
 import { colors } from "@/constants/colors";
+import { useI18n } from "@/i18n";
 import { SellFormDraft, SellPhoto } from "@/types/sell";
 
 type PhotosStepProps = {
@@ -15,23 +16,25 @@ type PhotosStepProps = {
 };
 
 export function PhotosStep({ photos, form, error, isDraftRestored = false, onChange, onAddPhotos, onRemovePhoto }: PhotosStepProps) {
+  const { t } = useI18n();
+
   return (
     <>
       <PhotoUploadPreview photos={photos} error={error} isDraftRestored={isDraftRestored} onAddPhotos={onAddPhotos} onRemovePhoto={onRemovePhoto} />
       {form && onChange ? (
         <View style={styles.card}>
-          <Text style={styles.label}>Title</Text>
-          <TextInput style={styles.input} value={form.title} onChangeText={(value) => onChange("title", value)} placeholder="Item title" placeholderTextColor={colors.inputPlaceholder} maxLength={70} />
-          <Text style={styles.label}>Price</Text>
+          <Text style={styles.label}>{t("sell.details.titleLabel")}</Text>
+          <TextInput style={styles.input} value={form.title} onChangeText={(value) => onChange("title", value)} placeholder={t("sell.details.titlePlaceholder")} placeholderTextColor={colors.inputPlaceholder} maxLength={70} />
+          <Text style={styles.label}>{t("sell.pricing.price")}</Text>
           <TextInput style={styles.input} value={form.priceLabel} onChangeText={(value) => onChange("priceLabel", value)} placeholder="€220" placeholderTextColor={colors.inputPlaceholder} keyboardType="decimal-pad" />
           <View style={styles.row}>
             <View style={styles.item}>
-              <Text style={styles.label}>City</Text>
-              <TextInput style={styles.input} value={form.locationCity} onChangeText={(value) => onChange("locationCity", value)} placeholder="City" placeholderTextColor={colors.inputPlaceholder} />
+              <Text style={styles.label}>{t("sell.delivery.city")}</Text>
+              <TextInput style={styles.input} value={form.locationCity} onChangeText={(value) => onChange("locationCity", value)} placeholder={t("sell.delivery.city")} placeholderTextColor={colors.inputPlaceholder} />
             </View>
             <View style={styles.item}>
-              <Text style={styles.label}>Country</Text>
-              <TextInput style={styles.input} value={form.locationCountry} onChangeText={(value) => onChange("locationCountry", value)} placeholder="Country" placeholderTextColor={colors.inputPlaceholder} />
+              <Text style={styles.label}>{t("sell.delivery.country")}</Text>
+              <TextInput style={styles.input} value={form.locationCountry} onChangeText={(value) => onChange("locationCountry", value)} placeholder={t("sell.delivery.country")} placeholderTextColor={colors.inputPlaceholder} />
             </View>
           </View>
         </View>
