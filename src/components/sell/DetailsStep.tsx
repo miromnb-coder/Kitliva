@@ -2,10 +2,17 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { SellTextField } from "@/components/sell/SellTextField";
 import { colors } from "@/constants/colors";
+import { useI18n } from "@/i18n";
 import { SellFormDraft } from "@/types/sell";
 
 const categories = ["Cycling", "Winter", "Outdoor", "Music", "Cameras", "Fitness", "Gaming", "Kids’ Gear"];
-const conditions = ["New", "Like new", "Good", "Fair", "Poor"];
+const conditions = [
+  { value: "New", labelKey: "condition.new" },
+  { value: "Like new", labelKey: "condition.like_new" },
+  { value: "Good", labelKey: "condition.good" },
+  { value: "Fair", labelKey: "condition.fair" },
+  { value: "Poor", labelKey: "condition.poor" }
+];
 
 type DetailsStepProps = {
   form: SellFormDraft;
@@ -14,19 +21,21 @@ type DetailsStepProps = {
 };
 
 export function DetailsStep({ form, error, onChange }: DetailsStepProps) {
+  const { t } = useI18n();
+
   return (
     <>
       <View style={styles.headerBlock}>
-        <Text style={styles.screenTitle}>Item details</Text>
-        <Text style={styles.screenSubtitle}>Help buyers understand exactly what you are selling.</Text>
+        <Text style={styles.screenTitle}>{t("sell.details.title")}</Text>
+        <Text style={styles.screenSubtitle}>{t("sell.details.subtitle")}</Text>
       </View>
 
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-      <SellTextField label="Title" value={form.title} placeholder="Example: MSR Hubba NX 2-Person Tent" maxLength={70} onChangeText={(value) => onChange("title", value)} />
+      <SellTextField label={t("sell.details.titleLabel")} value={form.title} placeholder={t("sell.details.titlePlaceholder")} maxLength={70} onChangeText={(value) => onChange("title", value)} />
 
       <View style={styles.section}>
-        <Text style={styles.label}>Category</Text>
+        <Text style={styles.label}>{t("sell.details.category")}</Text>
         <View style={styles.categoryGrid}>
           {categories.map((category) => {
             const selected = form.categoryName === category;
@@ -40,14 +49,14 @@ export function DetailsStep({ form, error, onChange }: DetailsStepProps) {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.label}>Condition</Text>
-        <Text style={styles.helperText}>Choose the option that best matches the item.</Text>
+        <Text style={styles.label}>{t("sell.details.condition")}</Text>
+        <Text style={styles.helperText}>{t("sell.details.conditionHelper")}</Text>
         <View style={styles.conditionChips}>
           {conditions.map((condition) => {
-            const selected = form.conditionLabel === condition;
+            const selected = form.conditionLabel === condition.value;
             return (
-              <Pressable key={condition} style={[styles.conditionChip, selected && styles.selectedChip]} onPress={() => onChange("conditionLabel", condition)}>
-                <Text style={[styles.conditionText, selected && styles.selectedText]}>{condition}</Text>
+              <Pressable key={condition.value} style={[styles.conditionChip, selected && styles.selectedChip]} onPress={() => onChange("conditionLabel", condition.value)}>
+                <Text style={[styles.conditionText, selected && styles.selectedText]}>{t(condition.labelKey)}</Text>
               </Pressable>
             );
           })}
@@ -56,14 +65,14 @@ export function DetailsStep({ form, error, onChange }: DetailsStepProps) {
 
       <View style={styles.fieldRow}>
         <View style={styles.fieldItem}>
-          <SellTextField label="Brand" value={form.brand} placeholder="Optional" onChangeText={(value) => onChange("brand", value)} />
+          <SellTextField label={t("sell.details.brand")} value={form.brand} placeholder={t("sell.details.optional")} onChangeText={(value) => onChange("brand", value)} />
         </View>
         <View style={styles.fieldItem}>
-          <SellTextField label="Model" value={form.model} placeholder="Optional" onChangeText={(value) => onChange("model", value)} />
+          <SellTextField label={t("sell.details.model")} value={form.model} placeholder={t("sell.details.optional")} onChangeText={(value) => onChange("model", value)} />
         </View>
       </View>
 
-      <SellTextField label="Description" value={form.description} placeholder="Tell buyers what is included, how much it has been used and why you are selling it." multiline onChangeText={(value) => onChange("description", value)} />
+      <SellTextField label={t("sell.details.description")} value={form.description} placeholder={t("sell.details.descriptionPlaceholder")} multiline onChangeText={(value) => onChange("description", value)} />
     </>
   );
 }
