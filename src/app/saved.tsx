@@ -8,12 +8,14 @@ import { EmptyStateCard } from "@/components/ui/EmptyStateCard";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
 import { useAuth } from "@/hooks/useAuth";
+import { useI18n } from "@/i18n";
 import { setListingFavorite } from "@/services/favorites";
 import { getSavedListings } from "@/services/listingCollections";
 import { Listing } from "@/types/listing";
 
 export default function SavedItemsScreen() {
   const router = useRouter();
+  const { t } = useI18n();
   const { isLoading, user } = useAuth();
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
@@ -59,20 +61,20 @@ export default function SavedItemsScreen() {
           <Ionicons name="arrow-back" size={22} color={colors.text} />
         </Pressable>
 
-        <Text style={styles.title}>Saved items</Text>
-        <Text style={styles.subtitle}>Gear you saved to revisit later.</Text>
+        <Text style={styles.title}>{t("collection.savedTitle")}</Text>
+        <Text style={styles.subtitle}>{t("collection.savedSubtitle")}</Text>
 
         <View style={styles.countRow}>
-          <Text style={styles.countText}>{listings.length} saved</Text>
-          <View style={styles.sortPill}><Ionicons name="time-outline" size={14} color={colors.link} /><Text style={styles.sortText}>Recent</Text></View>
+          <Text style={styles.countText}>{t("collection.savedCount", { count: listings.length })}</Text>
+          <View style={styles.sortPill}><Ionicons name="time-outline" size={14} color={colors.link} /><Text style={styles.sortText}>{t("collection.recent")}</Text></View>
         </View>
 
         {loading ? (
-          <EmptyStateCard icon="heart-outline" title="Loading saved items..." body="Your saved gear will appear here in a moment." />
+          <EmptyStateCard icon="heart-outline" title={t("collection.loadingSavedTitle")} body={t("collection.loadingSavedBody")} />
         ) : hasError ? (
-          <EmptyStateCard icon="refresh-outline" title="Could not load saved items" body="Please try again in a moment." primaryLabel="Retry" onPrimaryPress={loadSaved} />
+          <EmptyStateCard icon="refresh-outline" title={t("collection.savedErrorTitle")} body={t("common.momentError")} primaryLabel={t("common.retry")} onPrimaryPress={loadSaved} />
         ) : listings.length === 0 ? (
-          <EmptyStateCard icon="heart-outline" title="No saved items yet" body="Tap the heart on gear you want to revisit later." primaryLabel="Explore gear" onPrimaryPress={() => router.push("/(tabs)/search")} />
+          <EmptyStateCard icon="heart-outline" title={t("collection.emptySavedTitle")} body={t("collection.emptySavedBody")} primaryLabel={t("messages.exploreGear")} onPrimaryPress={() => router.push("/(tabs)/search")} />
         ) : (
           <ProductGrid listings={listings} onFavoritePress={toggleFavorite} />
         )}
