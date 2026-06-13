@@ -15,6 +15,7 @@ import { SellStep, SellStepIndicator } from "@/components/sell/SellStepIndicator
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
 import { useAuth } from "@/hooks/useAuth";
+import { useI18n } from "@/i18n";
 import { createListingWithImages } from "@/services/listings";
 import { getSellDraft, removeSellDraft, saveSellDraft, SellDraftStep, SellListingDraft } from "@/services/sellDrafts";
 import { PublishedListing } from "@/types/listing";
@@ -57,6 +58,7 @@ function canShowRestoreDraft(form: SellFormDraft, selectedPhotos: SellPhoto[]) {
 
 export default function SellScreen() {
   const router = useRouter();
+  const { t } = useI18n();
   const { isLoading, user } = useAuth();
   const [currentStep, setCurrentStep] = useState<SellFlowStep>("photos");
   const [form, setForm] = useState<SellFormDraft>(emptySellFormDraft);
@@ -111,28 +113,28 @@ export default function SellScreen() {
   }
 
   function getPhotosError() {
-    if (selectedPhotos.length === 0) return "Add at least one photo.";
+    if (selectedPhotos.length === 0) return t("sell.errors.photoRequired");
     return null;
   }
 
   function getDetailsError() {
-    if (!form.title.trim()) return "Please add a title before continuing.";
-    if (!form.categoryName.trim()) return "Please choose a category before continuing.";
-    if (!form.conditionLabel.trim()) return "Please choose the item condition before continuing.";
-    if (!form.description.trim()) return "Please add a short description before continuing.";
+    if (!form.title.trim()) return t("sell.errors.titleRequired");
+    if (!form.categoryName.trim()) return t("sell.errors.categoryRequired");
+    if (!form.conditionLabel.trim()) return t("sell.errors.conditionRequired");
+    if (!form.description.trim()) return t("sell.errors.descriptionRequired");
     return null;
   }
 
   function getPricingError() {
-    if (!form.priceLabel.trim()) return "Please add a price before continuing.";
-    if (!parsePriceAmount(form.priceLabel)) return "Please enter a valid price before continuing.";
+    if (!form.priceLabel.trim()) return t("sell.errors.priceRequired");
+    if (!parsePriceAmount(form.priceLabel)) return t("sell.errors.priceInvalid");
     return null;
   }
 
   function getDeliveryError() {
-    if (!form.locationCity.trim()) return "Please add a city before continuing.";
-    if (!form.locationCountry.trim()) return "Please add a country before continuing.";
-    if (!form.allowPickup && !form.allowShipping) return "Please choose at least one delivery option.";
+    if (!form.locationCity.trim()) return t("sell.errors.cityRequired");
+    if (!form.locationCountry.trim()) return t("sell.errors.countryRequired");
+    if (!form.allowPickup && !form.allowShipping) return t("sell.errors.deliveryRequired");
     return null;
   }
 
@@ -176,11 +178,7 @@ export default function SellScreen() {
     setDraftStatus(null);
 
     try {
-      await saveSellDraft({
-        form,
-        selectedPhotos,
-        currentStep
-      });
+      await saveSellDraft({ form, selectedPhotos, currentStep });
       setAvailableDraft(null);
       setDraftStatus("saved");
       setDraftSaveState("saved");
@@ -258,7 +256,7 @@ export default function SellScreen() {
     }
 
     if (!result.listing.coverImageUrl) {
-      setPublishError("Your listing was not published. Please check your connection and try again.");
+      setPublishError(t("sell.errors.publishNoPhoto"));
       return;
     }
 
@@ -313,10 +311,10 @@ export default function SellScreen() {
 
   function renderActions() {
     if (currentStep === "success") return null;
-    if (currentStep === "photos") return <SellFlowActions primaryLabel="Continue" onPrimaryPress={goToNextStep} />;
-    if (currentStep === "details" || currentStep === "pricing") return <SellFlowActions secondaryLabel="Back" onSecondaryPress={goToPreviousStep} primaryLabel="Continue" onPrimaryPress={goToNextStep} />;
-    if (currentStep === "delivery") return <SellFlowActions secondaryLabel="Back" onSecondaryPress={goToPreviousStep} primaryLabel="Continue to review" onPrimaryPress={goToNextStep} />;
-    return <SellFlowActions secondaryLabel="Back" onSecondaryPress={goToPreviousStep} primaryLabel={isPublishing ? "Publishing..." : "Publish listing"} onPrimaryPress={publishListing} isPrimaryLoading={isPublishing} isSecondaryDisabled={isPublishing} />;
+    if (currentStep === "photos") return <SellFlowActions primaryLabel={t("common.continue")} onPrimaryPress={goToNextStep} />;
+    if (currentStep === "details" || currentStep === "pricing") return <SellFlowActions secondaryLabel={t("common.back")} onSecondaryPress={goToPreviousStep} primaryLabel={t("common.continue")} onPrimaryPress={goToNextStep} />;
+    if (currentStep === "delivery") return <SellFlowActions secondaryLabel={t("common.back")} onSecondaryPress={goToPreviousStep} primaryLabel={t("sell.actions.continueToReview")} onPrimaryPress={goToNextStep} />;
+    return <SellFlowActions secondaryLabel={t("common.back")} onSecondaryPress={goToPreviousStep} primaryLabel={isPublishing ? t("sell.actions.publishing") : t("sell.actions.publishListing")} onPrimaryPress={publishListing} isPrimaryLoading={isPublishing} isSecondaryDisabled={isPublishing} />;
   }
 
   if (isLoading || !user) {
