@@ -11,6 +11,7 @@ import { MessagesEmptyCard } from "@/components/messages/MessagesEmptyCard";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
 import { useAuth } from "@/hooks/useAuth";
+import { useI18n } from "@/i18n";
 import { ConversationSummary, getConversations } from "@/services/conversations";
 import { Deal, getActiveDealsForUser } from "@/services/deals";
 
@@ -20,6 +21,7 @@ function getConversationRole(conversation: ConversationSummary): "buying" | "sel
 
 export default function InboxScreen() {
   const router = useRouter();
+  const { t } = useI18n();
   const { isLoading, user } = useAuth();
   const [conversations, setConversations] = useState<ConversationSummary[]>([]);
   const [activeDeals, setActiveDeals] = useState<Deal[]>([]);
@@ -85,16 +87,16 @@ export default function InboxScreen() {
     <Screen noPadding>
       <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <InboxHeader />
-        <Text style={styles.title}>Messages</Text>
+        <Text style={styles.title}>{t("messages.title")}</Text>
         <MessagesFilterTabs activeFilter={activeFilter} onChange={setActiveFilter} />
 
         {isInboxLoading ? (
           <MessageLoadingRows />
         ) : hasError ? (
           <View>
-            <MessagesEmptyCard icon="refresh-outline" title="Could not load messages" message="Please try again in a moment." />
+            <MessagesEmptyCard icon="refresh-outline" title={t("messages.loadErrorTitle")} message={t("common.momentError")} />
             <Pressable style={styles.retryButton} onPress={() => setRetryKey((current) => current + 1)}>
-              <Text style={styles.retryText}>Retry</Text>
+              <Text style={styles.retryText}>{t("common.retry")}</Text>
             </Pressable>
           </View>
         ) : (
@@ -105,21 +107,16 @@ export default function InboxScreen() {
               <View style={styles.emptyWrap}>
                 <MessagesEmptyCard
                   icon="chatbubble-ellipses-outline"
-                  title={activeFilter === "support" ? "No support messages yet" : "No messages yet"}
-                  message={activeFilter === "support" ? "Support conversations will appear here when you contact Kitliva." : "When you ask about gear or receive buyer messages, conversations will appear here."}
-                  primaryLabel={activeFilter === "support" ? "Safety center" : "Explore gear"}
+                  title={activeFilter === "support" ? t("messages.noSupportTitle") : t("messages.noMessagesTitle")}
+                  message={activeFilter === "support" ? t("messages.noSupportBody") : t("messages.noMessagesBody")}
+                  primaryLabel={activeFilter === "support" ? t("messages.safetyCenter") : t("messages.exploreGear")}
                   onPrimaryPress={() => router.push(activeFilter === "support" ? "/safety" : "/(tabs)/search")}
                 />
               </View>
             ) : (
               <View style={styles.list}>
                 {visibleConversations.map((conversation, index) => (
-                  <MessageThreadRow
-                    key={conversation.id}
-                    conversation={conversation}
-                    isLast={index === visibleConversations.length - 1}
-                    onPress={() => router.push(`/conversation/${conversation.id}`)}
-                  />
+                  <MessageThreadRow key={conversation.id} conversation={conversation} isLast={index === visibleConversations.length - 1} onPress={() => router.push(`/conversation/${conversation.id}`)} />
                 ))}
               </View>
             )}
@@ -131,41 +128,11 @@ export default function InboxScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background
-  },
-  content: {
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 112
-  },
-  title: {
-    marginTop: 22,
-    color: colors.text,
-    fontSize: 34,
-    fontWeight: "600",
-    letterSpacing: -0.8,
-    lineHeight: 40
-  },
-  emptyWrap: {
-    marginTop: 24
-  },
-  list: {
-    marginTop: 22
-  },
-  retryButton: {
-    height: 36,
-    alignSelf: "center",
-    justifyContent: "center",
-    borderRadius: 18,
-    backgroundColor: colors.buttonPrimary,
-    paddingHorizontal: 18,
-    marginTop: 14
-  },
-  retryText: {
-    color: colors.buttonPrimaryText,
-    fontSize: 12.5,
-    fontWeight: "700"
-  }
+  screen: { flex: 1, backgroundColor: colors.background },
+  content: { paddingHorizontal: 20, paddingTop: 10, paddingBottom: 112 },
+  title: { marginTop: 22, color: colors.text, fontSize: 34, fontWeight: "600", letterSpacing: -0.8, lineHeight: 40 },
+  emptyWrap: { marginTop: 24 },
+  list: { marginTop: 22 },
+  retryButton: { height: 36, alignSelf: "center", justifyContent: "center", borderRadius: 18, backgroundColor: colors.buttonPrimary, paddingHorizontal: 18, marginTop: 14 },
+  retryText: { color: colors.buttonPrimaryText, fontSize: 12.5, fontWeight: "700" }
 });
