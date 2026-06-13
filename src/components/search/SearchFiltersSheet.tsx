@@ -13,6 +13,8 @@ import { SearchDeliveryOption, SearchFilters, SearchSortOption } from "@/types/s
 
 export type SearchFilterSheetType = "category" | "price" | "condition" | "location" | "shipping" | "sort";
 
+type PricePreset = { labelKey: string; labelParams?: Record<string, string | number>; minPrice: string; maxPrice: string };
+
 const conditionValues: { subtitleKey: string; value: ListingCondition | "any" }[] = [
   { subtitleKey: "explore.sheet.anyConditionSubtitle", value: "any" },
   { subtitleKey: "explore.sheet.newSubtitle", value: "new" },
@@ -22,7 +24,7 @@ const conditionValues: { subtitleKey: string; value: ListingCondition | "any" }[
   { subtitleKey: "explore.sheet.poorSubtitle", value: "poor" }
 ];
 
-const pricePresets = [
+const pricePresets: PricePreset[] = [
   { labelKey: "explore.sheet.anyPrice", minPrice: "", maxPrice: "" },
   { labelKey: "explore.filters.under", labelParams: { price: 50 }, minPrice: "", maxPrice: "50" },
   { labelKey: "explore.sheet.price50to150", minPrice: "50", maxPrice: "150" },
