@@ -3,6 +3,7 @@ import { Tabs } from "expo-router";
 import { StyleSheet, View } from "react-native";
 
 import { colors } from "@/constants/colors";
+import { useI18n } from "@/i18n";
 import { typography } from "@/theme/typography";
 
 type IconName = keyof typeof Ionicons.glyphMap;
@@ -28,6 +29,8 @@ function SellTabIcon() {
 }
 
 export default function TabsLayout() {
+  const { t } = useI18n();
+
   return (
     <Tabs
       screenOptions={{
@@ -66,46 +69,11 @@ export default function TabsLayout() {
         }
       }}
     >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color, focused }) => <TabIcon color={color} focused={focused} focusedIcon="home" outlineIcon="home-outline" />
-        }}
-      />
-      <Tabs.Screen
-        name="search"
-        options={{
-          title: "Explore",
-          tabBarIcon: ({ color, focused }) => <TabIcon color={color} focused={focused} focusedIcon="compass" outlineIcon="compass-outline" />
-        }}
-      />
-      <Tabs.Screen
-        name="sell"
-        options={{
-          title: "Sell",
-          tabBarIcon: () => <SellTabIcon />,
-          tabBarLabelStyle: {
-            fontSize: typography.tabLabel,
-            fontWeight: "500",
-            marginTop: 4
-          }
-        }}
-      />
-      <Tabs.Screen
-        name="inbox"
-        options={{
-          title: "Messages",
-          tabBarIcon: ({ color, focused }) => <TabIcon color={color} focused={focused} focusedIcon="chatbox" outlineIcon="chatbox-outline" />
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Account",
-          tabBarIcon: ({ color, focused }) => <TabIcon color={color} focused={focused} focusedIcon="person" outlineIcon="person-outline" />
-        }}
-      />
+      <Tabs.Screen name="index" options={{ title: t("tabs.home"), tabBarIcon: ({ color, focused }) => <TabIcon color={color} focused={focused} focusedIcon="home" outlineIcon="home-outline" /> }} />
+      <Tabs.Screen name="search" options={{ title: t("tabs.explore"), tabBarIcon: ({ color, focused }) => <TabIcon color={color} focused={focused} focusedIcon="compass" outlineIcon="compass-outline" /> }} />
+      <Tabs.Screen name="sell" options={{ title: t("tabs.sell"), tabBarIcon: () => <SellTabIcon />, tabBarLabelStyle: { fontSize: typography.tabLabel, fontWeight: "500", marginTop: 4 } }} />
+      <Tabs.Screen name="inbox" options={{ title: t("tabs.messages"), tabBarIcon: ({ color, focused }) => <TabIcon color={color} focused={focused} focusedIcon="chatbox" outlineIcon="chatbox-outline" /> }} />
+      <Tabs.Screen name="profile" options={{ title: t("tabs.account"), tabBarIcon: ({ color, focused }) => <TabIcon color={color} focused={focused} focusedIcon="person" outlineIcon="person-outline" /> }} />
     </Tabs>
   );
 }
