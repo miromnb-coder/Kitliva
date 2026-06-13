@@ -4,6 +4,7 @@
     "strict": true,
     "noEmit": true,
     "baseUrl": ".",
+    "resolveJsonModule": true,
     "paths": {
       "@/*": ["src/*"]
     }
@@ -11,6 +12,7 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
+    "src/**/*.json",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
   ]
