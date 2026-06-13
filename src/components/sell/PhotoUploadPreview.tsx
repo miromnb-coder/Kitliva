@@ -5,6 +5,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
+import { useI18n } from "@/i18n";
 import { SellPhoto } from "@/types/sell";
 
 type PhotoUploadPreviewProps = {
@@ -16,6 +17,7 @@ type PhotoUploadPreviewProps = {
 };
 
 export function PhotoUploadPreview({ photos, error, isDraftRestored = false, onAddPhotos, onRemovePhoto }: PhotoUploadPreviewProps) {
+  const { t } = useI18n();
   const [failedPhotoIds, setFailedPhotoIds] = useState<string[]>([]);
 
   async function pickPhotos() {
@@ -30,9 +32,9 @@ export function PhotoUploadPreview({ photos, error, isDraftRestored = false, onA
 
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>Add photos</Text>
-      <Text style={styles.tip}>Start with clear photos. The first photo becomes your cover.</Text>
-      {isDraftRestored ? <View style={styles.restoredBadge}><Text style={styles.restoredBadgeText}>Draft restored from this device.</Text></View> : null}
+      <Text style={styles.title}>{t("sell.photos.title")}</Text>
+      <Text style={styles.tip}>{t("sell.photos.tip")}</Text>
+      {isDraftRestored ? <View style={styles.restoredBadge}><Text style={styles.restoredBadgeText}>{t("sell.draftRestored")}</Text></View> : null}
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
         {photos.map((photo) => {
@@ -50,7 +52,7 @@ export function PhotoUploadPreview({ photos, error, isDraftRestored = false, onA
             </View>
           );
         })}
-        {photos.length < 6 ? <Pressable style={styles.addTile} onPress={pickPhotos}><Ionicons name="add" size={30} color={colors.text} /><Text style={styles.addText}>Add photo</Text></Pressable> : null}
+        {photos.length < 6 ? <Pressable style={styles.addTile} onPress={pickPhotos}><Ionicons name="add" size={30} color={colors.text} /><Text style={styles.addText}>{t("sell.photos.addPhoto")}</Text></Pressable> : null}
       </ScrollView>
     </View>
   );
