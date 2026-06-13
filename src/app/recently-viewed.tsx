@@ -8,12 +8,14 @@ import { EmptyStateCard } from "@/components/ui/EmptyStateCard";
 import { Screen } from "@/components/ui/Screen";
 import { colors } from "@/constants/colors";
 import { useAuth } from "@/hooks/useAuth";
+import { useI18n } from "@/i18n";
 import { getFavoriteListingIds, setListingFavorite } from "@/services/favorites";
-import { clearRecentlyViewedListings, getRecentlyViewedListings } from "@/services/recentlyViewed";
+import { clearRecentlyViewedListings as resetRecentlyViewedListings, getRecentlyViewedListings } from "@/services/recentlyViewed";
 import { Listing } from "@/types/listing";
 
 export default function RecentlyViewedScreen() {
   const router = useRouter();
+  const { t } = useI18n();
   const { isLoading, user } = useAuth();
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(true);
@@ -35,8 +37,8 @@ export default function RecentlyViewedScreen() {
     }, [loadRecentlyViewed])
   );
 
-  async function clearHistory() {
-    await clearRecentlyViewedListings();
+  async function resetList() {
+    await resetRecentlyViewedListings();
     setListings([]);
   }
 
@@ -57,24 +59,22 @@ export default function RecentlyViewedScreen() {
     <Screen noPadding>
       <ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.headerRow}>
-          <Pressable style={styles.backButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={22} color={colors.text} />
-          </Pressable>
-          {listings.length > 0 ? <Pressable style={styles.clearButton} onPress={clearHistory}><Text style={styles.clearText}>Clear</Text></Pressable> : null}
+          <Pressable style={styles.backButton} onPress={() => router.back()}><Ionicons name="arrow-back" size={22} color={colors.text} /></Pressable>
+          {listings.length > 0 ? <Pressable style={styles.clearButton} onPress={resetList}><Text style={styles.clearText}>{t("common.clear")}</Text></Pressable> : null}
         </View>
 
-        <Text style={styles.title}>Recently viewed</Text>
-        <Text style={styles.subtitle}>Gear you opened recently.</Text>
+        <Text style={styles.title}>{t("collection.recentTitle")}</Text>
+        <Text style={styles.subtitle}>{t("collection.recentSubtitle")}</Text>
 
         <View style={styles.countRow}>
-          <Text style={styles.countText}>{listings.length} items</Text>
-          <View style={styles.sortPill}><Ionicons name="time-outline" size={14} color={colors.link} /><Text style={styles.sortText}>Latest first</Text></View>
+          <Text style={styles.countText}>{t("collection.itemCount", { count: listings.length })}</Text>
+          <View style={styles.sortPill}><Ionicons name="time-outline" size={14} color={colors.link} /><Text style={styles.sortText}>{t("collection.latestFirst")}</Text></View>
         </View>
 
         {loading ? (
-          <EmptyStateCard icon="time-outline" title="Loading recently viewed..." body="Your recent gear will appear here in a moment." />
+          <EmptyStateCard icon="time-outline" title={t("collection.loadingRecentTitle")} body={t("collection.loadingRecentBody")} />
         ) : listings.length === 0 ? (
-          <EmptyStateCard icon="time-outline" title="No recently viewed gear" body="Items you open will appear here for quick access." primaryLabel="Explore gear" onPrimaryPress={() => router.push("/(tabs)/search")} />
+          <EmptyStateCard icon="time-outline" title={t("collection.emptyRecentTitle")} body={t("collection.emptyRecentBody")} primaryLabel={t("messages.exploreGear")} onPrimaryPress={() => router.push("/(tabs)/search")} />
         ) : (
           <ProductGrid listings={listings} onFavoritePress={toggleFavorite} />
         )}
