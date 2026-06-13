@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
+import { useI18n } from "@/i18n";
 
 type DraftStatusVariant = "saved" | "error";
 
@@ -15,6 +16,7 @@ type SellDraftRestoreCardProps = {
 };
 
 export function SellDraftStatusCard({ variant }: SellDraftStatusCardProps) {
+  const { t } = useI18n();
   const isSaved = variant === "saved";
 
   return (
@@ -23,14 +25,16 @@ export function SellDraftStatusCard({ variant }: SellDraftStatusCardProps) {
         <Ionicons name={isSaved ? "checkmark-circle-outline" : "alert-circle-outline"} size={17} color={isSaved ? colors.primary : colors.danger} />
       </View>
       <View style={styles.statusContent}>
-        <Text style={[styles.statusTitle, isSaved ? styles.savedTitle : styles.errorTitle]}>{isSaved ? "Draft saved" : "Draft was not saved"}</Text>
-        <Text style={[styles.statusSubtext, !isSaved && styles.errorSubtext]}>{isSaved ? "You can continue this listing later." : "Please try again before leaving this screen."}</Text>
+        <Text style={[styles.statusTitle, isSaved ? styles.savedTitle : styles.errorTitle]}>{isSaved ? t("sell.draftSavedTitle") : t("sell.draftErrorTitle")}</Text>
+        <Text style={[styles.statusSubtext, !isSaved && styles.errorSubtext]}>{isSaved ? t("sell.draftSavedBody") : t("sell.draftErrorBody")}</Text>
       </View>
     </View>
   );
 }
 
 export function SellDraftRestoreCard({ onContinue, onDiscard }: SellDraftRestoreCardProps) {
+  const { t } = useI18n();
+
   return (
     <View style={styles.restoreCard}>
       <View style={styles.restoreTopRow}>
@@ -38,16 +42,16 @@ export function SellDraftRestoreCard({ onContinue, onDiscard }: SellDraftRestore
           <Ionicons name="document-text-outline" size={18} color={colors.accent} />
         </View>
         <View style={styles.restoreContent}>
-          <Text style={styles.restoreTitle}>Continue your draft?</Text>
-          <Text style={styles.restoreBody}>You have an unfinished listing saved on this device.</Text>
+          <Text style={styles.restoreTitle}>{t("sell.restoreTitle")}</Text>
+          <Text style={styles.restoreBody}>{t("sell.restoreBody")}</Text>
         </View>
       </View>
       <View style={styles.restoreButtonRow}>
         <Pressable style={styles.continueButton} onPress={onContinue}>
-          <Text style={styles.continueText}>Continue</Text>
+          <Text style={styles.continueText}>{t("common.continue")}</Text>
         </Pressable>
         <Pressable style={styles.discardButton} onPress={onDiscard}>
-          <Text style={styles.discardText}>Discard</Text>
+          <Text style={styles.discardText}>{t("sell.discard")}</Text>
         </Pressable>
       </View>
     </View>
