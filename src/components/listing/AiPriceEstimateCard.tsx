@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, View } from "react-native";
 
 import { colors } from "@/constants/colors";
+import { useI18n } from "@/i18n";
 import { Listing } from "@/types/listing";
 import { formatPrice } from "@/utils/formatPrice";
 
@@ -10,18 +11,20 @@ type AiPriceEstimateCardProps = {
 };
 
 export function AiPriceEstimateCard({ listing }: AiPriceEstimateCardProps) {
+  const { t } = useI18n();
+
   return (
     <View style={styles.card}>
       <View style={styles.leftSide}>
         <Ionicons name="trending-up-outline" size={24} color="#7B623C" />
         <View style={styles.leftTextWrap}>
-          <Text style={styles.label}>Price insight</Text>
-          <Text style={styles.sub}>Based on similar listings on Kitliva.</Text>
+          <Text style={styles.label}>{t("listing.priceInsight")}</Text>
+          <Text style={styles.sub}>{t("listing.priceInsightSub")}</Text>
         </View>
       </View>
 
       <View style={styles.rightSide}>
-        <Text style={styles.rangeLabel}>Fair price range</Text>
+        <Text style={styles.rangeLabel}>{t("listing.fairPriceRange")}</Text>
         <Text style={styles.estimate}>{formatPrice(listing.aiPriceMin, listing.currency)} – {formatPrice(listing.aiPriceMax, listing.currency)}</Text>
         <View style={styles.sliderTrack}>
           <View style={styles.sliderFill} />
@@ -39,7 +42,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: "#F7F2EB",
+    backgroundColor: colors.softGold,
     padding: 14,
     marginTop: 18
   },
@@ -59,7 +62,7 @@ const styles = StyleSheet.create({
   },
   sub: {
     marginTop: 4,
-    color: "#5F655F",
+    color: colors.mutedStrong,
     fontSize: 10.5,
     fontWeight: "400",
     lineHeight: 14
@@ -72,7 +75,7 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   rangeLabel: {
-    color: "#5F655F",
+    color: colors.mutedStrong,
     fontSize: 10.5,
     fontWeight: "600"
   },
@@ -93,7 +96,7 @@ const styles = StyleSheet.create({
     width: "58%",
     height: 3,
     borderRadius: 1.5,
-    backgroundColor: "#A77C3A"
+    backgroundColor: colors.accent
   },
   sliderDot: {
     position: "absolute",
