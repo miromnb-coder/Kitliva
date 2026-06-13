@@ -51,7 +51,7 @@ function formatTranslation(value: string, params?: TranslationParams) {
   if (!params) return value;
 
   return Object.entries(params).reduce((current, [key, replacement]) => {
-    return current.replaceAll(`{${key}}`, replacement == null ? "" : String(replacement));
+    return current.split(`{${key}}`).join(replacement == null ? "" : String(replacement));
   }, value);
 }
 
